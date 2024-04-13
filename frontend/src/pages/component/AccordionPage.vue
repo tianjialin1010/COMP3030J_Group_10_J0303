@@ -121,7 +121,7 @@ export default {
         id: '0',
         image: Image01,
         customer: 'Mark Cameron',
-        email: 'mark.cameron@app.com',
+        email: 'mark.cameron@App.com',
         location: '🇬🇧 London, UK',
         date: '22/01/2021',
         amount: '+249.88',

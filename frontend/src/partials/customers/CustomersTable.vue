@@ -66,9 +66,9 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch,onMounted } from 'vue'
 import Customer from './CustomersTableItem.vue'
-
+import axios from 'axios';
 import Image01 from '../../images/user-40-01.jpg'
 import Image02 from '../../images/user-40-02.jpg'
 import Image03 from '../../images/user-40-03.jpg'
@@ -90,6 +90,16 @@ export default {
 
     const selectAll = ref(false)
     const selected = ref([])
+    const customers = ref([])
+
+    const fetchCustomers = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/customers')
+        customers.value = response.data
+      } catch (error) {
+        console.error('There was an error fetching the customers:', error)
+      }
+    }
 
     const checkAll = () => {
       selected.value = []
@@ -102,130 +112,134 @@ export default {
       selectAll.value = customers.value.length === selected.value.length ? true : false
       emit('change-selection', selected.value)
     })    
-    
-    const customers = ref([
-      {
-        id: '0',
-        image: Image01,
-        name: 'Patricia Semklo',
-        email: 'patricia.semklo@app.com',
-        location: '🇬🇧 London, UK',
-        orders: '24',
-        lastOrder: '#123567',
-        spent: '$2,890.66',
-        refunds: '-',
-        fav: true
-      },
-      {
-        id: '1',
-        image: Image02,
-        name: 'Dominik Lamakani',
-        email: 'dominik.lamakani@gmail.com',
-        location: '🇩🇪 Dortmund, DE',
-        orders: '77',
-        lastOrder: '#779912',
-        spent: '$14,767.04',
-        refunds: '4',
-        fav: false
-      },
-      {
-        id: '2',
-        image: Image03,
-        name: 'Ivan Mesaros',
-        email: 'imivanmes@gmail.com',
-        location: '🇫🇷 Paris, FR',
-        orders: '44',
-        lastOrder: '#889924',
-        spent: '$4,996.00',
-        refunds: '1',
-        fav: true
-      },
-      {
-        id: '3',
-        image: Image04,
-        name: 'Maria Martinez',
-        email: 'martinezhome@gmail.com',
-        location: '🇮🇹 Bologna, IT',
-        orders: '29',
-        lastOrder: '#897726',
-        spent: '$3,220.66',
-        refunds: '2',
-        fav: false
-      },
-      {
-        id: '4',
-        image: Image05,
-        name: 'Vicky Jung',
-        email: 'itsvicky@contact.com',
-        location: '🇬🇧 London, UK',
-        orders: '22',
-        lastOrder: '#123567',
-        spent: '$2,890.66',
-        refunds: '-',
-        fav: true
-      },
-      {
-        id: '5',
-        image: Image06,
-        name: 'Tisho Yanchev',
-        email: 'tisho.y@kurlytech.com',
-        location: '🇬🇧 London, UK',
-        orders: '14',
-        lastOrder: '#896644',
-        spent: '$1,649.99',
-        refunds: '1',
-        fav: true
-      },
-      {
-        id: '6',
-        image: Image07,
-        name: 'James Cameron',
-        email: 'james.ceo@james.tech',
-        location: '🇫🇷 Marseille, FR',
-        orders: '34',
-        lastOrder: '#136988',
-        spent: '$3,569.87',
-        refunds: '2',
-        fav: true
-      },
-      {
-        id: '7',
-        image: Image08,
-        name: 'Haruki Masuno',
-        email: 'haruki@supermail.jp',
-        location: '🇯🇵 Tokio, JP',
-        orders: '112',
-        lastOrder: '#442206',
-        spent: '$19,246.07',
-        refunds: '6',
-        fav: false
-      },
-      {
-        id: '8',
-        image: Image09,
-        name: 'Joe Huang',
-        email: 'joehuang@hotmail.com',
-        location: '🇨🇳 Shanghai, CN',
-        orders: '64',
-        lastOrder: '#764321',
-        spent: '$12,276.92',
-        refunds: '-',
-        fav: true
-      },
-      {
-        id: '9',
-        image: Image10,
-        name: 'Carolyn McNeail',
-        email: 'carolynlove@gmail.com',
-        location: '🇮🇹 Milan, IT',
-        orders: '19',
-        lastOrder: '#908764',
-        spent: '$1,289.97',
-        refunds: '2',
-        fav: false
-      }      
-    ])
 
+    onMounted(() => {
+      fetchCustomers()
+    })
+
+    // const customers = ref([
+    //   {
+    //     id: '0',
+    //     image: Image01,
+    //     name: 'Patricia Semklo',
+    //     email: 'patricia.semklo@App.com',
+    //     location: '🇬🇧 London, UK',
+    //     orders: '24',
+    //     lastOrder: '#123567',
+    //     spent: '$2,890.66',
+    //     refunds: '-',
+    //     fav: true
+    //   },
+    //   {
+    //     id: '1',
+    //     image: Image02,
+    //     name: 'Dominik Lamakani',
+    //     email: 'dominik.lamakani@gmail.com',
+    //     location: '🇩🇪 Dortmund, DE',
+    //     orders: '77',
+    //     lastOrder: '#779912',
+    //     spent: '$14,767.04',
+    //     refunds: '4',
+    //     fav: false
+    //   },
+    //   {
+    //     id: '2',
+    //     image: Image03,
+    //     name: 'Ivan Mesaros',
+    //     email: 'imivanmes@gmail.com',
+    //     location: '🇫🇷 Paris, FR',
+    //     orders: '44',
+    //     lastOrder: '#889924',
+    //     spent: '$4,996.00',
+    //     refunds: '1',
+    //     fav: true
+    //   },
+    //   {
+    //     id: '3',
+    //     image: Image04,
+    //     name: 'Maria Martinez',
+    //     email: 'martinezhome@gmail.com',
+    //     location: '🇮🇹 Bologna, IT',
+    //     orders: '29',
+    //     lastOrder: '#897726',
+    //     spent: '$3,220.66',
+    //     refunds: '2',
+    //     fav: false
+    //   },
+    //   {
+    //     id: '4',
+    //     image: Image05,
+    //     name: 'Vicky Jung',
+    //     email: 'itsvicky@contact.com',
+    //     location: '🇬🇧 London, UK',
+    //     orders: '22',
+    //     lastOrder: '#123567',
+    //     spent: '$2,890.66',
+    //     refunds: '-',
+    //     fav: true
+    //   },
+    //   {
+    //     id: '5',
+    //     image: Image06,
+    //     name: 'Tisho Yanchev',
+    //     email: 'tisho.y@kurlytech.com',
+    //     location: '🇬🇧 London, UK',
+    //     orders: '14',
+    //     lastOrder: '#896644',
+    //     spent: '$1,649.99',
+    //     refunds: '1',
+    //     fav: true
+    //   },
+    //   {
+    //     id: '6',
+    //     image: Image07,
+    //     name: 'James Cameron',
+    //     email: 'james.ceo@james.tech',
+    //     location: '🇫🇷 Marseille, FR',
+    //     orders: '34',
+    //     lastOrder: '#136988',
+    //     spent: '$3,569.87',
+    //     refunds: '2',
+    //     fav: true
+    //   },
+    //   {
+    //     id: '7',
+    //     image: Image08,
+    //     name: 'Haruki Masuno',
+    //     email: 'haruki@supermail.jp',
+    //     location: '🇯🇵 Tokio, JP',
+    //     orders: '112',
+    //     lastOrder: '#442206',
+    //     spent: '$19,246.07',
+    //     refunds: '6',
+    //     fav: false
+    //   },
+    //   {
+    //     id: '8',
+    //     image: Image09,
+    //     name: 'Joe Huang',
+    //     email: 'joehuang@hotmail.com',
+    //     location: '🇨🇳 Shanghai, CN',
+    //     orders: '64',
+    //     lastOrder: '#764321',
+    //     spent: '$12,276.92',
+    //     refunds: '-',
+    //     fav: true
+    //   },
+    //   {
+    //     id: '9',
+    //     image: Image10,
+    //     name: 'Carolyn McNeail',
+    //     email: 'carolynlove@gmail.com',
+    //     location: '🇮🇹 Milan, IT',
+    //     orders: '19',
+    //     lastOrder: '#908764',
+    //     spent: '$1,289.97',
+    //     refunds: '2',
+    //     fav: false
+    //   }
+    // ])
+    //
     return {
       selectAll,
       selected,
