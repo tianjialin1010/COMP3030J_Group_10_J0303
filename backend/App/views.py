@@ -25,4 +25,25 @@ def catch_all(path):
 @blue.route('/api/customers')
 def get_users():
     users = User.query.all()
-    return jsonify([{'id': user.user_id, 'name': user.username, 'email': user.email} for user in users])
+    return jsonify([{'id': user.user_id,
+                     'name': user.username,
+                     'email': user.email} for user in users])
+
+@blue.route('/api/orders')
+def get_orders():
+    orders = Order.query.all()
+    orders_data = [{
+        'id': order.id,
+        'vehicle_id': order.vehicle_id,
+        'initiator_user_id': order.initiator_user_id,
+        'assigned_driver_id': order.assigned_driver_id,
+        'status': order.status,
+        'destination': order.destination,
+        'mileage': str(order.mileage),
+        'created_at': order.created_at.isoformat(),
+        'completed_at': order.completed_at.isoformat() if order.completed_at else None,
+        'vehicle_type': order.vehicle_type,
+        'carbon_emission': str(order.carbon_emission)
+    } for order in orders]
+
+    return jsonify(orders_data)
