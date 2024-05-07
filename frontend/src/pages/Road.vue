@@ -1,21 +1,36 @@
 <template>
-  <div style="height: 100%; width: 100%;display: flex;flex-direction: row;">
-    <div id="mapElement" ref="mapElement" style="height: 100%; width: 100%;"></div>
-    <div id="infoPanel" ref="infoPanel"></div>
+  <div class="flex h-[100vh] overflow-hidden">
+
+    <!-- Sidebar -->
+    <Sidebar :sidebarOpen="sidebarOpen" @close-sidebar="sidebarOpen = false" />
+
+    <!-- Main Content area -->
+    <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+
+      <!-- Site header -->
+      <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+
+      <!-- Map and Info Panel -->
+      <main class="grow">
+        <div id="mapElement" ref="mapElement" style="height: 100%; width: 100%;"></div>
+        <div id="infoPanel" ref="infoPanel" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 8px; z-index: 1000;"></div>
+      </main>
+    </div>
+
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import Sidebar from '../partials/Sidebar.vue'
+import Header from '../partials/Header.vue'
 
-import { onMounted, ref } from 'vue';
-
+const sidebarOpen = ref(false);
 const mapElement = ref(null);
 const infoPanel = ref(null);
 
 onMounted(() => {
-  // 确保在尝试访问 Google Maps API 之前 API 已加载
   if (!window.google || !window.google.maps) {
-    // 动态加载 Google Maps API
     loadGoogleMapsScript().then(() => {
       initializeMap();
     }).catch(error => {
@@ -107,7 +122,16 @@ function animateMarker(map, route, origin, destination) {
 
 <script>
 export default {
-  name: 'Road'
+  name: 'Road',
+  components: {
+    Sidebar,
+    Header
+  },
+  setup() {
+    return {
+      sidebarOpen
+    }
+  }
 }
 </script>
 
