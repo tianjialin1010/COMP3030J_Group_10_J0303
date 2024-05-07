@@ -91,3 +91,37 @@ def recognize():
     plate_number = demo.recognize_plate(image_path)
     return jsonify({'plate_number': plate_number})
 
+@blue.route('/api/reset-password', methods=['POST'])
+def reset_password():
+    data = request.get_json()
+    email = data.get('email')
+    new_password = data.get('new_password')
+
+    if not email or not new_password:
+        return jsonify({'error': 'Email and new password are required'}), 400
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'error': 'No user found with this email'}), 404
+
+    # 更新密码
+    user.password_hash = generate_password_hash(new_password)
+    db.session.commit()
+
+    return jsonify({'message': 'Password successfully reset'}), 200
+
+
+@blue.route('/api/delete-items', methods=['POST'])
+def delete_items():
+    data = request.get_json()
+    item_ids = data.get('items', [])
+
+    try:
+        for item_id in item_ids:
+            item = User.query.filter_by(user_id=item_id).first()
+            if item:
+                db.session.delete(item)
+        db.session.commit()
+        return jsonify({'message': 'Items deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

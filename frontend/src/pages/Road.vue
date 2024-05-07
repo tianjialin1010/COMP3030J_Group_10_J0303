@@ -22,8 +22,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import Sidebar from '../partials/Sidebar.vue'
-import Header from '../partials/Header.vue'
 
 const sidebarOpen = ref(false);
 const mapElement = ref(null);
@@ -121,6 +119,8 @@ function animateMarker(map, route, origin, destination) {
 </script>
 
 <script>
+import Sidebar from '../partials/Sidebar.vue'
+import Header from '../partials/Header.vue'
 export default {
   name: 'Road',
   components: {
