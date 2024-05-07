@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Dashboard from './pages/Dashboard.vue'
 import Analytics from './pages/Analytics.vue'
 import Fintech from './pages/Fintech.vue'
@@ -64,14 +64,16 @@ import AvatarPage from './pages/component/AvatarPage.vue'
 import TooltipPage from './pages/component/TooltipPage.vue'
 import AccordionPage from './pages/component/AccordionPage.vue'
 import IconsPage from './pages/component/IconsPage.vue'
+import Plate from './pages/Plate.vue'
+import Road from './pages/Road.vue'
 
-const routerHistory = createWebHistory()
+const routerHistory = createWebHashHistory()
 
 const router = createRouter({
   history: routerHistory,
   routes: [
     {
-      path: '/',
+      path: '/main',
       component: Dashboard
     },
     {
@@ -251,7 +253,7 @@ const router = createRouter({
       component: KnowledgeBase
     },
     {
-      path: '/signin',
+      path: '/',
       component: Signin
     },
     {
@@ -331,9 +333,17 @@ const router = createRouter({
       component: IconsPage
     },
     {
+      path: '/plate',
+      component: Plate
+    },
+    {
+      path: '/road',
+      component: Road
+    },
+    {
       path: '/:pathMatch(.*)*',
       component: PageNotFound
-    }
+    },
   ]
 })
 

@@ -38,23 +38,23 @@
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium mb-1" for="email">Email Address <span class="text-rose-500">*</span></label>
-                  <input id="email" class="form-input w-full" type="email" />
+                  <input id="email" ref="email" class="form-input w-full" type="email" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium mb-1" for="name">Full Name <span class="text-rose-500">*</span></label>
-                  <input id="name" class="form-input w-full" type="text" />
+                  <input id="name" ref="name" class="form-input w-full" type="text" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium mb-1" for="role">Your Role <span class="text-rose-500">*</span></label>
-                  <select id="role" class="form-select w-full">
-                    <option>Designer</option>
-                    <option>Developer</option>
-                    <option>Accountant</option>
+                  <label class="block text-sm font-medium mb-1" for="role">Your department <span class="text-rose-500">*</span></label>
+                  <select id="role" ref="role" class="form-select w-full">
+                    <option>driver</option>
+                    <option>warehouse</option>
+                    <option>admin</option>
                   </select>
                 </div>
                 <div>
                   <label class="block text-sm font-medium mb-1" for="password">Password</label>
-                  <input id="password" class="form-input w-full" type="password" autoComplete="on" />
+                  <input id="password" ref="password" class="form-input w-full" type="password" autoComplete="on" />
                 </div>
               </div>
               <div class="flex items-center justify-between mt-6">
@@ -64,7 +64,7 @@
                     <span class="text-sm ml-2">Email me about product news.</span>
                   </label>
                 </div>
-                <router-link class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3 whitespace-nowrap" to="/">Sign Up</router-link>
+                <button @click.prevent="handleRegister" class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3">Sign Up</button>
               </div>
             </form>
             <!-- Footer -->
@@ -90,8 +90,32 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {
   name: 'Signup',
+  methods: {
+    handleRegister() {
+      //调试代码，用于确认函数被调用
+      console.log("Register button clicked");
+
+      const email = this.$refs.email.value;
+      const name = this.$refs.name.value;
+      const role = this.$refs.role.value;
+      const password = this.$refs.password.value;
+      axios.post('/api/register', { email: email, name: name, role: role, password: password })
+        .then(response => {
+          if (response.data.success) {
+            this.$router.push('/');
+          } else {
+            alert('Registration failed: ' + response.data.error);
+          }
+        })
+        .catch(error => {
+          console.error('Error during registration:', error);
+          alert('Registration failed');
+        });
+    }
+  }
 }
 </script>

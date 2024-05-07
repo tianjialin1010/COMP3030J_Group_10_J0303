@@ -5,6 +5,17 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 from backend.App.exts import db
+from sqlalchemy import Enum
+from enum import Enum
+from sqlalchemy import Column, Integer, String, DateTime, Enum as SQLEnum
+from flask_sqlalchemy import SQLAlchemy
+
+class OrderStatus(Enum):
+    CREATED = 'created'
+    ACCEPTED = 'accepted'
+    IN_PROGRESS = 'in_progress'
+    COMPLETED = 'completed'
+    CANCELED = 'canceled'
 
 class Driver(db.Model):
     __tablename__ = 'drivers'
@@ -21,11 +32,11 @@ class Order(db.Model):
     vehicle_id = db.Column(db.Integer, ForeignKey('vehicles.id'))
     initiator_user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     assigned_driver_id = db.Column(db.Integer, db.ForeignKey('drivers.driver_id'))
-    status = db.Column(db.String(255), nullable=False)  # Simplified enum representation
+    status = db.Column(SQLEnum(OrderStatus), nullable=False, default=OrderStatus.CREATED)
     destination = db.Column(db.String(255), nullable=False)
     mileage = db.Column(db.Numeric(10, 2), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    completed_at = db.Column(db.DateTime)
+    completed_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
     vehicle_type = db.Column(db.String(255), nullable=False)  # Simplified enum representation
     carbon_emission = db.Column(db.Numeric(10, 2), nullable=False)
     driver = db.relationship('Driver', foreign_keys=[assigned_driver_id])
@@ -38,12 +49,17 @@ class SustainabilityData(db.Model):
     fuel_consumption = db.Column(db.Numeric(10, 2), nullable=False)
     efficiency_score = db.Column(db.Numeric(5, 2), nullable=False)
 
+class RoleType(Enum):
+    driver = 'driver'  # 确保与数据库中的枚举值完全匹配
+    warehouse = 'warehouse'
+    admin = 'admin'
+
 class User(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(255), nullable=False)  # Simplified enum representation
+    role = db.Column(SQLEnum(RoleType), nullable=False)  # 使用 SQLAlchemy 的 Enum 类型
     avatar_url = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

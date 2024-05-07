@@ -1,0 +1,132 @@
+<template>
+  <div style="height: 100%; width: 100%;display: flex;flex-direction: row;">
+    <div id="mapElement" ref="mapElement" style="height: 100%; width: 100%;"></div>
+    <div id="infoPanel" ref="infoPanel"></div>
+  </div>
+</template>
+
+<script setup>
+
+import { onMounted, ref } from 'vue';
+
+const mapElement = ref(null);
+const infoPanel = ref(null);
+
+onMounted(() => {
+  // 确保在尝试访问 Google Maps API 之前 API 已加载
+  if (!window.google || !window.google.maps) {
+    // 动态加载 Google Maps API
+    loadGoogleMapsScript().then(() => {
+      initializeMap();
+    }).catch(error => {
+      console.error("Google Maps failed to load", error);
+    });
+  } else {
+    initializeMap();
+  }
+});
+
+function loadGoogleMapsScript() {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyA09g-Nb2xujhJc0jEsR8iPPqmUbvRqLuw&v=weekly&language=en";
+    script.async = true;
+    script.defer = true;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
+function initializeMap() {
+  const map = new window.google.maps.Map(mapElement.value, {
+
+    center: { lat: 52.625, lng: -7.333 },
+    zoom: 7,
+  });
+
+  const directionsService = new google.maps.DirectionsService();
+  const directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
+
+  calculateRoute(directionsService, directionsRenderer, map);
+}
+
+function calculateRoute(directionsService, directionsRenderer, map) {
+  const origin = { lat: 51.898514, lng: -8.475604 }; // Cork
+  const destination = { lat: 53.349805, lng: -6.26031 }; // Dublin
+
+  const request = {
+    origin: origin,
+    destination: destination,
+    travelMode: google.maps.TravelMode.DRIVING,
+  };
+
+  directionsService.route(request, (response, status) => {
+    if (status === 'OK') {
+      directionsRenderer.setDirections(response);
+      animateMarker(map, response.routes[0], origin, destination);
+    } else {
+      window.alert('Directions request failed due to ' + status);
+    }
+  });
+}
+
+
+function animateMarker(map, route, origin, destination) {
+  const path = route.overview_path;
+  const stoppingPointIndex = Math.floor(path.length / 3);
+  let carIconPath;
+
+  // 使用传递的 origin 和 destination 参数
+  if (origin.lng > destination.lng) {
+    carIconPath = '/car1.jpg';
+  } else {
+    carIconPath = '/car2.jpg';
+  }
+
+  const marker = new google.maps.Marker({
+    map: map,
+    icon: carIconPath,
+  });
+
+  let step = 0;
+  const intervalId = setInterval(() => {
+    if (step <= stoppingPointIndex) {
+      marker.setPosition(path[step]);
+      step++;
+    } else {
+      clearInterval(intervalId);
+      const remainingDistance = (route.legs[0].distance.value * (1 - 1/3) / 1000).toFixed(2) + " km";
+      const remainingDuration = (route.legs[0].duration.value * (1 - 1/3) / 60).toFixed(0) + " minutes";
+      infoPanel.value.innerHTML = `<strong>Remaining Distance:</strong> ${remainingDistance} <br><strong>Remaining Duration:</strong> ${remainingDuration}`;
+    }
+  }, 100);
+}
+
+</script>
+
+<script>
+export default {
+  name: 'Road'
+}
+</script>
+
+<style>
+html, body, #map {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#infoPanel {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 1000;
+}
+</style>
