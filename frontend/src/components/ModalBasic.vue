@@ -25,15 +25,17 @@
         <div class="px-5 py-3 border-b border-slate-200 dark:border-slate-700">
           <div class="flex justify-between items-center">
             <div class="font-semibold text-slate-800 dark:text-slate-100">{{ title }}</div>
-            <button class="text-slate-400 dark:text-slate-500 hover:text-slate-500 dark:hover:text-slate-400" @click.stop="$emit('close-modal')">
-              <div class="sr-only">Close</div>
-              <svg class="w-4 h-4 fill-current">
-                <path d="M7.95 6.536l4.242-4.243a1 1 0 111.415 1.414L9.364 7.95l4.243 4.242a1 1 0 11-1.415 1.415L7.95 9.364l-4.243 4.243a1 1 0 01-1.414-1.415L6.536 7.95 2.293 3.707a1 1 0 011.414-1.414L7.95 6.536z" />
-              </svg>
-            </button>
+
+<!--            <button class="text-slate-400 dark:text-slate-500 hover:text-slate-500 dark:hover:text-slate-400" @click.stop="$emit('close-modal')">-->
+<!--              <div class="sr-only">Close</div>-->
+<!--              <svg class="w-4 h-4 fill-current">-->
+<!--                <path d="M7.95 6.536l4.242-4.243a1 1 0 111.415 1.414L9.364 7.95l4.243 4.242a1 1 0 11-1.415 1.415L7.95 9.364l-4.243 4.243a1 1 0 01-1.414-1.415L6.536 7.95 2.293 3.707a1 1 0 011.414-1.414L7.95 6.536z" />-->
+<!--              </svg>-->
+<!--            </button>-->
+
           </div>
         </div>
-        <slot />       
+        <slot />
       </div>
     </div>
   </transition>
@@ -51,30 +53,33 @@ export default {
     const modalContent = ref(null)
 
     // close on click outside
-    const clickHandler = ({ target }) => {
-      if (!props.modalOpen || modalContent.value.contains(target)) return
-      emit('close-modal')
-    }
+    // const clickHandler = ({ target }) => {
+    //   if (!props.modalOpen || modalContent.value.contains(target)) return
+    //   emit('close-modal')
+    //   console.log('ssssssssss')
+    // }
 
     // close if the esc key is pressed
-    const keyHandler = ({ keyCode }) => {
-      if (!props.modalOpen || keyCode !== 27) return
-      emit('close-modal')
-    }
-
-    onMounted(() => {
-      document.addEventListener('click', clickHandler)
-      document.addEventListener('keydown', keyHandler)
-    })
-
-    onUnmounted(() => {
-      document.removeEventListener('click', clickHandler)
-      document.removeEventListener('keydown', keyHandler)
-    })
+    // const keyHandler = ({ keyCode }) => {
+    //   if (!props.modalOpen || keyCode !== 27) return
+    //   console
+    //   emit('close-modal')
+    //   console.log('bbbbbbb')
+    // }
+    //
+    // onMounted(() => {
+    //   document.addEventListener('click', clickHandler)
+    //   document.addEventListener('keydown', keyHandler)
+    // })
+    //
+    // onUnmounted(() => {
+    //   document.removeEventListener('click', clickHandler)
+    //   document.removeEventListener('keydown', keyHandler)
+    // })
 
     return {
       modalContent,
     }
-  }  
+  }
 }
 </script>

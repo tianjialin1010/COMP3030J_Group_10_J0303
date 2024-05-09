@@ -27,6 +27,43 @@ def get_users():
     users = User.query.all()
     return jsonify([{'id': user.user_id, 'name': user.username, 'email': user.email} for user in users])
 
+@blue.route('/api/orders')
+def get_orders():
+    orders = Order.query.all()
+    return jsonify([{
+        'id': order.id,
+        'vehicle_id': order.vehicle_id,
+        'initiator_user_id': order.initiator_user_id,
+        'assigned_driver_id': order.assigned_driver_id,
+        'status': order.status.value,
+        'destination': order.destination,
+        'mileage': float(order.mileage),
+        'created_at': order.created_at.isoformat(),
+        'completed_at': order.completed_at.isoformat() if order.completed_at else None,
+        'vehicle_type': order.vehicle_type,
+        'carbon_emission': float(order.carbon_emission),
+        'start_location': order.startlocation,
+    } for order in orders])
+
+
+@blue.route('/api/addOrder', methods=['POST'])
+def add_order():
+    data = request.json
+    initiator_user_id = data.get('IU_ID')
+    vehicle_type = data.get('vehicle_type')
+    destination = data.get('destination')
+    start_location = data.get('start_location')
+
+    if not all([initiator_user_id, vehicle_type, destination, start_location]):
+        return jsonify({'error': 'Missing data'}), 400
+
+    order = Order(initiator_user_id=initiator_user_id, vehicle_type=vehicle_type, destination=destination, startlocation=start_location)
+    db.session.add(order)
+    db.session.commit()
+
+    return jsonify({'message': 'Order added successfully'}), 201
+
+
 @blue.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()

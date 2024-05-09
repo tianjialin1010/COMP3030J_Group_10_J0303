@@ -20,32 +20,42 @@
                 </div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold text-left">Order</div>
+                <div class="font-semibold text-left">OrderID</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold text-left">Date</div>
+                <div class="font-semibold text-left">IU_ID</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold text-left">Customer</div>
-              </th>
-              <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold text-left">Total</div>
+                <div class="font-semibold text-left">AD_ID</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                 <div class="font-semibold text-left">Status</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold">Items</div>
+                <div class="font-semibold">Destination</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold text-left">Location</div>
+                <div class="font-semibold">Mileage</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold text-left">Payment type</div>
+                <div class="font-semibold text-left">Created_at</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <span class="sr-only">Menu</span>
+                <div class="font-semibold text-left">Completed_at</div>
               </th>
+              <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                <div class="font-semibold text-left">Vehicle_Type</div>
+              </th>
+              <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                <div class="font-semibold text-left">Carbon_Emission</div>
+              </th>
+              <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                <div class="font-semibold text-left">CarID</div>
+              </th>
+              <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                <div class="font-semibold text-left">Startlocation</div>
+              </th>
+
             </tr>
           </thead>
           <!-- Table body -->
@@ -64,8 +74,9 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import Order from './OrdersTableItem.vue'
+import axios from 'axios';
 
 import Image01 from '../../images/icon-01.svg'
 import Image02 from '../../images/icon-02.svg'
@@ -81,6 +92,16 @@ export default {
 
     const selectAll = ref(false)
     const selected = ref([])
+    const orders = ref([])
+
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/orders')
+        orders.value = response.data
+      } catch (error) {
+        console.error('There was an error fetching the customers:', error)
+      }
+    }
 
     const checkAll = () => {
       selected.value = []
@@ -94,138 +115,9 @@ export default {
       emit('change-selection', selected.value)
     })    
     
-    const orders = ref([
-      {
-        id: '0',
-        image: Image01,
-        order: '#123567',
-        date: '22/01/2021',
-        customer: 'Patricia Semklo',
-        total: '$129.00',
-        status: 'Refunded',
-        items: '1',
-        location: '🇨🇳 Shanghai, CN',
-        type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        id: '1',
-        image: Image01,
-        order: '#779912',
-        date: '22/01/2021',
-        customer: 'Dominik Lamakani',
-        total: '$89.00',
-        status: 'Approved',
-        items: '2',
-        location: '🇲🇽 Mexico City, MX',
-        type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        id: '2',
-        image: Image02,
-        order: '#889924',
-        date: '22/01/2021',
-        customer: 'Ivan Mesaros',
-        total: '$89.00',
-        status: 'Approved',
-        items: '2',
-        location: '🇮🇹 Milan, IT',
-        type: 'One-time',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        id: '3',
-        image: Image01,
-        order: '#897726',
-        date: '22/01/2021',
-        customer: 'Maria Martinez',
-        total: '$59.00',
-        status: 'Pending',
-        items: '1',
-        location: '🇮🇹 Bologna, IT',
-        type: 'One-time',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        id: '4',
-        image: Image03,
-        order: '#123567',
-        date: '22/01/2021',
-        customer: 'Vicky Jung',
-        total: '$39.00',
-        status: 'Refunded',
-        items: '1',
-        location: '🇬🇧 London, UK',
-        type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        id: '5',
-        image: Image01,
-        order: '#896644',
-        date: '21/01/2021',
-        customer: 'Tisho Yanchev',
-        total: '$59.00',
-        status: 'Approved',
-        items: '1',
-        location: '🇫🇷 Paris, FR',
-        type: 'One-time',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        id: '6',
-        image: Image03,
-        order: '#136988',
-        date: '21/01/2021',
-        customer: 'James Cameron',
-        total: '$89.00',
-        status: 'Approved',
-        items: '1',
-        location: '🇫🇷 Marseille, FR',
-        type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        id: '7',
-        image: Image03,
-        order: '#442206',
-        date: '21/01/2021',
-        customer: 'Haruki Masuno',
-        total: '$129.00',
-        status: 'Approved',
-        items: '2',
-        location: '🇺🇸 New York, USA',
-        type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        id: '8',
-        image: Image02,
-        order: '#764321',
-        date: '21/01/2021',
-        customer: 'Joe Huang',
-        total: '$89.00',
-        status: 'Pending',
-        items: '2',
-        location: '🇨🇳 Shanghai, CN',
-        type: 'One-time',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      },
-      {
-        id: '9',
-        image: Image01,
-        order: '#908764',
-        date: '21/01/2021',
-        customer: 'Carolyn McNeail',
-        total: '$59.00',
-        status: 'Refunded',
-        items: '1',
-        location: '🇬🇧 Sheffield, UK',
-        type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-      }
-    ])
+    onMounted(() => {
+      fetchOrders()
+    })
 
     return {
       selectAll,
