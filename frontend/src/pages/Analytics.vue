@@ -18,7 +18,7 @@
           
             <!-- Left: Title -->
             <div class="mb-4 sm:mb-0">
-              <h1 class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold">Analytics ✨</h1>
+              <h1 class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold">Analytics 📉</h1>
             </div>
         
             <!-- Right: Actions -->
@@ -42,20 +42,20 @@
             <AnalyticsCard03 />
             <!-- Horizontal bar chart (Audience Overview) -->
             <AnalyticsCard04 />
-            <!-- Report card (Top Channels) -->
+<!--            &lt;!&ndash; Report card (Top Channels) &ndash;&gt;
             <AnalyticsCard05 />
-            <!-- Report card (Top Pages) -->
-            <AnalyticsCard06 />
+            &lt;!&ndash; Report card (Top Pages) &ndash;&gt;
+            <AnalyticsCard06 />-->
             <!-- Report card (Top Countries) -->
             <AnalyticsCard07 />
-            <!-- Doughnut chart (Sessions By Device) -->
+<!--            &lt;!&ndash; Doughnut chart (Sessions By Device) &ndash;&gt;
             <AnalyticsCard08 />
-            <!-- Doughnut chart (Visit By Age Category) -->
-            <AnalyticsCard09 />
+            &lt;!&ndash; Doughnut chart (Visit By Age Category) &ndash;&gt;
+            <AnalyticsCard09 />-->
             <!-- Polar chart (Sessions By Gender) -->
             <AnalyticsCard10 />
-            <!-- Table (Top Products) -->
-            <AnalyticsCard11 />
+<!--            &lt;!&ndash; Table (Top Products) &ndash;&gt;
+            <AnalyticsCard11 />-->
 
           </div>
 

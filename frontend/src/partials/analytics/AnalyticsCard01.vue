@@ -12,7 +12,7 @@
               <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">24.7K</div>
               <div class="text-sm font-medium text-emerald-500">+49%</div>
             </div>
-            <div class="text-sm text-slate-500 dark:text-slate-400">Unique Visitors</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Carbon integral</div>
           </div>
           <div class="hidden md:block w-px h-8 bg-slate-200 dark:bg-slate-700 mr-5" aria-hidden="true"></div>
         </div>
@@ -23,7 +23,7 @@
               <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">56.9K</div>
               <div class="text-sm font-medium text-emerald-500">+7%</div>
             </div>
-            <div class="text-sm text-slate-500 dark:text-slate-400">Total Pageviews</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Energy saving</div>
           </div>
           <div class="hidden md:block w-px h-8 bg-slate-200 dark:bg-slate-700 mr-5" aria-hidden="true"></div>
         </div>
@@ -31,10 +31,10 @@
         <div class="flex items-center py-2">
           <div class="mr-5">
             <div class="flex items-center">
-              <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">54%</div>
-              <div class="text-sm font-medium text-amber-500">-7%</div>
+              <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">54</div>
+              <div class="text-sm font-medium text-amber-500">-7</div>
             </div>
-            <div class="text-sm text-slate-500 dark:text-slate-400">Bounce Rate</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Order quantity</div>
           </div>
           <div class="hidden md:block w-px h-8 bg-slate-200 dark:bg-slate-700 mr-5" aria-hidden="true"></div>
         </div>
@@ -42,10 +42,10 @@
         <div class="flex items-center">
           <div>
             <div class="flex items-center">
-              <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">2m 56s</div>
+              <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">11m 56s</div>
               <div class="text-sm font-medium text-amber-500">+7%</div>
             </div>
-            <div class="text-sm text-slate-500 dark:text-slate-400">Visit Duration</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Average time saved</div>
           </div>
         </div>
       </div>

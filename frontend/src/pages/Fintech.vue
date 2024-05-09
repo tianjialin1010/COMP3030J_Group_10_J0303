@@ -18,7 +18,7 @@
           
             <!-- Left: Title -->
             <div class="mb-4 sm:mb-0">
-              <h1 class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold">Fintech ✨</h1>
+              <h1 class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold">Foot Point ♻️</h1>
             </div>
 
             <!-- Right: Actions -->
@@ -44,31 +44,35 @@
 
             <!-- Page Intro -->
             <FintechIntro />
-            <!-- Line chart (Portfolio Returns) -->
+            <!-- Line chart (碳排放) -->
             <FintechCard01 />
-            <!-- Credit Card -->
+            <!-- Car condition（车辆状况） -->
             <FintechCard02 />
-            <!-- Bar chart (Cash Flow) -->
+
+<!--            &lt;!&ndash; Bar chart (Cash Flow) &ndash;&gt;
             <FintechCard03 />
-            <!-- Horizontal bar chart (Cash Flow by Account) -->
-            <FintechCard04 />
-            <!-- Table (Recent Expenses) -->
+            &lt;!&ndash; Horizontal bar chart (Cash Flow by Account) &ndash;&gt;
+            <FintechCard04 />-->
+
+            <!-- Table (Recent orders) -->
             <FintechCard05 />
-            <!-- Table (Recent Earnings) -->
+            <!-- Table (Recent orders) -->
             <FintechCard06 />
-            <!-- Line chart (Saving Goals) -->
+
+<!--            &lt;!&ndash; Line chart (Saving Goals) &ndash;&gt;
             <FintechCard07 />
-            <!-- Line chart (Growth Portfolio) -->
+            &lt;!&ndash; Line chart (Growth Portfolio) &ndash;&gt;
             <FintechCard08 />
-            <!-- Pie chart (Portfolio Value) -->
+            &lt;!&ndash; Pie chart (Portfolio Value) &ndash;&gt;
             <FintechCard09 />
-            <!-- Line charts (Stock graphs) -->
+            &lt;!&ndash; Line charts (Stock graphs) &ndash;&gt;
             <FintechCard10 />
             <FintechCard11 />
             <FintechCard12 />
-            <FintechCard13 />
-            <!-- Table (Market Trends) -->
-            <FintechCard14 />
+            <FintechCard13 />-->
+
+<!--            &lt;!&ndash; Table (Market Trends) &ndash;&gt;
+            <FintechCard14 />-->
 
           </div>
 

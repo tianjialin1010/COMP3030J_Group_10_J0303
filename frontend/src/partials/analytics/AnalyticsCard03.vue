@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col col-span-full sm:col-span-6 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
     <header class="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center">
-      <h2 class="font-semibold text-slate-800 dark:text-slate-100">Acquisition Channels</h2>
+      <h2 class="font-semibold text-slate-800 dark:text-slate-100">The composition of carbon emissions</h2>
     </header>
     <!-- Chart built with Chart.js 3 -->
     <!-- Change the height attribute to adjust the chart height -->
@@ -30,7 +30,7 @@ export default {
       datasets: [
         // Stack
         {
-          label: 'Direct',
+          label: 'CO2',
           data: [
             5000, 4000, 4000, 3800, 5200, 5100,
           ],
@@ -41,7 +41,7 @@ export default {
         },
         // Stack
         {
-          label: 'Referral',
+          label: 'CH4',
           data: [
             2500, 2600, 4000, 4000, 4800, 3500,
           ],
@@ -52,7 +52,7 @@ export default {
         },
         // Stack
         {
-          label: 'Organic Search',
+          label: 'N2O',
           data: [
             2300, 2000, 3100, 2700, 1300, 2600,
           ],
@@ -63,7 +63,7 @@ export default {
         },
         // Stack
         {
-          label: 'Social',
+          label: 'Others',
           data: [
             4800, 4200, 4800, 1800, 3300, 3500,
           ],

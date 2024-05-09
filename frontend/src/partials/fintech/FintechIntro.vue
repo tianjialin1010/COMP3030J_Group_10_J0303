@@ -1,3 +1,5 @@
+
+
 <template>
   <div class="flex flex-col col-span-full bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
     <div class="px-5 py-6">
@@ -11,8 +13,8 @@
           </div>
           <!-- User info -->
           <div>
-            <div class="mb-2">Hey <strong class="font-medium text-slate-800 dark:text-slate-100">Mary</strong> 👋, this is your current balance:</div>
-            <div class="text-3xl font-bold text-emerald-500">$47,347.09</div>
+            <div class="mb-2">Hey <strong class="font-medium text-slate-800 dark:text-slate-100">Mary</strong> 👋, this is your carbon footprint:</div>
+            <div class="text-3xl font-bold text-emerald-500">47,347.09 CO2e</div>
           </div>
         </div>
         <!-- Right side -->

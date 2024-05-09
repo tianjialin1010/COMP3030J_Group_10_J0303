@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col col-span-full xl:col-span-4 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
     <header class="px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-      <h2 class="font-semibold text-slate-800 dark:text-slate-100">Active Users Right Now</h2>
+      <h2 class="font-semibold text-slate-800 dark:text-slate-100">Current orders</h2>
     </header>
     <!-- Card content -->
     <div class="flex flex-col h-full">
@@ -16,7 +16,7 @@
           <!-- Vistors number -->
           <div>
             <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">347</div>
-            <div class="text-sm text-slate-500 dark:text-slate-400">Live visitors</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Live drivers</div>
           </div>
         </div>
       </div>
@@ -35,10 +35,10 @@
             <thead class="text-xs uppercase text-slate-400 dark:text-slate-500">
               <tr>
                 <th class="py-2">
-                  <div class="font-semibold text-left">Top pages</div>
+                  <div class="font-semibold text-left">Top cities</div>
                 </th>
                 <th class="py-2">
-                  <div class="font-semibold text-right">Active users</div>
+                  <div class="font-semibold text-right">Active driver</div>
                 </th>
               </tr>
             </thead>
@@ -47,7 +47,7 @@
               <!-- Row -->
               <tr>
                 <td class="py-2">
-                  <div class="text-left">preview.cruip.com/open-pro/</div>
+                  <div class="text-left">Dublin</div>
                 </td>
                 <td class="py-2">
                   <div class="font-medium text-right text-slate-800">94</div>
@@ -56,7 +56,7 @@
               <!-- Row -->
               <tr>
                 <td class="py-2">
-                  <div class="text-left">preview.cruip.com/simple/</div>
+                  <div class="text-left">Galway</div>
                 </td>
                 <td class="py-2">
                   <div class="font-medium text-right text-slate-800">42</div>
@@ -65,7 +65,7 @@
               <!-- Row -->
               <tr>
                 <td class="py-2">
-                  <div class="text-left">cruip.com/unlimited/</div>
+                  <div class="text-left">Belfast</div>
                 </td>
                 <td class="py-2">
                   <div class="font-medium text-right text-slate-800">12</div>
@@ -74,7 +74,7 @@
               <!-- Row -->
               <tr>
                 <td class="py-2">
-                  <div class="text-left">preview.cruip.com/twist/</div>
+                  <div class="text-left">Waterford</div>
                 </td>
                 <td class="py-2">
                   <div class="font-medium text-right text-slate-800">4</div>
