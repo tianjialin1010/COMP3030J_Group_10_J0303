@@ -6,7 +6,7 @@
 
     <!-- Content area -->
     <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-      
+
       <!-- Site header -->
       <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
@@ -29,7 +29,7 @@
                   <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                 </svg>
                 <span class="hidden xs:block ml-2">Add Board</span>
-              </button>              
+              </button>
             </div>
 
           </div>
@@ -50,7 +50,7 @@
                 <router-link class="text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 whitespace-nowrap" to="#0">Development</router-link>
               </li>
             </ul>
-          </div>          
+          </div>
 
           <!-- Cards -->
           <div class="grid grid-cols-12 gap-x-4 gap-y-8">
@@ -58,7 +58,7 @@
             <TasksGroups title="To Do’s 🖋️">
               <Task01 />
               <Task02 />
-              <Task03 />              
+              <Task03 />
             </TasksGroups>
             <!-- Tasks column -->
             <TasksGroups title="In Progress ✌️">
@@ -74,13 +74,13 @@
             <TasksGroups title="Notes 📒">
               <Task08 />
               <Task09 />
-            </TasksGroups>            
+            </TasksGroups>
           </div>
 
         </div>
       </main>
 
-    </div> 
+    </div>
 
   </div>
 </template>
@@ -122,7 +122,7 @@ export default {
 
     return {
       sidebarOpen,
-    }  
+    }
   }
 }
 </script>

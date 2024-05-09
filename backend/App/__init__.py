@@ -1,9 +1,12 @@
-from flask import Flask
+import os
+
+from flask import Flask,send_from_directory
 from backend.App.exts import init_exts
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from backend.App.views import blue
 from flask_cors import CORS
+
 
 HOSTNAME = "127.0.0.1"
 PORT = 3306
@@ -13,14 +16,15 @@ FLASK_DB = "comp3030j"
 
 def createApp(config_name=None):
     app = Flask(__name__,
-                static_folder="../../frontend/dist/assets",
-                template_folder="../../frontend/dist")
+                static_folder='../..')
     CORS(app)
     app.register_blueprint(blueprint=blue)
     app.config['SECRET_KEY'] = 'J0303'
     db_uri = f'mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{FLASK_DB}?charset=utf8mb4'
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    register_routes(app)
+
 
     if config_name == 'testing':
         # Specific configurations for the testing environment
@@ -44,3 +48,23 @@ def createApp(config_name=None):
 
     init_exts(app)
     return app
+
+def register_routes(app):
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve_frontend(path):
+        dist_path = os.path.join(app.static_folder, 'frontend', 'dist')
+        if path and os.path.exists(os.path.join(dist_path, path)):
+            return send_from_directory(dist_path, path)
+        else:
+            return send_from_directory(dist_path, 'index.html')
+
+    @app.route('/admin/', defaults={'path': ''})
+    @app.route('/admin/<path:path>')
+    def serve_admin_frontend(path):
+        admin_dist_path = os.path.join(app.static_folder, 'frontend_admin', 'dist')
+        if path and os.path.exists(os.path.join(admin_dist_path, path)):
+            return send_from_directory(admin_dist_path, path)
+        else:
+            return send_from_directory(admin_dist_path, 'index.html')
+

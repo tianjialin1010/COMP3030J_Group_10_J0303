@@ -6,7 +6,7 @@
 
     <!-- Content area -->
     <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-      
+
       <!-- Site header -->
       <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
@@ -30,12 +30,12 @@
               <!-- Filter button -->
               <FilterButton align="right" />
               <!-- Add order button -->
-              <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
+              <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white" @click="showModal=true">
                 <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                   <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                 </svg>
                 <span class="hidden xs:block ml-2">Add Order</span>
-              </button>              
+              </button>
             </div>
 
           </div>
@@ -46,12 +46,15 @@
           <!-- Pagination -->
           <div class="mt-8">
             <PaginationClassic />
-          </div>          
+          </div>
+
+          <!-- Add Order Modal -->
+          <AddOrderModal v-if="showModal" @close-modal="showModal = false" />
 
         </div>
       </main>
 
-    </div> 
+    </div>
 
   </div>
 </template>
@@ -65,6 +68,9 @@ import DateSelect from '../../components/DateSelect.vue'
 import FilterButton from '../../components/DropdownFilter.vue'
 import OrdersTable from '../../partials/orders/OrdersTable.vue'
 import PaginationClassic from '../../components/PaginationClassic.vue'
+import AddOrderModal from '../../partials/actions/AddOrderModal.vue'
+
+
 
 export default {
   name: 'Orders',
@@ -75,12 +81,16 @@ export default {
     DateSelect,
     FilterButton,
     OrdersTable,
-    PaginationClassic,    
+    PaginationClassic,
+    AddOrderModal, // 添加这个组件
+
+
   },
   setup() {
 
     const sidebarOpen = ref(false)
     const selectedItems = ref([])
+    const showModal = ref(false)
 
     const updateSelectedItems = (selected) => {
       selectedItems.value = selected
@@ -90,7 +100,13 @@ export default {
       sidebarOpen,
       selectedItems,
       updateSelectedItems,
-    }   
+      showModal,
+
+    }
   }
 }
 </script>
+
+<style>
+/* 可选的样式 */
+</style>
