@@ -6,7 +6,7 @@
 
     <!-- Content area -->
     <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-      
+
       <!-- Site header -->
       <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
@@ -15,20 +15,22 @@
 
           <!-- Page header -->
           <div class="sm:flex sm:justify-between sm:items-center mb-5">
-          
+
             <!-- Left: Title -->
             <div class="mb-4 sm:mb-0">
               <h1 class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold">Search For Jobs ✨</h1>
             </div>
-        
+
             <!-- Post a job button -->
-            <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
+            <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white" @click="showModal=true">
               <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+                <path
+                    d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z"/>
               </svg>
-              <span class="hidden xs:block ml-2">Post A Job</span>
+              <span class="hidden xs:block ml-2">Add Order</span>
             </button>
-          
+        <DriverAddOrderModal v-if="showModal" @close-modal="showModal = false" />
+
           </div>
 
           <!-- Page content -->
@@ -62,15 +64,16 @@
                     <span>Sort by </span>
                     <DropdownSort align="right" />
                   </div>
-                </div>          
+                </div>
 
                 <!-- Job list -->
+
                 <div class="space-y-2">
                     <JobListItem
                       v-for="item in items"
                       :key="item.id"
                       :item="item"
-                    />                    
+                    />
                 </div>
 
                 <!-- Pagination -->
@@ -82,22 +85,23 @@
 
           </div>
 
-        </div>        
+        </div>
       </main>
 
-    </div> 
+    </div>
 
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import Sidebar from '../../partials/Sidebar.vue'
 import Header from '../../partials/Header.vue'
 import JobSidebar from '../../partials/job/JobSidebar.vue'
 import DropdownSort from '../../components/DropdownSort.vue'
 import JobListItem from '../../partials/job/JobListItem.vue'
 import PaginationNumeric from '../../components/PaginationNumeric.vue'
+import DriverAddOrderModal from '../../partials/actions/DriverAddOrderModal.vue'
 
 import Image01 from '../../images/company-icon-05.svg'
 import Image02 from '../../images/company-icon-06.svg'
@@ -106,138 +110,164 @@ import Image04 from '../../images/company-icon-07.svg'
 import Image05 from '../../images/company-icon-08.svg'
 import Image06 from '../../images/company-icon-01.svg'
 import Image07 from '../../images/company-icon-02.svg'
+import axios from "axios";
+
 
 export default {
   name: 'JobListing',
   components: {
+    DriverAddOrderModal,
     Sidebar,
     Header,
     JobSidebar,
     DropdownSort,
-    JobListItem,    
+    JobListItem,
     PaginationNumeric,
   },
   setup() {
-
     const sidebarOpen = ref(false)
+    const items = ref([])
+    const showModal = ref(false)
 
-    const items = ref([
-      {
-        id: 0,
-        image: Image01,
-        company: 'Company 01',
-        role: 'Senior Web App Designer',
-        link: '/job/job-post',
-        details: 'Contract / Remote / New York, NYC',
-        date: 'Jan 4',
-        type: 'Featured',
-        fav: false,
-      },
-      {
-        id: 1,
-        image: Image01,
-        company: 'Company 02',
-        role: 'Senior Full Stack Engineer',
-        link: '/job/job-post',
-        details: 'Contract / Remote / New York, NYC',
-        date: 'Jan 7',
-        type: 'New',
-        fav: true,
-      }, 
-      {
-        id: 2,
-        image: Image02,
-        company: 'Company 03',
-        role: 'Ruby on Rails Engineer',
-        link: '/job/job-post',
-        details: 'Contract / Remote / New York, NYC',
-        date: 'Jan 7',
-        type: 'New',
-        fav: false,
-      }, 
-      {
-        id: 3,
-        image: Image03,
-        company: 'Company 04',
-        role: 'Senior Software Engineer Backend',
-        link: '/job/job-post',
-        details: 'Full-time / Remote / Anywhere',
-        date: 'Jan 7',
-        type: 'New',
-        fav: false,
-      }, 
-      {
-        id: 4,
-        image: Image04,
-        company: 'Company 05',
-        role: 'React.js Software Developer',
-        link: '/job/job-post',
-        details: 'Full-time / Remote / London, UK',
-        date: 'Jan 6',
-        type: 'New',
-        fav: true,
-      }, 
-      {
-        id: 5,
-        image: Image05,
-        company: 'Company 06',
-        role: 'Senior Full Stack Rails Developer',
-        link: '/job/job-post',
-        details: 'Part-time / Remote / Milan, IT',
-        date: 'Jan 6',
-        type: 'New',
-        fav: false,
-      }, 
-      {
-        id: 6,
-        image: Image06,
-        company: 'Company 07',
-        role: 'Principal Software Engineer',
-        link: '/job/job-post',
-        details: 'Freelance / Remote / London, UK',
-        date: 'Jan 6',
-        type: 'New',
-        fav: false,
-      }, 
-      {
-        id: 7,
-        image: Image04,
-        company: 'Company 08',
-        role: 'Contract React Native Engineer',
-        link: '/job/job-post',
-        details: 'Contract / Remote / Miami, FL',
-        date: 'Jan 6',
-        type: 'New',
-        fav: false,
-      }, 
-      {
-        id: 8,
-        image: Image05,
-        company: 'Company 09',
-        role: 'Senior Client Engineer (React & React Native)',
-        link: '/job/job-post',
-        details: 'Full-time / Remote / Lincoln, NE',
-        date: 'Jan 5',
-        type: 'New',
-        fav: false,
-      }, 
-      {
-        id: 9,
-        image: Image07,
-        company: 'Company 10',
-        role: 'QA Automation Engineer',
-        link: '/job/job-post',
-        details: 'Contract / Remote / Anywhere',
-        date: 'Jan 5',
-        type: 'New',
-        fav: false,
-      },                                                       
-    ])
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get('/api/orders')
+        items.value = response.data
+      } catch (error) {
+        console.error('Error fetching jobs:', error)
+      }
+    }
+
+    onMounted(fetchJobs)
 
     return {
       sidebarOpen,
       items,
-    }  
+      showModal,
+    }
   }
+    // setup() {
+    //
+    // const sidebarOpen = ref(false)
+    //
+    // const items = ref([
+    //   {
+    //     id: 0,
+    //     image: Image01,
+    //     company: 'Company 01',
+    //     role: 'Senior Web App Designer',
+    //     link: '/job/job-post',
+    //     details: 'Contract / Remote / New York, NYC',
+    //     date: 'Jan 4',
+    //     type: 'Featured',
+    //     fav: false,
+    //   },
+    //   {
+    //     id: 1,
+    //     image: Image01,
+    //     company: 'Company 02',
+    //     role: 'Senior Full Stack Engineer',
+    //     link: '/job/job-post',
+    //     details: 'Contract / Remote / New York, NYC',
+    //     date: 'Jan 7',
+    //     type: 'New',
+    //     fav: true,
+    //   },
+    //   {
+    //     id: 2,
+    //     image: Image02,
+    //     company: 'Company 03',
+    //     role: 'Ruby on Rails Engineer',
+    //     link: '/job/job-post',
+    //     details: 'Contract / Remote / New York, NYC',
+    //     date: 'Jan 7',
+    //     type: 'New',
+    //     fav: false,
+    //   },
+    //   {
+    //     id: 3,
+    //     image: Image03,
+    //     company: 'Company 04',
+    //     role: 'Senior Software Engineer Backend',
+    //     link: '/job/job-post',
+    //     details: 'Full-time / Remote / Anywhere',
+    //     date: 'Jan 7',
+    //     type: 'New',
+    //     fav: false,
+    //   },
+    //   {
+    //     id: 4,
+    //     image: Image04,
+    //     company: 'Company 05',
+    //     role: 'React.js Software Developer',
+    //     link: '/job/job-post',
+    //     details: 'Full-time / Remote / London, UK',
+    //     date: 'Jan 6',
+    //     type: 'New',
+    //     fav: true,
+    //   },
+    //   {
+    //     id: 5,
+    //     image: Image05,
+    //     company: 'Company 06',
+    //     role: 'Senior Full Stack Rails Developer',
+    //     link: '/job/job-post',
+    //     details: 'Part-time / Remote / Milan, IT',
+    //     date: 'Jan 6',
+    //     type: 'New',
+    //     fav: false,
+    //   },
+    //   {
+    //     id: 6,
+    //     image: Image06,
+    //     company: 'Company 07',
+    //     role: 'Principal Software Engineer',
+    //     link: '/job/job-post',
+    //     details: 'Freelance / Remote / London, UK',
+    //     date: 'Jan 6',
+    //     type: 'New',
+    //     fav: false,
+    //   },
+    //   {
+    //     id: 7,
+    //     image: Image04,
+    //     company: 'Company 08',
+    //     role: 'Contract React Native Engineer',
+    //     link: '/job/job-post',
+    //     details: 'Contract / Remote / Miami, FL',
+    //     date: 'Jan 6',
+    //     type: 'New',
+    //     fav: false,
+    //   },
+    //   {
+    //     id: 8,
+    //     image: Image05,
+    //     company: 'Company 09',
+    //     role: 'Senior Client Engineer (React & React Native)',
+    //     link: '/job/job-post',
+    //     details: 'Full-time / Remote / Lincoln, NE',
+    //     date: 'Jan 5',
+    //     type: 'New',
+    //     fav: false,
+    //   },
+    //   {
+    //     id: 9,
+    //     image: Image07,
+    //     company: 'Company 10',
+    //     role: 'QA Automation Engineer',
+    //     link: '/job/job-post',
+    //     details: 'Contract / Remote / Anywhere',
+    //     date: 'Jan 5',
+    //     type: 'New',
+    //     fav: false,
+    //   },
+    // ])
+  //
+  //   return {
+  //     sidebarOpen,
+  //     items,
+  //   }
+  // }
+
 }
 </script>

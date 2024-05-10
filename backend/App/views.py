@@ -2,13 +2,12 @@ from sqlalchemy.testing.pickleable import User
 from werkzeug.security import generate_password_hash
 from backend.App.models import *
 from backend.App.models import User
-#2024/4/29
-from flask import Blueprint,abort,send_from_directory
+# 2024/4/29
+from flask import Blueprint, abort, send_from_directory
 from werkzeug.security import check_password_hash
 
-
-
 blue = Blueprint('user', __name__)
+
 
 # @blue.route('/', defaults={'path': 'home'})
 # @blue.route('/home')
@@ -20,7 +19,7 @@ blue = Blueprint('user', __name__)
 # @blue.route('/api/items')
 # def get_items():
 #     items = Item.query.all()
-#     return jsonify([{'order_id': item.order_id, 'name': item.name} for item in items])
+#     return jsonify([{'id': item.id, 'name': item.name} for item in items])
 
 @blue.route('/api/customers')
 def get_users():
@@ -69,6 +68,31 @@ def add_order():
     return jsonify({'message': 'Order added successfully'}), 201
 
 
+@blue.route('/update_order', methods=['POST'])
+def update_order():
+    data = request.json  # 获取发送过来的 JSON 数据
+    ID1 = data.get('ID')
+
+    # 假设你有一个名为 orders 的数据库表
+    order = Order.query.filter_by(id=ID1).first()  # 使用 ID 查询订单
+    # AD_ID = data.get('AD_ID')
+    # Driver_ID = data.get('Driver_ID')
+    # Vehicle_ID = data.get('Vehicle_ID')
+
+    if order:
+        # 更新订单的其他属性
+        order.assigned_driver_id = data.get('AD_ID')
+        order.driver = data.get('Driver_ID')
+        order.vehicle_id = data.get('Vehicle_ID')
+
+        # 提交更改到数据库
+        db.session.commit()
+
+        return jsonify({'message': 'Order updated successfully'}), 200
+    else:
+        return jsonify({'error': 'Order not found'}), 404
+
+
 @blue.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -83,56 +107,31 @@ def login():
         return jsonify({'success': True, 'message': 'Login successful'}), 200
     else:
         return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+
+
 @blue.route('/api/register', methods=['POST'])
 def register():
-    try:
-        data = request.get_json()
-        email = data.get('email')
-        name = data.get('name')
-        role = data.get('role').upper()  # 转换为大写以匹配枚举类型
-        password = data.get('password')
-        if not email or not name or not role or not password:
-            return jsonify({'error': 'Missing required fields'}), 400
-        if User.query.filter_by(email=email).first():
-            return jsonify({'error': 'Email already registered'}), 409
+    data = request.get_json()
+    email = data.get('email')
+    name = data.get('name')
+    role = data.get('role')
+    password = data.get('password')
 
-        # 尝试创建枚举类型，捕获任何KeyError
-        try:
-            role_enum = RoleType[role]  # 使用大写角色名来获取枚举
-        except KeyError:
-            return jsonify({'error': 'Invalid role specified'}), 400
+    if not email or not name or not role or not password:
+        return jsonify({'error': 'Missing required fields'}), 400
 
-        hashed_password = generate_password_hash(password)
-        new_user = User(username=name, email=email, role=role_enum, password_hash=hashed_password, created_at=datetime.utcnow())
-        db.session.add(new_user)
-        db.session.commit()
-        return jsonify({'success': True, 'message': 'User registered successfully'}), 201
-    except KeyError:
-        return jsonify({'error': 'Invalid role specified'}), 400
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-# @blue.route('/api/register', methods=['POST'])
-# def register():
-#     data = request.get_json()
-#     email = data.get('email')
-#     name = data.get('name')
-#     role = data.get('role')
-#     password = data.get('password')
-#
-#     if not email or not name or not role or not password:
-#         return jsonify({'error': 'Missing required fields'}), 400
-#
-#     if User.query.filter_by(email=email).first():
-#         return jsonify({'error': 'Email already registered'}), 409
-#
-#     hashed_password = generate_password_hash(password)
-#     new_user = User(username=name, email=email, role=RoleType[role].value, password_hash=hashed_password, created_at=datetime.utcnow())
-#     db.session.add(new_user)
-#     db.session.commit()
-#
-#     return jsonify({'success': True, 'message': 'User registered successfully'}), 201
+    if User.query.filter_by(email=email).first():
+        return jsonify({'error': 'Email already registered'}), 409
 
-#以下内容用于车牌识别项目
+    hashed_password = generate_password_hash(password)
+    new_user = User(username=name, email=email, role=role, password_hash=hashed_password, created_at=datetime.utcnow())
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'success': True, 'message': 'User registered successfully'}), 201
+
+
+# 以下内容用于车牌识别项目
 from flask import jsonify, request
 import os
 from crnn import demo
@@ -142,14 +141,17 @@ from crnn.demo import init_model, device, model  # 确保导入了device
 # 假设您的图片存放在这个目录下
 IMAGE_DIR = os.path.join(os.path.dirname(__file__), '../../crnn/new')
 
+
 @blue.route('/images', methods=['GET'])
 def list_images():
     images = os.listdir(IMAGE_DIR)
     return jsonify(images)
 
+
 @blue.route('/path_to_images/<filename>')
 def serve_image(filename):
     return send_from_directory(IMAGE_DIR, filename)
+
 
 @blue.route('/recognize', methods=['POST'])
 def recognize():
@@ -159,6 +161,7 @@ def recognize():
     image_path = os.path.join(IMAGE_DIR, data['image_name'])  # 确保图片在 'new' 目录下
     plate_number = demo.recognize_plate(image_path)
     return jsonify({'plate_number': plate_number})
+
 
 @blue.route('/api/reset-password', methods=['POST'])
 def reset_password():
@@ -213,10 +216,7 @@ def delete_users():
         for item_id in item_ids:
             item = User.query.filter_by(user_id=item_id).first()
             if item:
-                print(f"Deleting User: ID={item.user_id}, Username={item.username}, Email={item.email}")
                 db.session.delete(item)
-            else:
-                print(f"No user found with ID: {item_id}")  # 如果没有找到用户，打印这个信息
         db.session.commit()
         return jsonify({'message': 'Items deleted successfully'}), 200
     except Exception as e:
