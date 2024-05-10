@@ -25,7 +25,8 @@
             <!-- Right: Actions  -->
             <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
               <!-- Delete button -->
-              <DeleteButton :selectedItems="selectedItems" />
+              <DeleteButton :selectedItems="selectedItems" apiUrl="/api/delete-orders"/>
+
               <!-- Dropdown -->
               <DateSelect />
               <!-- Filter button -->

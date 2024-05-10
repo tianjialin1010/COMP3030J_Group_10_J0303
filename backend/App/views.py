@@ -36,7 +36,7 @@ def get_users():
 def get_orders():
     orders = Order.query.all()
     return jsonify([{
-        'order_id': order.order_id,
+        'id': order.order_id,
         'vehicle_id': order.vehicle_id,
         'initiator_user_id': order.initiator_user_id,
         'assigned_driver_id': order.assigned_driver_id,
@@ -179,14 +179,32 @@ def reset_password():
 
     return jsonify({'message': 'Password successfully reset'}), 200
 
-
-@blue.route('/api/delete-items', methods=['POST'])
-def delete_items():
+@blue.route('/api/delete-orders', methods=['POST'])
+def delete_orders():
     data = request.get_json()
-    print(f"Received data: {data}")  # 打印接收到的完整数据
 
     item_ids = data.get('items', [])
-    print(f"Item IDs: {item_ids}")  # 打印解析得到的 item_ids 列表
+
+    if not item_ids:
+        return jsonify({'error': 'No items provided'}), 400  # 如果没有提供任何ID，返回错误
+
+    try:
+        for item_id in item_ids:
+            item = Order.query.filter_by(order_id=item_id).first()
+            if item:
+                db.session.delete(item)
+            else:
+                print(f"No user found with ID: {item_id}")  # 如果没有找到用户，打印这个信息
+        db.session.commit()
+        return jsonify({'message': 'Items deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@blue.route('/api/delete-users', methods=['POST'])
+def delete_users():
+    data = request.get_json()
+
+    item_ids = data.get('items', [])
 
     if not item_ids:
         return jsonify({'error': 'No items provided'}), 400  # 如果没有提供任何ID，返回错误

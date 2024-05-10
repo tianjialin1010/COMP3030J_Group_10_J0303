@@ -11,7 +11,7 @@
 import axios from "axios";
 export default {
   name: 'DeleteButton',
-  props: ['selectedItems'],
+  props: ['selectedItems', 'apiUrl'],
   methods: {
     confirmDeletion() {
       if (confirm(`Are you sure you want to delete these ${this.selectedItems.length} items?`)) {
@@ -19,7 +19,7 @@ export default {
       }
     },
     deleteItems() {
-      axios.post('/api/delete-items', { items: this.selectedItems })
+      axios.post(this.apiUrl, { items: this.selectedItems })
         .then(() => {
           alert('Items deleted successfully.');
         })

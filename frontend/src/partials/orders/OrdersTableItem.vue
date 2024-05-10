@@ -151,7 +151,7 @@
       </td>
 
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-        <div>{{order.id}}</div>
+        <div>{{order.vehicle_id}}</div>
       </td>
       <td class="px-2 first:pl-5 Flast:pr-5 py-3 whitespace-nowrap">
         <div class="text-left font-medium text-emerald-500">{{order.initiator_user_id}}</div>
