@@ -1,23 +1,23 @@
 <template>
-  <div class="flex h-[100vh] overflow-hidden">
+  <div class="flex h-[50vh] overflow-hidden">
 
     <!-- Sidebar -->
-    <Sidebar :sidebarOpen="sidebarOpen" @close-sidebar="sidebarOpen = false" />
+
 
     <!-- Main Content area -->
-    <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+
 
       <!-- Site header -->
-      <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+
 
       <!-- Map and Info Panel -->
       <main class="grow">
         <div id="mapElement" ref="mapElement" style="height: 100%; width: 100%;"></div>
-        <div id="infoPanel" ref="infoPanel" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 8px; z-index: 1000;"></div>
+<!--        <div id="infoPanel" ref="infoPanel" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 8px; z-index: 1000;"></div>-->
       </main>
     </div>
 
-  </div>
+
 </template>
 
 <script setup>

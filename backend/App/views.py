@@ -2,13 +2,12 @@ from sqlalchemy.testing.pickleable import User
 from werkzeug.security import generate_password_hash
 from backend.App.models import *
 from backend.App.models import User
-#2024/4/29
-from flask import Blueprint,abort,send_from_directory
+# 2024/4/29
+from flask import Blueprint, abort, send_from_directory
 from werkzeug.security import check_password_hash
 
-
-
 blue = Blueprint('user', __name__)
+
 
 # @blue.route('/', defaults={'path': 'home'})
 # @blue.route('/home')
@@ -26,6 +25,7 @@ blue = Blueprint('user', __name__)
 def get_users():
     users = User.query.all()
     return jsonify([{'id': user.user_id, 'name': user.username, 'email': user.email} for user in users])
+
 
 @blue.route('/api/orders')
 def get_orders():
@@ -57,11 +57,37 @@ def add_order():
     if not all([initiator_user_id, vehicle_type, destination, start_location]):
         return jsonify({'error': 'Missing data'}), 400
 
-    order = Order(initiator_user_id=initiator_user_id, vehicle_type=vehicle_type, destination=destination, startlocation=start_location)
+    order = Order(initiator_user_id=initiator_user_id, vehicle_type=vehicle_type, destination=destination,
+                  startlocation=start_location)
     db.session.add(order)
     db.session.commit()
 
     return jsonify({'message': 'Order added successfully'}), 201
+
+
+@blue.route('/update_order', methods=['POST'])
+def update_order():
+    data = request.json  # 获取发送过来的 JSON 数据
+    ID1 = data.get('ID')
+
+    # 假设你有一个名为 orders 的数据库表
+    order = Order.query.filter_by(id=ID1).first()  # 使用 ID 查询订单
+    # AD_ID = data.get('AD_ID')
+    # Driver_ID = data.get('Driver_ID')
+    # Vehicle_ID = data.get('Vehicle_ID')
+
+    if order:
+        # 更新订单的其他属性
+        order.assigned_driver_id = data.get('AD_ID')
+        order.driver = data.get('Driver_ID')
+        order.vehicle_id = data.get('Vehicle_ID')
+
+        # 提交更改到数据库
+        db.session.commit()
+
+        return jsonify({'message': 'Order updated successfully'}), 200
+    else:
+        return jsonify({'error': 'Order not found'}), 404
 
 
 @blue.route('/api/login', methods=['POST'])
@@ -78,6 +104,7 @@ def login():
         return jsonify({'success': True, 'message': 'Login successful'}), 200
     else:
         return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+
 
 @blue.route('/api/register', methods=['POST'])
 def register():
@@ -100,7 +127,8 @@ def register():
 
     return jsonify({'success': True, 'message': 'User registered successfully'}), 201
 
-#以下内容用于车牌识别项目
+
+# 以下内容用于车牌识别项目
 from flask import jsonify, request
 import os
 from crnn import demo
@@ -110,14 +138,17 @@ from crnn.demo import init_model, device, model  # 确保导入了device
 # 假设您的图片存放在这个目录下
 IMAGE_DIR = os.path.join(os.path.dirname(__file__), '../../crnn/new')
 
+
 @blue.route('/images', methods=['GET'])
 def list_images():
     images = os.listdir(IMAGE_DIR)
     return jsonify(images)
 
+
 @blue.route('/path_to_images/<filename>')
 def serve_image(filename):
     return send_from_directory(IMAGE_DIR, filename)
+
 
 @blue.route('/recognize', methods=['POST'])
 def recognize():
@@ -127,6 +158,7 @@ def recognize():
     image_path = os.path.join(IMAGE_DIR, data['image_name'])  # 确保图片在 'new' 目录下
     plate_number = demo.recognize_plate(image_path)
     return jsonify({'plate_number': plate_number})
+
 
 @blue.route('/api/reset-password', methods=['POST'])
 def reset_password():
