@@ -119,7 +119,7 @@ export default {
 
     // const customers = ref([
     //   {
-    //     id: '0',
+    //     order_id: '0',
     //     image: Image01,
     //     name: 'Patricia Semklo',
     //     email: 'patricia.semklo@App.com',
@@ -131,7 +131,7 @@ export default {
     //     fav: true
     //   },
     //   {
-    //     id: '1',
+    //     order_id: '1',
     //     image: Image02,
     //     name: 'Dominik Lamakani',
     //     email: 'dominik.lamakani@gmail.com',
@@ -143,7 +143,7 @@ export default {
     //     fav: false
     //   },
     //   {
-    //     id: '2',
+    //     order_id: '2',
     //     image: Image03,
     //     name: 'Ivan Mesaros',
     //     email: 'imivanmes@gmail.com',
@@ -155,7 +155,7 @@ export default {
     //     fav: true
     //   },
     //   {
-    //     id: '3',
+    //     order_id: '3',
     //     image: Image04,
     //     name: 'Maria Martinez',
     //     email: 'martinezhome@gmail.com',
@@ -167,7 +167,7 @@ export default {
     //     fav: false
     //   },
     //   {
-    //     id: '4',
+    //     order_id: '4',
     //     image: Image05,
     //     name: 'Vicky Jung',
     //     email: 'itsvicky@contact.com',
@@ -179,7 +179,7 @@ export default {
     //     fav: true
     //   },
     //   {
-    //     id: '5',
+    //     order_id: '5',
     //     image: Image06,
     //     name: 'Tisho Yanchev',
     //     email: 'tisho.y@kurlytech.com',
@@ -191,7 +191,7 @@ export default {
     //     fav: true
     //   },
     //   {
-    //     id: '6',
+    //     order_id: '6',
     //     image: Image07,
     //     name: 'James Cameron',
     //     email: 'james.ceo@james.tech',
@@ -203,7 +203,7 @@ export default {
     //     fav: true
     //   },
     //   {
-    //     id: '7',
+    //     order_id: '7',
     //     image: Image08,
     //     name: 'Haruki Masuno',
     //     email: 'haruki@supermail.jp',
@@ -215,7 +215,7 @@ export default {
     //     fav: false
     //   },
     //   {
-    //     id: '8',
+    //     order_id: '8',
     //     image: Image09,
     //     name: 'Joe Huang',
     //     email: 'joehuang@hotmail.com',
@@ -227,7 +227,7 @@ export default {
     //     fav: true
     //   },
     //   {
-    //     id: '9',
+    //     order_id: '9',
     //     image: Image10,
     //     name: 'Carolyn McNeail',
     //     email: 'carolynlove@gmail.com',

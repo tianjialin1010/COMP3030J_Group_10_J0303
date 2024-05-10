@@ -84,7 +84,7 @@ export default {
   name: 'CustomersTable',
   components: {
     Customer,
-  },  
+  },
   props: ['selectedItems'],
   setup(props, { emit }) {
 
@@ -107,11 +107,11 @@ export default {
         selected.value = customers.value.map(customer => customer.id)
       }
     }
-    
+
     watch(selected, () => {
       selectAll.value = customers.value.length === selected.value.length ? true : false
       emit('change-selection', selected.value)
-    })    
+    })
 
     onMounted(() => {
       fetchCustomers()

@@ -424,12 +424,12 @@ class DoActionTag(Tag):
 
 ## Definition tags
 class DefinitionTag(Tag):
-    counter = 0  # to give automatically id's
+    counter = 0  # to give automatically order_id's
 
     def __init__(self):
         Tag.__init__(self)
         DefinitionTag.counter += 1
-        self.id = DefinitionTag.counter  # id in dictionary
+        self.id = DefinitionTag.counter  # order_id in dictionary
 
 
 class BitmapTag(DefinitionTag):
@@ -501,7 +501,7 @@ class PlaceObjectTag(ControlTag):
             # (8 bit flags): 4:matrix, 2:character, 1:move
             bb += "\x06".encode("ascii")
         bb += int2uint16(depth)  # Depth
-        bb += int2uint16(id)  # character id
+        bb += int2uint16(id)  # character order_id
         bb += self.make_matrix_record(trans_xy=xy).tobytes()  # MATRIX record
         self.bytes = bb
 

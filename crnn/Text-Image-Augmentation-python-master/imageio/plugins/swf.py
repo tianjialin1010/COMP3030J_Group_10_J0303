@@ -311,8 +311,8 @@ class SWFFormat(Format):
                 self._write_header(wh, self._arg_fps)
             # Create tags
             bm = _swf.BitmapTag(im)
-            sh = _swf.ShapeTag(bm.id, (0, 0), wh)
-            po = _swf.PlaceObjectTag(1, sh.id, move=(not isfirstframe))
+            sh = _swf.ShapeTag(bm.order_id, (0, 0), wh)
+            po = _swf.PlaceObjectTag(1, sh.order_id, move=(not isfirstframe))
             sf = _swf.ShowFrameTag()
             # Write tags
             for tag in [bm, sh, po, sf]:

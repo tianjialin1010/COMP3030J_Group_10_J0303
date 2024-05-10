@@ -8170,8 +8170,8 @@ def metaseries_description_metadata(description):
             if not attrib:
                 result[child.tag] = parse(child, {})
                 continue
-            if 'id' in attrib:
-                i = attrib['id']
+            if 'order_id' in attrib:
+                i = attrib['order_id']
                 t = attrib['type']
                 v = attrib['value']
                 if t in types:

@@ -12,11 +12,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 class OrderStatus(Enum):
-    CREATED = 'created'
-    ACCEPTED = 'accepted'
-    IN_PROGRESS = 'in_progress'
-    COMPLETED = 'completed'
-    CANCELED = 'canceled'
+    CREATED = 'CREATED'
+    ACCEPTED = 'ACCEPTED'
+    IN_PROGRESS = 'IN_PROGRESS'
+    COMPLETED = 'COMPLETED'
+    CANCELED = 'CANCELED'
 
 
 class Driver(db.Model):
@@ -31,8 +31,8 @@ class Driver(db.Model):
 
 class Order(db.Model):
     __tablename__ = 'orders'
-    id = db.Column(db.Integer, primary_key=True)
-    vehicle_id = db.Column(db.Integer, ForeignKey('vehicles.id'))
+    order_id = db.Column(db.Integer, primary_key=True)
+    vehicle_id = db.Column(db.Integer, ForeignKey('vehicles.vehicle_id'))
     initiator_user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     assigned_driver_id = db.Column(db.Integer, db.ForeignKey('drivers.driver_id'))
     status = db.Column(SQLEnum(OrderStatus), nullable=False, default=OrderStatus.CREATED)
@@ -49,16 +49,16 @@ class Order(db.Model):
 class SustainabilityData(db.Model):
     __tablename__ = 'sustainabilitydata'
     data_id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id'), nullable=False)
     carbon_emission = db.Column(db.Numeric(10, 2), nullable=False)
     fuel_consumption = db.Column(db.Numeric(10, 2), nullable=False)
     efficiency_score = db.Column(db.Numeric(5, 2), nullable=False)
 
 
 class RoleType(Enum):
-    driver = 'driver'  # 确保与数据库中的枚举值完全匹配
-    warehouse = 'warehouse'
-    admin = 'admin'
+    DRIVER = 'DRIVER'  # 确保与数据库中的枚举值完全匹配
+    WAREHOUSE = 'WAREHOUSE'
+    ADMIN = 'ADMIN'
 
 
 class User(db.Model):
@@ -74,7 +74,7 @@ class User(db.Model):
 
 class Vehicle(db.Model):
     __tablename__ = 'vehicles'
-    id = db.Column(db.Integer, primary_key=True)
+    vehicle_id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(255), nullable=False)  # Simplified enum representation
     load_capacity = db.Column(db.Numeric(10, 2), nullable=False)
     emission_rate = db.Column(db.Numeric(10, 2), nullable=False)
