@@ -1,8 +1,6 @@
 from backend.App import createApp
-from flask import render_template
 
-app = createApp('development')
+app = createApp()
 
 if __name__ == "__main__":
-    app.run(debug=True)
-
+    app.run(debug=True)  # 'debug=True' might be redundant if debug is already set in 'createApp'

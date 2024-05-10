@@ -147,10 +147,10 @@ import torch
 import cv2
 import numpy as np
 import os
-from .plateNet import myNet_ocr
-from .alphabets import plate_chr
+from crnn.plateNet import myNet_ocr
+from crnn.alphabets import plate_chr
 
-def init_model(device, model_path='crnn/saved_model/1.pth'):
+def init_model(device, model_path='C:/Users/tianj/PycharmProjects/COMP3030J_Group_10_J0303/crnn/saved_model/1.pth'):
     check_point = torch.load(model_path, map_location=device)
     model_state = check_point['state_dict']
     cfg = check_point['cfg']
@@ -173,9 +173,9 @@ def init_model(device, model_path='crnn/saved_model/1.pth'):
 #     return model
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model_path', type=str, default='crnn/saved_model/1.pth', help='model.pt path(s)')
+parser.add_argument('--model_path', type=str, default='C:/Users/tianj/PycharmProjects/COMP3030J_Group_10_J0303/crnn/saved_model/1.pth', help='model.pt path(s)')
 # parser.add_argument('--image_path', type=str, default='images/tmp6FC6.png', help='source')
-parser.add_argument('--image_path', type=str, default='crnn/new/02D41166_1.jpg', help='source')
+parser.add_argument('--image_path', type=str, default='C:/Users/tianj/PycharmProjects/COMP3030J_Group_10_J0303/crnn/new/02D41166_1.jpg', help='source')
 # parser.add_argument('--image_path', type=str, default='/mnt/Gu/trainData/plate/new_git_train/val_verify', help='source')
 parser.add_argument('--img_h', type=int, default=48, help='height')
 parser.add_argument('--img_w',type=int,default=168,help='width')

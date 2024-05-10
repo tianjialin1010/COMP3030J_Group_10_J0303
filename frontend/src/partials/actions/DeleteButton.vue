@@ -16,14 +16,12 @@ export default {
     confirmDeletion() {
       if (confirm(`Are you sure you want to delete these ${this.selectedItems.length} items?`)) {
         this.deleteItems();
-        this.$router.push('/ecommerce/customers');
       }
     },
     deleteItems() {
       axios.post('/api/delete-items', { items: this.selectedItems })
         .then(() => {
           alert('Items deleted successfully.');
-
         })
         .catch(error => {
           alert('Failed to delete items: ' + error.message);

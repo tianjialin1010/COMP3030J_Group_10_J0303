@@ -71,7 +71,7 @@ class PillowFormat(Format):
 
     @property
     def plugin_id(self):
-        """ The PIL plugin id.
+        """ The PIL plugin order_id.
         """
         return self._plugin_id  # Set when format is created
 

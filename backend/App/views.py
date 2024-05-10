@@ -20,18 +20,23 @@ blue = Blueprint('user', __name__)
 # @blue.route('/api/items')
 # def get_items():
 #     items = Item.query.all()
-#     return jsonify([{'id': item.id, 'name': item.name} for item in items])
+#     return jsonify([{'order_id': item.order_id, 'name': item.name} for item in items])
 
 @blue.route('/api/customers')
 def get_users():
     users = User.query.all()
-    return jsonify([{'id': user.user_id, 'name': user.username, 'email': user.email} for user in users])
+    return jsonify([{'id': user.user_id,
+                     'name': user.username,
+                     'email': user.email,
+                     'role': user.role.value,
+                     'created_at': user.created_at,
+                     } for user in users])
 
 @blue.route('/api/orders')
 def get_orders():
     orders = Order.query.all()
     return jsonify([{
-        'id': order.id,
+        'order_id': order.order_id,
         'vehicle_id': order.vehicle_id,
         'initiator_user_id': order.initiator_user_id,
         'assigned_driver_id': order.assigned_driver_id,
@@ -78,27 +83,54 @@ def login():
         return jsonify({'success': True, 'message': 'Login successful'}), 200
     else:
         return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
-
 @blue.route('/api/register', methods=['POST'])
 def register():
-    data = request.get_json()
-    email = data.get('email')
-    name = data.get('name')
-    role = data.get('role')
-    password = data.get('password')
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        name = data.get('name')
+        role = data.get('role').upper()  # 转换为大写以匹配枚举类型
+        password = data.get('password')
+        if not email or not name or not role or not password:
+            return jsonify({'error': 'Missing required fields'}), 400
+        if User.query.filter_by(email=email).first():
+            return jsonify({'error': 'Email already registered'}), 409
 
-    if not email or not name or not role or not password:
-        return jsonify({'error': 'Missing required fields'}), 400
+        # 尝试创建枚举类型，捕获任何KeyError
+        try:
+            role_enum = RoleType[role]  # 使用大写角色名来获取枚举
+        except KeyError:
+            return jsonify({'error': 'Invalid role specified'}), 400
 
-    if User.query.filter_by(email=email).first():
-        return jsonify({'error': 'Email already registered'}), 409
-
-    hashed_password = generate_password_hash(password)
-    new_user = User(username=name, email=email, role=role, password_hash=hashed_password, created_at=datetime.utcnow())
-    db.session.add(new_user)
-    db.session.commit()
-
-    return jsonify({'success': True, 'message': 'User registered successfully'}), 201
+        hashed_password = generate_password_hash(password)
+        new_user = User(username=name, email=email, role=role_enum, password_hash=hashed_password, created_at=datetime.utcnow())
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'User registered successfully'}), 201
+    except KeyError:
+        return jsonify({'error': 'Invalid role specified'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+# @blue.route('/api/register', methods=['POST'])
+# def register():
+#     data = request.get_json()
+#     email = data.get('email')
+#     name = data.get('name')
+#     role = data.get('role')
+#     password = data.get('password')
+#
+#     if not email or not name or not role or not password:
+#         return jsonify({'error': 'Missing required fields'}), 400
+#
+#     if User.query.filter_by(email=email).first():
+#         return jsonify({'error': 'Email already registered'}), 409
+#
+#     hashed_password = generate_password_hash(password)
+#     new_user = User(username=name, email=email, role=RoleType[role].value, password_hash=hashed_password, created_at=datetime.utcnow())
+#     db.session.add(new_user)
+#     db.session.commit()
+#
+#     return jsonify({'success': True, 'message': 'User registered successfully'}), 201
 
 #以下内容用于车牌识别项目
 from flask import jsonify, request
@@ -151,14 +183,40 @@ def reset_password():
 @blue.route('/api/delete-items', methods=['POST'])
 def delete_items():
     data = request.get_json()
+    print(f"Received data: {data}")  # 打印接收到的完整数据
+
     item_ids = data.get('items', [])
+    print(f"Item IDs: {item_ids}")  # 打印解析得到的 item_ids 列表
+
+    if not item_ids:
+        return jsonify({'error': 'No items provided'}), 400  # 如果没有提供任何ID，返回错误
 
     try:
         for item_id in item_ids:
             item = User.query.filter_by(user_id=item_id).first()
             if item:
+                print(f"Deleting User: ID={item.user_id}, Username={item.username}, Email={item.email}")
                 db.session.delete(item)
+            else:
+                print(f"No user found with ID: {item_id}")  # 如果没有找到用户，打印这个信息
         db.session.commit()
         return jsonify({'message': 'Items deleted successfully'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# @blue.route('/api/orders')
+# def get_orders():
+#     orders = Order.query.all()
+#     return jsonify([{
+#         'order_id': order.order_id,
+#         'vehicle_id': order.vehicle_id,
+#         'initiator_user_id': order.initiator_user_id,
+#         'assigned_driver_id': order.assigned_driver_id,
+#         'status': order.status.value,
+#         'destination': order.destination,
+#         'mileage': float(order.mileage),
+#         'created_at': order.created_at.isoformat(),
+#         'completed_at': order.completed_at.isoformat() if order.completed_at else None,
+#         'vehicle_type': order.vehicle_type,
+#         'carbon_emission': float(order.carbon_emission),
+#         } for order in orders])

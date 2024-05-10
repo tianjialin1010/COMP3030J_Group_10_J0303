@@ -1,3 +1,4 @@
+<!--Orders.vue-->
 <template>
   <div class="flex h-[100dvh] overflow-hidden">
 
@@ -107,6 +108,3 @@ export default {
 }
 </script>
 
-<style>
-/* 可选的样式 */
-</style>

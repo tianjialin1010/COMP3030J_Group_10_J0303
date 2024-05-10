@@ -106,7 +106,7 @@ export default {
         items: '1',
         location: '🇨🇳 Shanghai, CN',
         type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim order_id est laborum.'
       },
       {
         id: '1',
@@ -119,7 +119,7 @@ export default {
         items: '2',
         location: '🇲🇽 Mexico City, MX',
         type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim order_id est laborum.'
       },
       {
         id: '2',
@@ -132,7 +132,7 @@ export default {
         items: '2',
         location: '🇮🇹 Milan, IT',
         type: 'One-time',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim order_id est laborum.'
       },
       {
         id: '3',
@@ -145,7 +145,7 @@ export default {
         items: '1',
         location: '🇮🇹 Bologna, IT',
         type: 'One-time',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim order_id est laborum.'
       },
       {
         id: '4',
@@ -158,7 +158,7 @@ export default {
         items: '1',
         location: '🇬🇧 London, UK',
         type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim order_id est laborum.'
       },
       {
         id: '5',
@@ -171,7 +171,7 @@ export default {
         items: '1',
         location: '🇫🇷 Paris, FR',
         type: 'One-time',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim order_id est laborum.'
       },
       {
         id: '6',
@@ -184,7 +184,7 @@ export default {
         items: '1',
         location: '🇫🇷 Marseille, FR',
         type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim order_id est laborum.'
       },
       {
         id: '7',
@@ -197,7 +197,7 @@ export default {
         items: '2',
         location: '🇺🇸 New York, USA',
         type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim order_id est laborum.'
       },
       {
         id: '8',
@@ -210,7 +210,7 @@ export default {
         items: '2',
         location: '🇨🇳 Shanghai, CN',
         type: 'One-time',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim order_id est laborum.'
       },
       {
         id: '9',
@@ -223,7 +223,7 @@ export default {
         items: '1',
         location: '🇬🇧 Sheffield, UK',
         type: 'Subscription',
-        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim order_id est laborum.'
       }
     ])
 

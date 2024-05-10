@@ -97,7 +97,7 @@ def lendecode(f):
 
 
 def encode_type_id(b, ext_id):
-    """ Encode the type identifier, with or without extension id.
+    """ Encode the type identifier, with or without extension order_id.
     """
     if ext_id is not None:
         bb = ext_id.encode("UTF-8")

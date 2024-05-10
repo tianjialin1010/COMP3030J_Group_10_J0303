@@ -54,7 +54,7 @@
         </svg>
       </button>
     </td>
-  </tr>  
+  </tr>
 </template>
 
 <script>
