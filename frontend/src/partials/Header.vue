@@ -41,7 +41,10 @@
           <!-- Divider -->
           <hr class="w-px h-6 bg-slate-200 dark:bg-slate-700 border-none" />
           <UserMenu align="right" />
-
+          <!-- Logout Button -->
+          <button @click="logout" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+            Logout!
+          </button>
         </div>
 
       </div>
@@ -51,7 +54,6 @@
 
 <script>
 import { ref } from 'vue'
-
 import SearchModal from '../components/ModalSearch.vue'
 import Notifications from '../components/DropdownNotifications.vue'
 import Help from '../components/DropdownHelp.vue'
@@ -72,7 +74,13 @@ export default {
     const searchModalOpen = ref(false)
     return {
       searchModalOpen,
-    }  
-  }  
+    }
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem('username'); // 清除用户名
+      this.$router.push('/'); // 导航到登录页面
+    }
+  }
 }
 </script>

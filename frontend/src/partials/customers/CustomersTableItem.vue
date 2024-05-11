@@ -28,17 +28,17 @@
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
       <div class="text-left">{{customer.email}}</div>
     </td>
+<!--    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">-->
+<!--      <div class="text-left">{{customer.role}}</div>-->
+<!--    </td>-->
+<!--    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">-->
+<!--      <div class="text-center">{{customer.created_at}}</div>-->
+<!--    </td>-->
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="text-left">{{customer.location}}</div>
+      <div class="text-left font-medium text-sky-500">{{customer.role}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="text-center">{{customer.orders}}</div>
-    </td>
-    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="text-left font-medium text-sky-500">{{customer.lastOrder}}</div>
-    </td>
-    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="text-left font-medium text-emerald-500">{{customer.spent}}</div>
+      <div class="text-left font-medium text-emerald-500">{{customer.created_at}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
       <div class="text-center">{{customer.refunds}}</div>

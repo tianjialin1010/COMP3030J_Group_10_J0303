@@ -11,17 +11,17 @@
       <main class="grow">
         <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
           <div class="app-container">
-            <h1>车牌识别系统</h1>
+            <h1>LicensePlate Recognition</h1>
             <select v-model="selectedFile" @change="loadImage">
-              <option disabled value="">请选择一张图片</option>
+              <option disabled value="">Please take a photo</option>
               <option v-for="file in files" :key="file">{{ file }}</option>
             </select>
-            <button @click="recognizePlate" :disabled="!selectedFile">识别车牌</button>
+            <button @click="recognizePlate" :disabled="!selectedFile">Recognise now!</button>
             <div v-if="imageSrc" class="image-preview">
               <img :src="imageSrc" alt="Selected image preview">
             </div>
             <div v-if="plateNumber" class="results">
-              识别结果: <strong>{{ plateNumber }}</strong>
+              The  plate number is: <strong>{{ plateNumber }}</strong>
             </div>
           </div>
         </div>

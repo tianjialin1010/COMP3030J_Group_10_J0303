@@ -44,16 +44,83 @@
     </div>
 
     <!-- Content -->
-    <div class="relative">
-      <h1 class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold mb-1">Good afternoon, Acme Inc. 👋</h1>
-      <p class="dark:text-indigo-200">Here is what’s happening with your projects today:</p>
+    <div class="relative p-4 bg-white dark:bg-slate-800">
+    <div class="mb-6">
+<!--      <div>-->
+<!--        <p v-if="username">欢迎你，{{ username }}</p>-->
+<!--        &lt;!&ndash; 其他内容 &ndash;&gt;-->
+<!--      </div>-->
+      <p v-if="username" class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold mb-1">Good afternoon, {{ username }}. 👋</p>
+      <p class="text-lg dark:text-indigo-200">Here is what’s happening with your projects today:</p>
     </div>
+    <div class="weather-section">
+      <h1 class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold mb-4">The temperature today:</h1>
+      <div v-if="weather" class="mb-4">
+        <p class="text-lg">Today's temperature range: {{ weather.temp_min }}°C - {{ weather.temp_max }}°C</p>
+        <p class="text-lg">How is today: {{ weather.description }}</p>
+      </div>
+      <button class="btn-primary" @click="fetchWeather">Fetch your location (Necessary for weather forecast)</button>
+    </div>
+  </div>
 
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'WelcomeBanner',
+  data() {
+    return {
+      weather: null,
+      username: ''
+    };
+  },
+  created() {
+    this.username = localStorage.getItem('username'); // 获取用户名
+  },
+  methods: {
+    fetchWeather() {
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        this.getWeather(latitude, longitude);
+      }, error => {
+        console.error(error);
+      });
+    },
+    getWeather(lat, lon) {
+      axios.get(`/api/weather?lat=${lat}&lon=${lon}`)
+        .then(response => {
+          this.weather = response.data;
+        })
+        .catch(error => {
+          console.error('Failed to fetch weather:', error);
+        });
+    }
+  }
 }
 </script>
+<style scoped>
+.btn-primary {
+  background-color: #4f46e5; /* Indigo */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #4338ca; /* Darker Indigo */
+}
+
+.weather-section p {
+  margin-bottom: 0.5rem;
+}
+
+.weather-section .text-lg {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.75rem; /* 28px */
+}
+</style>

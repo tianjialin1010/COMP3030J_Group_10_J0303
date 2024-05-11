@@ -14,27 +14,27 @@
       </section>
       <!-- Business Profile -->
       <section>
-        <h3 class="text-xl leading-snug text-slate-800 dark:text-slate-100 font-bold mb-1">Business Profile</h3>
-        <div class="text-sm">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit.</div>
+        <h3 class="text-xl leading-snug text-slate-800 dark:text-slate-100 font-bold mb-1">Profile</h3>
+        <div class="text-sm">Fill in more personal information to help us better understand you!</div>
         <div class="sm:flex sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-5">
           <div class="sm:w-1/3">
-            <label class="block text-sm font-medium mb-1" for="name">Business Name</label>
+            <label class="block text-sm font-medium mb-1" for="name">Full Name</label>
             <input id="name" class="form-input w-full" type="text" />
           </div>
-          <div class="sm:w-1/3">
-            <label class="block text-sm font-medium mb-1" for="business-id">Business ID</label>
-            <input id="business-id" class="form-input w-full" type="text" />
-          </div>
-          <div class="sm:w-1/3">
-            <label class="block text-sm font-medium mb-1" for="location">Location</label>
-            <input id="location" class="form-input w-full" type="text" />
-          </div>
+<!--          <div class="sm:w-1/3">-->
+<!--            <label class="block text-sm font-medium mb-1" for="business-id">Business ID</label>-->
+<!--            <input id="business-id" class="form-input w-full" type="text" />-->
+<!--          </div>-->
+<!--          <div class="sm:w-1/3">-->
+<!--            <label class="block text-sm font-medium mb-1" for="location">Location</label>-->
+<!--            <input id="location" class="form-input w-full" type="text" />-->
+<!--          </div>-->
         </div>
       </section>
       <!-- Email -->
       <section>
         <h3 class="text-xl leading-snug text-slate-800 dark:text-slate-100 font-bold mb-1">Email</h3>
-        <div class="text-sm">Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia.</div>
+        <div class="text-sm">Please be sure to contact your supervisor before changing your email address</div>
         <div class="flex flex-wrap mt-5">
           <div class="mr-2">
             <label class="sr-only" for="email">Business email</label>

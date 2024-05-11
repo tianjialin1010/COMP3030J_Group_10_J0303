@@ -58,12 +58,12 @@
                 </div>
               </div>
               <div class="flex items-center justify-between mt-6">
-                <div class="mr-1">
-                  <label class="flex items-center">
-                    <input type="checkbox" class="form-checkbox" />
-                    <span class="text-sm ml-2">Email me about product news.</span>
-                  </label>
-                </div>
+<!--                <div class="mr-1">-->
+<!--                  <label class="flex items-center">-->
+<!--                    <input type="checkbox" class="form-checkbox" />-->
+<!--                    <span class="text-sm ml-2">Email me about product news.</span>-->
+<!--                  </label>-->
+<!--                </div>-->
                 <button @click.prevent="handleRegister" class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3">Sign Up</button>
               </div>
             </form>

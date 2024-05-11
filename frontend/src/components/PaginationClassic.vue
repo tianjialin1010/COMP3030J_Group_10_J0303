@@ -11,7 +11,7 @@
       </ul>
     </nav>
     <div class="text-sm text-slate-500 dark:text-slate-400 text-center sm:text-left">
-      Showing <span class="font-medium text-slate-600 dark:text-slate-300">1</span> to <span class="font-medium text-slate-600 dark:text-slate-300">10</span> of <span class="font-medium text-slate-600 dark:text-slate-300">467</span> results
+      Showing <span class="font-medium text-slate-600 dark:text-slate-300">1</span> to <span class="font-medium text-slate-600 dark:text-slate-300">10</span> of <span class="font-medium text-slate-600 dark:text-slate-300">4</span> results
     </div>
   </div>
 </template>

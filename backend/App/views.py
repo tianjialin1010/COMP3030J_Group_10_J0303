@@ -5,6 +5,10 @@ from backend.App.models import User
 # 2024/4/29
 from flask import Blueprint, abort, send_from_directory
 from werkzeug.security import check_password_hash
+#
+from flask import Flask, request, jsonify
+import requests
+from flask import session  # 引入session
 
 blue = Blueprint('user', __name__)
 
@@ -104,9 +108,18 @@ def login():
 
     user = User.query.filter_by(email=email).first()
     if user and check_password_hash(user.password_hash, password):
-        return jsonify({'success': True, 'message': 'Login successful'}), 200
+        session['user_id'] = user.user_id  # 保存用户ID到session
+        session['username'] = user.username  # 保存用户名到session，方便前端显示
+        return jsonify({'success': True, 'message': 'Login successful', 'username': user.username}), 200
     else:
         return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+
+@blue.route('/api/logout', methods=['POST'])
+def logout():
+    session.pop('user_id', None)  # 清除session
+    session.pop('username', None)
+    return jsonify({'success': True, 'message': 'Logout successful'}), 200
+
 
 
 @blue.route('/api/register', methods=['POST'])
@@ -238,3 +251,20 @@ def delete_users():
 #         'vehicle_type': order.vehicle_type,
 #         'carbon_emission': float(order.carbon_emission),
 #         } for order in orders])
+
+
+@blue.route('/api/weather')
+def get_weather():
+    lat = request.args.get('lat')
+    lon = request.args.get('lon')
+    api_key = 'b2ebe693daf761902632f26c202f9a1d'
+    url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
+
+    response = requests.get(url)
+    data = response.json()
+    weather = {
+        'temp_min': data['main']['temp_min'],
+        'temp_max': data['main']['temp_max'],
+        'description': data['weather'][0]['description']
+    }
+    return jsonify(weather)

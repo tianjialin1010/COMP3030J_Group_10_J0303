@@ -23,22 +23,22 @@
                 <span class="sr-only">Favourite</span>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold text-left">Order</div>
+                <div class="font-semibold text-left">Name</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                 <div class="font-semibold text-left">Email</div>
               </th>
+<!--              <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">-->
+<!--                <div class="font-semibold text-left">Registered</div>-->
+<!--              </th>-->
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold text-left">Location</div>
+                <div class="font-semibold">Role</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold">Orders</div>
+                <div class="font-semibold text-left">Registered</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold text-left">Last order</div>
-              </th>
-              <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold text-left">Total spent</div>
+                <div class="font-semibold text-left">Total footprint</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                 <div class="font-semibold">Refunds</div>
