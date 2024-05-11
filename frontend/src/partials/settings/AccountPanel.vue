@@ -21,14 +21,6 @@
             <label class="block text-sm font-medium mb-1" for="name">Full Name</label>
             <input id="name" class="form-input w-full" type="text" />
           </div>
-<!--          <div class="sm:w-1/3">-->
-<!--            <label class="block text-sm font-medium mb-1" for="business-id">Business ID</label>-->
-<!--            <input id="business-id" class="form-input w-full" type="text" />-->
-<!--          </div>-->
-<!--          <div class="sm:w-1/3">-->
-<!--            <label class="block text-sm font-medium mb-1" for="location">Location</label>-->
-<!--            <input id="location" class="form-input w-full" type="text" />-->
-<!--          </div>-->
         </div>
       </section>
       <!-- Email -->
@@ -53,19 +45,17 @@
       </section>
       <!-- Smart Sync -->
       <section>
-        <h3 class="text-xl leading-snug text-slate-800 dark:text-slate-100 font-bold mb-1">Smart Sync update for Mac</h3>
-        <div class="text-sm">With this update, online-only files will no longer appear to take up hard drive space.</div>
-        <div class="flex items-center mt-5">
-          <div class="form-switch">
-            <input type="checkbox" id="toggle" class="sr-only" v-model="sync" true-value="On" false-value="Off" />
-            <label class="bg-slate-400 dark:bg-slate-700" for="toggle">
-              <span class="bg-white shadow-sm" aria-hidden="true"></span>
-              <span class="sr-only">Enable smart sync</span>
-            </label>
-          </div>
-          <div class="text-sm text-slate-400 dark:text-slate-500 italic ml-2">{{sync}}</div>
-        </div>
+        <h3 ref="syncTitle" class="text-xl leading-snug text-slate-800 dark:text-slate-100 font-bold mb-1">Smart Sync update for Mac</h3>
+        <div ref="syncDescription" class="text-sm">With this update, online-only files will no longer appear to take up hard drive space.</div>
       </section>
+      <div class="m-1.5">
+          <!-- Language Buttons -->
+          <div class="flex flex-wrap -space-x-px">
+            <button class="btn bg-indigo-600 text-white rounded-none border-l-indigo-400 first:rounded-l last:rounded-r first:border-l-transparent" @click="changeLanguage('zh')">中文</button>
+            <button class="btn bg-indigo-500 hover:bg-indigo-600 text-indigo-100 rounded-none border-l-indigo-400 first:rounded-l last:rounded-r first:border-r-transparent" @click="changeLanguage('en')">English</button>
+            <button class="btn bg-indigo-500 hover:bg-indigo-600 text-indigo-100 rounded-none border-l-indigo-400 first:rounded-l last:rounded-r first:border-r-transparent" @click="changeLanguage('ga')">Gaeilge</button>
+          </div>
+      </div>
     </div>
     <!-- Panel footer -->
     <footer>
@@ -76,21 +66,51 @@
         </div>
       </div>
     </footer>
-  </div>  
+  </div>
 </template>
 
 <script>
 import { ref } from 'vue'
+import axios from 'axios';
 
 export default {
   name: 'AccountPanel',
   setup() {
+    const sync = ref('Off');
+    const syncTitle = ref(null);
+    const syncDescription = ref(null);
+    const apiKey = 'AIzaSyA09g-Nb2xujhJc0jEsR8iPPqmUbvRqLuw';  // 替换为你的Google API密钥
+    const changeLanguage = async (lang) => {
+      syncTitle.value.textContent = await translateText(syncTitle.value.textContent, lang);
+      syncDescription.value.textContent = await translateText(syncDescription.value.textContent, lang);
+    };
+    const translateText = async (text, targetLang) => {
+      try {
+        const response = await axios.post(`https://translation.googleapis.com/language/translate/v2?key=${apiKey}`, {
+          q: text,
+          target: targetLang
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        return response.data.data.translations[0].translatedText;
+      } catch (error) {
+        console.error('Request URL:', error.config.url);  // 查看请求的URL
+        console.error('Error status:', error.response.status);  // 查看错误状态码
+        console.error('Error body:', error.response.data);  // 查看响应体中的错误消息
+        return text; // 如果翻译失败，返回原文
+      }
+    };
 
-  const sync = ref('Off')
 
     return {
       sync,
-    }
+      syncTitle,
+      syncDescription,
+      changeLanguage,
+      translateText
+    };
   }
 }
 </script>

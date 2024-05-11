@@ -8,10 +8,19 @@ from werkzeug.security import check_password_hash
 #
 from flask import Flask, request, jsonify
 import requests
-from flask import session  # 引入session
+
+import random
+import string
+from flask import send_file, session
+from captcha.image import ImageCaptcha
+import io
 
 blue = Blueprint('user', __name__)
 
+def generate_random_captcha(length=4):
+    # 生成一个包含大写字母和数字的验证码
+    characters = string.ascii_uppercase + string.digits
+    return ''.join(random.choice(characters) for _ in range(length))
 
 # @blue.route('/', defaults={'path': 'home'})
 # @blue.route('/home')
@@ -106,13 +115,19 @@ def login():
     if not email or not password:
         return jsonify({'error': 'Missing email or password'}), 400
 
-    user = User.query.filter_by(email=email).first()
-    if user and check_password_hash(user.password_hash, password):
-        session['user_id'] = user.user_id  # 保存用户ID到session
-        session['username'] = user.username  # 保存用户名到session，方便前端显示
-        return jsonify({'success': True, 'message': 'Login successful', 'username': user.username}), 200
+    if 'captcha' in data and session.get('captcha', '') == data['captcha']:
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password_hash, password):
+            session['user_id'] = user.user_id  # 保存用户ID到session
+            session['username'] = user.username  # 保存用户名到session，方便前端显示
+            return jsonify({'success': True, 'message': 'Login successful', 'username': user.username}), 200
+        else:
+            return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+
+        pass
+
     else:
-        return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+        return jsonify({'error': 'Invalid captcha'}), 400
 
 @blue.route('/api/logout', methods=['POST'])
 def logout():
@@ -268,3 +283,13 @@ def get_weather():
         'description': data['weather'][0]['description']
     }
     return jsonify(weather)
+
+
+
+@blue.route('/api/captcha')
+def generate_captcha():
+    image = ImageCaptcha(width=280, height=90)
+    captcha_text = generate_random_captcha()  # 生成随机的验证码文本
+    data = image.generate(captcha_text)
+    session['captcha'] = captcha_text  # 将验证码文本保存在session中以供验证
+    return send_file(io.BytesIO(data.getvalue()), mimetype='image/png')

@@ -50,6 +50,10 @@
                   <router-link class="text-sm underline hover:no-underline" to="/reset-password">Forgot Password?</router-link>
                 </div>
 <!--                <router-link class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" to="/main">Sign In</router-link>-->
+              <div>
+                  <img :src="captchaUrl" @click="refreshCaptcha" alt="Captcha" /> <!-- 点击图片刷新验证码 -->
+                  <input type="text" placeholder="Enter Captcha" v-model="captcha" />
+              </div>
               </div>
               <button @click="handleLogin" class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3">Sign In</button>
             </form>
@@ -91,25 +95,33 @@ import axios from 'axios';
 
 export default {
   name: 'Signin',
+  data() {
+    return {
+      captchaUrl: '/api/captcha',
+      captcha: '',
+    };
+  },
   methods: {
     handleLogin() {
       const email = this.$refs.email.value;
       const password = this.$refs.password.value;
-      axios.post('/api/login', { email: email, password: password })
+      axios.post('/api/login', { email: email, password: password, captcha: this.captcha })
         .then(response => {
           if (response.data.success) {
-            localStorage.setItem('username', response.data.username); // 保存用户名
-            this.$router.push('/main'); // 导航到主页面
+            localStorage.setItem('username', response.data.username);
+            this.$router.push('/main');
           } else {
-            alert('Login failed!');
+            alert(response.data.error || 'Login failed!');
           }
         })
         .catch(error => {
           console.error('Error during login:', error);
           alert('Login failed!');
         });
+    },
+    refreshCaptcha() {
+      this.captchaUrl = '/api/captcha?' + Date.now();  // 刷新验证码
     }
-
   }
 }
 </script>
