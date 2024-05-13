@@ -245,9 +245,9 @@ export default {
 
     const statusColor = (status) => {
       switch (status) {
-        case 'completed':
+        case 'COMPLETED':
           return 'bg-emerald-100 dark:bg-emerald-400/30 text-emerald-600 dark:text-emerald-400'
-        case 'cancelled':
+        case 'CANCELLED':
           return 'bg-amber-100 dark:bg-amber-400/30 text-amber-600 dark:text-amber-400'
         default:
           return 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'

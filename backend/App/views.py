@@ -87,15 +87,12 @@ def update_order():
     ID1 = data.get('ID')
 
     # 假设你有一个名为 orders 的数据库表
-    order = Order.query.filter_by(id=ID1).first()  # 使用 ID 查询订单
-    # AD_ID = data.get('AD_ID')
-    # Driver_ID = data.get('Driver_ID')
-    # Vehicle_ID = data.get('Vehicle_ID')
+    order = Order.query.filter_by(order_id=ID1).first()  # 使用 ID 查询订单
 
     if order:
         # 更新订单的其他属性
         order.assigned_driver_id = data.get('AD_ID')
-        order.driver = data.get('Driver_ID')
+        order.driver_id = data.get('Driver_ID')
         order.vehicle_id = data.get('Vehicle_ID')
 
         # 提交更改到数据库
