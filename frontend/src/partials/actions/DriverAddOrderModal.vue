@@ -72,6 +72,7 @@ export default {
       AD_ID: '',
       Driver_ID: '',
       Vehicle_ID: '',
+      Status:'',
 
     };
   },
@@ -82,7 +83,9 @@ export default {
           ID: this.ID,
           AD_ID: this.AD_ID,
           Driver_ID: this.Driver_ID,
-          Vehicle_ID: this.Vehicle_ID
+          Vehicle_ID: this.Vehicle_ID,
+          Status: 'ACCEPTED',
+
         });
         console.log(response.data); // 如果需要的话，你可以处理后端返回的响应
         this.modalOpen = false; // 关闭模态框

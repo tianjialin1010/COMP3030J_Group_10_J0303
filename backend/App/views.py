@@ -94,7 +94,8 @@ def update_order():
         order.assigned_driver_id = data.get('AD_ID')
         order.driver_id = data.get('Driver_ID')
         order.vehicle_id = data.get('Vehicle_ID')
-
+        if order.vehicle_id is not None:
+            order.status = data.get('Status')
         # 提交更改到数据库
         db.session.commit()
 
