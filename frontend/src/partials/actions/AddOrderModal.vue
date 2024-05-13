@@ -26,9 +26,9 @@
             </div>
             <!-- 目的地 -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="destination">Destination <span
+              <label class="block text-sm font-medium mb-1" for="destination"> Start Location<span
                   class="text-rose-500">*</span></label>
-              <select id="destination" class="form-select w-full px-2 py-1" v-model="selected_destination" required>
+              <select id="destination" class="form-select w-full px-2 py-1" v-model="selected_start_location" required>
                 <option value="shanghai">Shanghai</option>
                 <option value="beijing">Beijing</option>
                 <option value="shandong">Shandong</option>
@@ -36,9 +36,9 @@
             </div>
             <!-- 起始点 -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="startLocation">Start Location <span
+              <label class="block text-sm font-medium mb-1" for="startLocation">Destination <span
                   class="text-rose-500">*</span></label>
-              <select id="startLocation" class="form-select w-full px-2 py-1" v-model="selected_start_location" required>
+              <select id="startLocation" class="form-select w-full px-2 py-1" v-model="selected_destination" required>
                 <option value="beijing">Beijing</option>
                 <option value="shanghai">Shanghai</option>
                 <option value="shandong">Shandong</option>
@@ -84,6 +84,7 @@ export default {
         vehicle_type: this.selected_vehicle_type,
         destination: this.selected_destination,
         start_location: this.selected_start_location,
+
       };
 
       axios.post('/api/addOrder', formData)
