@@ -274,7 +274,7 @@
                 <div class="font-semibold">Destination</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                <div class="font-semibold">Mileage</div>
+                <div class="font-semibold">Mileage/KM</div>
               </th>
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                 <div class="font-semibold text-left">Created_at</div>

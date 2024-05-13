@@ -70,11 +70,12 @@ def add_order():
     vehicle_type = data.get('vehicle_type')
     destination = data.get('destination')
     start_location = data.get('start_location')
+    mileage = data.get('distance')
 
-    if not all([initiator_user_id, vehicle_type, destination, start_location]):
+    if not all([initiator_user_id, vehicle_type, destination, start_location,mileage]):
         return jsonify({'error': 'Missing data'}), 400
 
-    order = Order(initiator_user_id=initiator_user_id, vehicle_type=vehicle_type, destination=destination, startlocation=start_location)
+    order = Order(initiator_user_id=initiator_user_id, vehicle_type=vehicle_type, destination=destination, startlocation=start_location , mileage=mileage)
     db.session.add(order)
     db.session.commit()
 
