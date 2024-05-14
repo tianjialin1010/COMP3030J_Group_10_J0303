@@ -335,7 +335,7 @@ export default {
 
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/orders')
+        const response = await axios.get('/api/orders')
         orders.value = response.data
       } catch (error) {
         console.error('There was an error fetching the customers:', error)
