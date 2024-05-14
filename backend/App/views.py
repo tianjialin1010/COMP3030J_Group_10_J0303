@@ -292,3 +292,29 @@ def generate_captcha():
     data = image.generate(captcha_text)
     session['captcha'] = captcha_text  # 将验证码文本保存在session中以供验证
     return send_file(io.BytesIO(data.getvalue()), mimetype='image/png')
+
+
+# In Flask, receiving and processing data:
+@blue.route('/api/endOrder', methods=['POST'])
+def end_order():
+    data = request.json
+    mileage = data.get('Mileage')
+    vehicle_id = data.get('Vehicle_ID')
+    plate_number = data.get('PlateNumber')  # You are receiving it but not using it
+    completed_at = datetime.utcnow()  # Server time, no need to send from client
+
+    if not all([mileage, vehicle_id]):
+        return jsonify({'error': 'Missing data'}), 400
+
+    order = Order.query.filter_by(vehicle_id=vehicle_id).first()
+    if not order:
+        return jsonify({'error': 'Order not found'}), 404
+
+    order.mileage = mileage
+    order.completed_at = completed_at
+    carbon_emission = float(mileage) * 0.2
+    order.carbon_emission = carbon_emission
+
+    db.session.commit()
+
+    return jsonify({'message': 'Order updated successfully', 'carbon_emission': carbon_emission}), 200

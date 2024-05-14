@@ -25,6 +25,7 @@ import CreditCards from './pages/finance/CreditCards.vue'
 import Transactions from './pages/finance/Transactions.vue'
 import TransactionDetails from './pages/finance/TransactionDetails.vue'
 import JobListing from './pages/job/JobListing.vue'
+import EndOrder from './pages/job/EndOrder.vue'
 import JobPost from './pages/job/JobPost.vue'
 import CompanyProfile from './pages/job/CompanyProfile.vue'
 import Messages from './pages/Messages.vue'
@@ -175,6 +176,10 @@ const router = createRouter({
     {
       path: '/job/job-listing',
       component: JobListing
+    },
+    {
+      path: '/job/end-order',
+      component: EndOrder
     },
     {
       path: '/job/job-post',
