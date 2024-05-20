@@ -1,6 +1,15 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from enum import Enum
+from sqlalchemy.orm import relationship
+from sqlalchemy.types import Enum as SQLEnum
+
+
+
+
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+from enum import Enum
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
@@ -10,81 +19,60 @@ from enum import Enum
 from sqlalchemy import Column, Integer, String, DateTime, Enum as SQLEnum
 from flask_sqlalchemy import SQLAlchemy
 
-
-class OrderStatus(Enum):
-    CREATED = 'CREATED'
-    ACCEPTED = 'ACCEPTED'
-    IN_PROGRESS = 'IN_PROGRESS'
-    COMPLETED = 'COMPLETED'
-    CANCELED = 'CANCELED'
-
-
-class Driver(db.Model):
-    __tablename__ = 'drivers'
-    driver_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
-    total_mileage = db.Column(db.Numeric(10, 2), nullable=False, default='0.00')
-    total_emission = db.Column(db.Numeric(10, 2), nullable=False, default='0.00')
-    orders_count = db.Column(db.Integer, nullable=False, default=0)
-    status = db.Column(db.String(255), nullable=False)  # Simplified enum representation
-
-
-class Order(db.Model):
-    __tablename__ = 'orders'
-    order_id = db.Column(db.Integer, primary_key=True)
-    vehicle_id = db.Column(db.Integer, ForeignKey('vehicles.vehicle_id'))
-    initiator_user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    assigned_driver_id = db.Column(db.Integer, db.ForeignKey('drivers.driver_id'))
-    status = db.Column(SQLEnum(OrderStatus), nullable=False, default=OrderStatus.CREATED)
-    destination = db.Column(db.String(255), nullable=False)
-    startlocation = db.Column(db.String(255), nullable=False)
-    mileage = db.Column(db.Numeric(10, 2), default=0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    completed_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    vehicle_type = db.Column(db.String(255), nullable=False)  # Simplified enum representation
-    carbon_emission = db.Column(db.Numeric(10, 2), default=0)
-    driver = db.relationship('Driver', foreign_keys=[assigned_driver_id])
-
-
-class SustainabilityData(db.Model):
-    __tablename__ = 'sustainabilitydata'
-    data_id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id'), nullable=False)
-    carbon_emission = db.Column(db.Numeric(10, 2), nullable=False)
-    fuel_consumption = db.Column(db.Numeric(10, 2), nullable=False)
-    efficiency_score = db.Column(db.Numeric(5, 2), nullable=False)
-
-
-class RoleType(Enum):
-    DRIVER = 'DRIVER'  # 确保与数据库中的枚举值完全匹配
-    WAREHOUSE = 'WAREHOUSE'
-    ADMIN = 'ADMIN'
-
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Enum
 
 class User(db.Model):
     __tablename__ = 'users'
-    user_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
-    role = db.Column(SQLEnum(RoleType), nullable=False)  # 使用 SQLAlchemy 的 Enum 类型
-    avatar_url = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    password_hash = db.Column(db.String(255), nullable=False)
+    role = db.Column(Enum('DRIVER', 'WAREHOUSE', 'ADMIN', name='role_enum'), nullable=False)
+    avatar_url = db.Column(db.String(255), nullable=True)
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp())
 
+    drivers = db.relationship('Driver', backref='user', uselist=False, cascade='all, delete-orphan')
+    warehouses = db.relationship('Warehouse', backref='manager', uselist=False, cascade='all, delete-orphan')
+
+class Driver(db.Model):
+    __tablename__ = 'drivers'
+    driver_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), unique=True, nullable=False)
+    total_mileage = db.Column(db.Numeric(10, 2), nullable=False, default=0.00)
+    total_emission = db.Column(db.Numeric(10, 2), nullable=False, default=0.00)
+    orders_count = db.Column(db.Integer, nullable=False, default=0)
+    status = db.Column(Enum('AVAILABLE', 'UNAVAILABLE', name='driver_status_enum'), nullable=False)
+
+    orders = db.relationship('Order', backref='assigned_driver', lazy=True)
+    vehicles = db.relationship('Vehicle', backref='owner', lazy=True)
+
+class Order(db.Model):
+    __tablename__ = 'orders'
+    order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    assigned_driver_id = db.Column(db.Integer, db.ForeignKey('drivers.driver_id'), nullable=True)
+    status = db.Column(Enum('CREATED', 'ACCEPTED', 'IN_PROGRESS', 'COMPLETED', name='order_status_enum'), nullable=False, default='CREATED')
+    origin = db.Column(db.String(255), nullable=False)
+    destination = db.Column(db.String(255), nullable=False)
+    license_plate = db.Column(db.String(10), db.ForeignKey('vehicles.license_plate'), nullable=True)
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=True)
+    completed_at = db.Column(db.TIMESTAMP, nullable=True)
+    mileage = db.Column(db.Numeric(10, 2), nullable=True, default=0.00)
+    estimate_time = db.Column(db.Numeric(10, 2), nullable=True)
+    carbon_emission = db.Column(db.Numeric(10, 2), nullable=True)
 
 class Vehicle(db.Model):
     __tablename__ = 'vehicles'
-    vehicle_id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(255), nullable=False)  # Simplified enum representation
-    load_capacity = db.Column(db.Numeric(10, 2), nullable=False)
+    license_plate = db.Column(db.String(10), primary_key=True, nullable=False)
+    type = db.Column(Enum('TRUCK', 'VAN', 'ELECTRIC', name='vehicle_type_enum'), nullable=False)
     emission_rate = db.Column(db.Numeric(10, 2), nullable=False)
-    orders = db.relationship('Order', backref='vehicle')
+    owner_id = db.Column(db.Integer, db.ForeignKey('drivers.driver_id'), nullable=False)
 
+    orders = db.relationship('Order', backref='vehicle', lazy=True)
 
 class Warehouse(db.Model):
     __tablename__ = 'warehouses'
-    warehouse_id = db.Column(db.Integer, primary_key=True)
-    longitude = db.Column(db.Numeric(9, 6), nullable=False)
-    latitude = db.Column(db.Numeric(9, 6), nullable=False)
+    warehouse_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     city = db.Column(db.String(255), nullable=False)
     capacity = db.Column(db.Numeric(10, 2), nullable=False)
+    manager_user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)

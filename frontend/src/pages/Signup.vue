@@ -36,37 +36,31 @@
             <!-- Form -->
             <form>
               <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium mb-1" for="email">Email Address <span class="text-rose-500">*</span></label>
-                  <input id="email" ref="email" class="form-input w-full" type="email" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1" for="name">Full Name <span class="text-rose-500">*</span></label>
-                  <input id="name" ref="name" class="form-input w-full" type="text" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1" for="role">Your department <span class="text-rose-500">*</span></label>
-                  <select id="role" ref="role" class="form-select w-full">
-                    <option>driver</option>
-                    <option>warehouse</option>
-                    <option>admin</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1" for="password">Password</label>
-                  <input id="password" ref="password" class="form-input w-full" type="password" autoComplete="on" />
-                </div>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="email">Email Address <span class="text-rose-500">*</span></label>
+                <input id="email" ref="email" class="form-input w-full" type="email" />
               </div>
-              <div class="flex items-center justify-between mt-6">
-<!--                <div class="mr-1">-->
-<!--                  <label class="flex items-center">-->
-<!--                    <input type="checkbox" class="form-checkbox" />-->
-<!--                    <span class="text-sm ml-2">Email me about product news.</span>-->
-<!--                  </label>-->
-<!--                </div>-->
-                <button @click.prevent="handleRegister" class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3">Sign Up</button>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="name">Full Name <span class="text-rose-500">*</span></label>
+                <input id="name" ref="name" class="form-input w-full" type="text" />
               </div>
-            </form>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="role">Your department <span class="text-rose-500">*</span></label>
+                <select id="role" ref="role" class="form-select w-full">
+                  <option>driver</option>
+                  <option>warehouse</option>
+                  <option>admin</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="password">Password</label>
+                <input id="password" ref="password" class="form-input w-full" type="password" autoComplete="on" />
+              </div>
+            </div>
+            <div class="flex items-center justify-between mt-6">
+              <button @click.prevent="handleRegister" class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3">Sign Up</button>
+            </div>
+          </form>
             <!-- Footer -->
             <div class="pt-5 mt-6 border-t border-slate-200 dark:border-slate-700">
               <div class="text-sm">
@@ -101,8 +95,21 @@ export default {
 
       const email = this.$refs.email.value;
       const name = this.$refs.name.value;
-      const role = this.$refs.role.value;
+      const role = this.$refs.role.value.toUpperCase();  // 转换为大写
       const password = this.$refs.password.value;
+
+      // 简单的邮箱验证正则表达式
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      if (password.length < 6) {
+        alert('Password must be at least 6 characters long.');
+        return;
+      }
+
       axios.post('/api/register', { email: email, name: name, role: role, password: password })
         .then(response => {
           if (response.data.success) {

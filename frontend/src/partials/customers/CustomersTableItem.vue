@@ -1,3 +1,4 @@
+<!-- CustomersTableItem.vue -->
 <template>
   <tr>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
@@ -28,31 +29,17 @@
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
       <div class="text-left">{{customer.email}}</div>
     </td>
-<!--    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">-->
-<!--      <div class="text-left">{{customer.role}}</div>-->
-<!--    </td>-->
-<!--    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">-->
-<!--      <div class="text-center">{{customer.created_at}}</div>-->
-<!--    </td>-->
-    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="text-left font-medium text-sky-500">{{customer.role}}</div>
+    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap text-right">
+      <div class="text-left">{{customer.role}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="text-left font-medium text-emerald-500">{{customer.created_at}}</div>
+      <div class="text-left">{{ formatDate(customer.created_at) }}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="text-center">{{customer.refunds}}</div>
+      <div class="text-left">{{customer.total_footprint}}</div>
     </td>
-    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
-      <!-- Menu button -->
-      <button class="text-slate-400 hover:text-slate-500 dark:text-slate-500 dark:hover:text-slate-400 rounded-full">
-        <span class="sr-only">Menu</span>
-        <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
-          <circle cx="16" cy="16" r="2" />
-          <circle cx="10" cy="16" r="2" />
-          <circle cx="22" cy="16" r="2" />
-        </svg>
-      </button>
+    <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+      <div class="text-left">{{customer.refunds}}</div>
     </td>
   </tr>
 </template>
@@ -68,7 +55,7 @@ export default {
 
     function check() {
       let updatedSelected = [...props.selected]
-      if (this.checked) {
+      if (checked.value) {
         updatedSelected.splice(updatedSelected.indexOf(props.value), 1)
       } else {
         updatedSelected.push(props.value)
@@ -76,9 +63,14 @@ export default {
       context.emit('update:selected', updatedSelected)
     }
 
+    function formatDate(dateString) {
+      return dateString.replace('T', ' ')
+    }
+
     return {
       check,
       checked,
+      formatDate,
     }
   },
 }

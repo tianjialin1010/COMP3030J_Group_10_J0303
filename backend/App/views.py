@@ -35,47 +35,76 @@ def generate_random_captcha(length=4):
 #     return jsonify([{'id': item.id, 'name': item.name} for item in items])
 
 @blue.route('/api/customers')
-def get_users():
-    users = User.query.all()
-    return jsonify([{'id': user.user_id,
-                     'name': user.username,
-                     'email': user.email,
-                     'role': user.role.value,
-                     'created_at': user.created_at,
-                     } for user in users])
+def get_customers():
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+
+    customers_query = User.query.paginate(page=page, per_page=per_page, error_out=False)
+    total = customers_query.total
+    customers = customers_query.items
+
+    return jsonify({
+        'total': total,
+        'users': [{
+            'id': user.user_id,
+            'name': user.username,
+            'email': user.email,
+            'role': user.role,
+            'created_at': user.created_at.isoformat() if user.created_at else None
+        } for user in customers]
+    })
+
 
 @blue.route('/api/orders')
 def get_orders():
-    orders = Order.query.all()
-    return jsonify([{
-        'id': order.order_id,
-        'vehicle_id': order.vehicle_id,
-        'initiator_user_id': order.initiator_user_id,
-        'assigned_driver_id': order.assigned_driver_id,
-        'status': order.status.value,
-        'destination': order.destination,
-        'mileage': float(order.mileage),
-        'created_at': order.created_at.isoformat(),
-        'completed_at': order.completed_at.isoformat() if order.completed_at else None,
-        'vehicle_type': order.vehicle_type,
-        'carbon_emission': float(order.carbon_emission),
-        'start_location': order.startlocation,
-    } for order in orders])
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+
+    orders_query = Order.query.paginate(page=page, per_page=per_page, error_out=False)
+    total = orders_query.total
+    orders = orders_query.items
+
+    return jsonify({
+        'total': total,
+        'orders': [{
+            'id': order.order_id,
+            'assigned_driver_id': order.assigned_driver_id,
+            'status': order.status,
+            'origin': order.origin,
+            'destination': order.destination,
+            'license_plate': order.license_plate,
+            'created_at': order.created_at.isoformat() if order.created_at else None,
+            'completed_at': order.completed_at.isoformat() if order.completed_at else None,
+            'mileage': float(order.mileage) if order.mileage is not None else None,
+            'estimate_time': float(order.estimate_time) if order.estimate_time is not None else None,
+            'carbon_emission': float(order.carbon_emission) if order.carbon_emission is not None else None
+        } for order in orders]
+    })
+
 
 
 @blue.route('/api/addOrder', methods=['POST'])
 def add_order():
     data = request.json
-    initiator_user_id = data.get('IU_ID')
-    vehicle_type = data.get('vehicle_type')
+    origin = data.get('origin')
     destination = data.get('destination')
-    start_location = data.get('start_location')
-    mileage = data.get('distance')
+    mileage = data.get('mileage', 0.00)  # 默认值为 0.00
+    estimate_time = data.get('estimate_time')  # 可以为空
 
-    if not all([initiator_user_id, vehicle_type, destination, start_location,mileage]):
+    # 检查必要字段是否存在
+    if not all([origin, destination,mileage,estimate_time]):
         return jsonify({'error': 'Missing data'}), 400
 
-    order = Order(initiator_user_id=initiator_user_id, vehicle_type=vehicle_type, destination=destination, startlocation=start_location , mileage=mileage)
+    # 创建 Order 实例
+    order = Order(
+        origin=origin,
+        destination=destination,
+        mileage=mileage,
+        estimate_time=estimate_time,
+        created_at=datetime.utcnow()
+    )
+
+    # 添加到数据库会话并提交
     db.session.add(order)
     db.session.commit()
 
@@ -84,25 +113,49 @@ def add_order():
 
 @blue.route('/update_order', methods=['POST'])
 def update_order():
-    data = request.json  # 获取发送过来的 JSON 数据
-    ID1 = data.get('ID')
+    data = request.json
+    order_id = data.get('order_id')
 
-    # 假设你有一个名为 orders 的数据库表
-    order = Order.query.filter_by(order_id=ID1).first()  # 使用 ID 查询订单
+    # 获取当前登录用户的 user_id
+    user_id = session.get('user_id')
 
-    if order:
-        # 更新订单的其他属性
-        order.assigned_driver_id = data.get('AD_ID')
-        order.driver_id = data.get('Driver_ID')
-        order.vehicle_id = data.get('Vehicle_ID')
-        if order.vehicle_id is not None:
-            order.status = data.get('Status')
-        # 提交更改到数据库
-        db.session.commit()
+    # 根据 user_id 查找 driver_id
+    driver = Driver.query.filter_by(user_id=user_id).first()
 
-        return jsonify({'message': 'Order updated successfully'}), 200
-    else:
+    if not driver:
+        return jsonify({'error': 'You are not a driver'}), 403
+
+    driver_id = driver.driver_id
+
+    # 查找订单
+    order = Order.query.filter_by(order_id=order_id).first()
+
+    if not order:
         return jsonify({'error': 'Order not found'}), 404
+
+    # 更新订单信息
+    order.assigned_driver_id = driver_id
+    order.status = 'ACCEPTED'
+    order.license_plate = data.get('vehicle_id')
+    order.created_at = datetime.utcnow()
+
+    db.session.commit()
+
+    return jsonify({'message': 'Order updated successfully'}), 200
+
+@blue.route('/api/vehicles', methods=['GET'])
+def get_vehicles():
+    user_id = session.get('user_id')
+
+    driver = Driver.query.filter_by(user_id=user_id).first()
+    if not driver:
+        return jsonify({'error': 'You are not a driver'}), 403
+
+    vehicles = Vehicle.query.filter_by(owner_id=driver.driver_id).all()
+    vehicle_list = [{'license_plate': vehicle.license_plate} for vehicle in vehicles]
+
+    return jsonify(vehicle_list)
+
 
 
 @blue.route('/api/login', methods=['POST'])
@@ -135,7 +188,6 @@ def logout():
     return jsonify({'success': True, 'message': 'Logout successful'}), 200
 
 
-
 @blue.route('/api/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -152,8 +204,23 @@ def register():
 
     hashed_password = generate_password_hash(password)
     new_user = User(username=name, email=email, role=role, password_hash=hashed_password, created_at=datetime.utcnow())
-    db.session.add(new_user)
-    db.session.commit()
+
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to register user', 'details': str(e)}), 500
+
+    if role == 'DRIVER':
+        new_driver = Driver(user_id=new_user.user_id, total_mileage=0.00, total_emission=0.00, orders_count=0,
+                            status='AVAILABLE')
+        try:
+            db.session.add(new_driver)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': 'Failed to create driver record', 'details': str(e)}), 500
 
     return jsonify({'success': True, 'message': 'User registered successfully'}), 201
 
@@ -166,28 +233,28 @@ from flask import Flask, jsonify, request
 from crnn.demo import init_model, device, model  # 确保导入了device
 
 # 假设您的图片存放在这个目录下
-IMAGE_DIR = os.path.join(os.path.dirname(__file__), '../../crnn/new')
+# IMAGE_DIR = os.path.join(os.path.dirname(__file__), '../../crnn/new')
 
 
-@blue.route('/images', methods=['GET'])
-def list_images():
-    images = os.listdir(IMAGE_DIR)
-    return jsonify(images)
-
-
-@blue.route('/path_to_images/<filename>')
-def serve_image(filename):
-    return send_from_directory(IMAGE_DIR, filename)
-
-
-@blue.route('/recognize', methods=['POST'])
-def recognize():
-    data = request.json
-    if 'image_name' not in data:
-        abort(400, description="Missing 'image_name' in request data")
-    image_path = os.path.join(IMAGE_DIR, data['image_name'])  # 确保图片在 'new' 目录下
-    plate_number = demo.recognize_plate(image_path)
-    return jsonify({'plate_number': plate_number})
+# @blue.route('/images', methods=['GET'])
+# def list_images():
+#     images = os.listdir(IMAGE_DIR)
+#     return jsonify(images)
+#
+#
+# @blue.route('/path_to_images/<filename>')
+# def serve_image(filename):
+#     return send_from_directory(IMAGE_DIR, filename)
+#
+#
+# @blue.route('/recognize', methods=['POST'])
+# def recognize():
+#     data = request.json
+#     if 'image_name' not in data:
+#         abort(400, description="Missing 'image_name' in request data")
+#     image_path = os.path.join(IMAGE_DIR, data['image_name'])  # 确保图片在 'new' 目录下
+#     plate_number = demo.recognize_plate(image_path)
+#     return jsonify({'plate_number': plate_number})
 
 
 @blue.route('/api/reset-password', methods=['POST'])
@@ -233,7 +300,6 @@ def delete_orders():
 @blue.route('/api/delete-users', methods=['POST'])
 def delete_users():
     data = request.get_json()
-
     item_ids = data.get('items', [])
 
     if not item_ids:
@@ -241,12 +307,13 @@ def delete_users():
 
     try:
         for item_id in item_ids:
-            item = User.query.filter_by(user_id=item_id).first()
+            item = User.query.get(item_id)
             if item:
                 db.session.delete(item)
         db.session.commit()
         return jsonify({'message': 'Items deleted successfully'}), 200
     except Exception as e:
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 # @blue.route('/api/orders')
@@ -319,6 +386,36 @@ def end_order():
 
     return jsonify({'message': 'Order updated successfully', 'carbon_emission': carbon_emission}), 200
 
+@blue.route('/video')
+def get_video():
+    return send_file('../../frontend/src/assets/images/test.mp4', mimetype='video/mp4')
+
 @blue.route('/api/<path:filename>')
 def get_model(filename):
     return send_from_directory('../3d/', filename)
+
+
+IMAGE_DIR = '../../crnn/new'  # 确保路径正确
+
+
+@blue.route('/api/images', methods=['GET'])
+def get_images():
+    images = os.listdir(IMAGE_DIR)
+    return jsonify(images)
+
+
+@blue.route('/api/images/<filename>', methods=['GET'])
+def get_image(filename):
+    return send_from_directory(IMAGE_DIR, filename)
+
+
+@blue.route('/api/recognize', methods=['POST'])
+def recognize():
+    if 'image' not in request.files:
+        abort(400, description="Missing 'image' in request files")
+    image = request.files['image']
+    image_path = os.path.join(IMAGE_DIR, image.filename)
+    image.save(image_path)
+
+    plate_number = demo.recognize_plate(image_path)
+    return jsonify({'plate_number': plate_number})
