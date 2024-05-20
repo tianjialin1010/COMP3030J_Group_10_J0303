@@ -1,0 +1,10 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+
+# Virtual environment
+venv/
+node_modules
+migrations
+__pycache__
