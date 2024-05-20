@@ -1,14 +1,11 @@
+<!--WarehouseEndOrderModel.vue-->
 <template>
   <div class="p-6">
     <h1 class="text-xl font-bold mb-4"></h1>
 
     <ModalBasic :modalOpen="modalOpen" @close-modal="modalOpen = false">
       <!-- Google Map Component -->
-      <Road
-        @map-loaded="handleMapLoaded"
-        :origin="order.origin"
-        :destination="order.destination"
-      />
+      <Road @map-loaded="handleMapLoaded" />
       <!-- Modal Content -->
       <div class="px-5 py-4">
         <div class="text-sm">
@@ -28,10 +25,9 @@
                 </option>
               </select>
             </div>
-            <video id="myVideo" width="640" height="360" controls autoplay>
-              <source src="http://localhost:5000/video" type="video/mp4">
-              您的浏览器不支持HTML5视频标签。
-            </video>
+
+            <!-- 替换 <video> 标签为 Plate 组件 -->
+            <Plate />
           </div>
         </div>
         <!-- Modal Footer -->
@@ -47,15 +43,17 @@
 </template>
 
 <script>
-import ModalBasic from '../../components/ModalBasic.vue';
-import axios from 'axios';
-import Road from '../../pages/Road.vue';
+import ModalBasic from '../../components/ModalBasic.vue'; // 调整路径以适合您的项目结构
+import axios from 'axios'; // 导入Axios以进行HTTP请求
+import Road from '../../pages/Road.vue'; // 调整路径以适合您的项目结构
+import Plate from '../../pages/Plate.vue'; // 调整路径以适合您的项目结构
 
 export default {
   name: 'DriverAddOrderModal',
   components: {
     Road,
     ModalBasic,
+    Plate, // 引入 Plate 组件
   },
   props: {
     order: Object
@@ -85,14 +83,15 @@ export default {
           order_id: this.order.order_id,
           vehicle_id: this.Vehicle_ID,
         });
-        console.log(response.data);
-        this.modalOpen = false;
+        console.log(response.data); // 如果需要的话，你可以处理后端返回的响应
+        this.modalOpen = false; // 关闭模态框
       } catch (error) {
         console.error('Error sending data to backend:', error);
       }
     },
     handleMapLoaded() {
       console.log('Map loaded');
+      // 如果需要在地图加载后执行某些操作，可以在这里处理
     }
   }
 }

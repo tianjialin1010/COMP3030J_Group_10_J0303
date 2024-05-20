@@ -394,8 +394,13 @@ def get_video():
 def get_model(filename):
     return send_from_directory('../3d/', filename)
 
+from werkzeug.utils import secure_filename
 
 IMAGE_DIR = '../../crnn/new'  # 确保路径正确
+
+# 确保 IMAGE_DIR 路径存在
+if not os.path.exists(IMAGE_DIR):
+    os.makedirs(IMAGE_DIR)
 
 
 @blue.route('/api/images', methods=['GET'])
@@ -411,11 +416,23 @@ def get_image(filename):
 
 @blue.route('/api/recognize', methods=['POST'])
 def recognize():
-    if 'image' not in request.files:
-        abort(400, description="Missing 'image' in request files")
-    image = request.files['image']
-    image_path = os.path.join(IMAGE_DIR, image.filename)
-    image.save(image_path)
+    try:
+        if 'image' not in request.files:
+            abort(400, description="Missing 'image' in request files")
+        image = request.files['image']
+        if image.filename == '':
+            abort(400, description="No selected file")
 
-    plate_number = demo.recognize_plate(image_path)
-    return jsonify({'plate_number': plate_number})
+        filename = secure_filename(image.filename)
+        image_path = os.path.join(IMAGE_DIR, filename)
+        image.save(image_path)
+
+        # 调用车牌识别函数
+        plate_number = demo.recognize_plate(image_path)
+
+        # 返回识别结果
+        return jsonify({'plate_number': plate_number})
+    except Exception as e:
+        # 捕获所有异常并返回 500 错误
+        print(f"Error processing request: {e}")
+        return jsonify({'error': 'Internal Server Error'}), 500

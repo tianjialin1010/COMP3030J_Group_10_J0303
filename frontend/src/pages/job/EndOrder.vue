@@ -1,3 +1,4 @@
+<!--EndOrder.vue-->
 <template>
   <div class="flex h-[100dvh] overflow-hidden">
     <!-- Sidebar -->
@@ -12,7 +13,7 @@
           <div class="sm:flex sm:justify-between sm:items-center mb-5">
             <!-- Left: Title -->
             <div class="mb-4 sm:mb-0">
-              <h1 class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold">Accept these orders ✨</h1>
+              <h1 class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold">End these orders ✨</h1>
             </div>
           </div>
           <!-- Page content -->
@@ -60,7 +61,7 @@
           </div>
         </div>
       </main>
-      <DriverAddOrderModal v-if="showModal" :order="selectedOrder" :driverId="driverId" @close-modal="showModal = false" />
+      <WarehouseEndOrderModal v-if="showModal" :order="selectedOrder" :driverId="driverId" @close-modal="showModal = false" />
     </div>
   </div>
 </template>
@@ -73,13 +74,13 @@ import JobSidebar from '../../partials/job/JobSidebar.vue'
 import DropdownSort from '../../components/DropdownSort.vue'
 import JobListItem from '../../partials/job/JobListItem.vue'
 import PaginationNumeric from '../../components/PaginationNumeric.vue'
-import DriverAddOrderModal from '../../partials/actions/DriverAddOrderModal.vue'
+import WarehouseEndOrderModal from '../../partials/actions/WarehouseEndOrderModal.vue'
 import axios from 'axios'
 
 export default {
   name: 'JobListing',
   components: {
-    DriverAddOrderModal,
+    WarehouseEndOrderModal,
     Sidebar,
     Header,
     JobSidebar,

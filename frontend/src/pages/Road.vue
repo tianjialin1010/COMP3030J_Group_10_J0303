@@ -1,31 +1,28 @@
 <template>
   <div class="flex h-[50vh] overflow-hidden">
-
-    <!-- Sidebar -->
-
-
     <!-- Main Content area -->
-
-
-      <!-- Site header -->
-
-
-      <!-- Map and Info Panel -->
-      <main class="grow">
-        <div id="mapElement" ref="mapElement" style="height: 100%; width: 100%;"></div>
-<!--        <div id="infoPanel" ref="infoPanel" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 8px; z-index: 1000;"></div>-->
-      </main>
-    </div>
-
-
+    <main class="grow">
+      <div id="mapElement" ref="mapElement" style="height: 100%; width: 100%;"></div>
+    </main>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, toRefs } from 'vue'
+import { defineProps } from 'vue'
 
-const sidebarOpen = ref(false);
+const { origin, destination } = defineProps({
+  origin: {
+    type: Object,
+    required: true
+  },
+  destination: {
+    type: Object,
+    required: true
+  }
+})
+
 const mapElement = ref(null);
-const infoPanel = ref(null);
 
 onMounted(() => {
   if (!window.google || !window.google.maps) {
@@ -53,8 +50,7 @@ function loadGoogleMapsScript() {
 
 function initializeMap() {
   const map = new window.google.maps.Map(mapElement.value, {
-
-    center: { lat: 52.625, lng: -7.333 },
+    center: { lat: (origin.lat + destination.lat) / 2, lng: (origin.lng + destination.lng) / 2 },
     zoom: 7,
   });
 
@@ -65,9 +61,6 @@ function initializeMap() {
 }
 
 function calculateRoute(directionsService, directionsRenderer, map) {
-  const origin = { lat: 51.898514, lng: -8.475604 }; // Cork
-  const destination = { lat: 53.349805, lng: -6.26031 }; // Dublin
-
   const request = {
     origin: origin,
     destination: destination,
@@ -84,14 +77,12 @@ function calculateRoute(directionsService, directionsRenderer, map) {
   });
 }
 
-
 function animateMarker(map, route, origin, destination) {
   const path = route.overview_path;
   const stoppingPointIndex = Math.floor(path.length / 3);
   let carIconPath;
 
-  // 使用传递的 origin 和 destination 参数
-  if (origin.lng > destination.lng) {
+  if (origin.lat > destination.lat) {
     carIconPath = '/car1.jpg';
   } else {
     carIconPath = '/car2.jpg';
@@ -115,7 +106,6 @@ function animateMarker(map, route, origin, destination) {
     }
   }, 100);
 }
-
 </script>
 
 <script>

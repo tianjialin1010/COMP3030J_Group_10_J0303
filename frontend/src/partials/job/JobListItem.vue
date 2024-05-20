@@ -9,7 +9,7 @@
               <img class="w-9 h-9 rounded-full" :src="localImage" width="36" height="36" alt="Default Image"/>
             </div>
             <div>
-              <div class="inline-flex font-semibold text-slate-800 dark:text-slate-100" >{{ item.start_location }} -- {{ item.destination }}</div>
+              <div class="inline-flex font-semibold text-slate-800 dark:text-slate-100" >{{ item.origin}} -- {{ item.destination }}</div>
                   <div class="text-sm">Distance:{{item.mileage}}</div>
               </div>
           </div>
