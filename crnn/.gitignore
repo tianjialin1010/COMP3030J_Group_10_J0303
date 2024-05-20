@@ -13,6 +13,7 @@ output/
 color_model/
 color_model_small/
 pretrainde_model/
+__pycache__
 demoMy.py
 get_every_provice_number.py
 get_train_less_data.py

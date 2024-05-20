@@ -1,23 +1,10 @@
-.DS_Store
+# Python cache
+__pycache__/
+*.py[cod]
+
+
+# Virtual environment
+venv/
 node_modules
-/dist
-
-
-# local env files
-.env.local
-.env.*.local
-
-# Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+migrations
+__pycache__

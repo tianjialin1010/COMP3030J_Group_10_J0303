@@ -5,6 +5,4 @@ __pycache__/
 
 # Virtual environment
 venv/
-node_modules
-migrations
 __pycache__

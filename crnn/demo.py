@@ -150,8 +150,8 @@ import os
 from crnn.plateNet import myNet_ocr
 from crnn.alphabets import plate_chr
 #这里为了配合服务器使用以下第一行路径，如果拉下来想自己本地运行请改成自己电脑的本地路径，下面两个同理
-def init_model(device, model_path='/home/student/jialin/crnn/saved_model/1.pth'):
-#def init_model(device, model_path='C:/Users/tianj/PycharmProjects/COMP3030J_Group_10_J0303/crnn/saved_model/1.pth'):
+#def init_model(device, model_path='/home/student/jialin/crnn/saved_model/1.pth'):
+def init_model(device, model_path='C:/Users/tianj/PycharmProjects/COMP3030J_Group_10_J0303/crnn/saved_model/1.pth'):
     check_point = torch.load(model_path, map_location=device)
     model_state = check_point['state_dict']
     cfg = check_point['cfg']
@@ -174,11 +174,11 @@ def init_model(device, model_path='/home/student/jialin/crnn/saved_model/1.pth')
 #     return model
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model_path', type=str, default='/home/student/jialin/crnn/saved_model/1.pth', help='model.pt path(s)')
-#parser.add_argument('--model_path', type=str, default='C:/Users/tianj/PycharmProjects/COMP3030J_Group_10_J0303/crnn/saved_model/1.pth', help='model.pt path(s)')
+#parser.add_argument('--model_path', type=str, default='/home/student/jialin/crnn/saved_model/1.pth', help='model.pt path(s)')
+parser.add_argument('--model_path', type=str, default='C:/Users/tianj/PycharmProjects/COMP3030J_Group_10_J0303/crnn/saved_model/1.pth', help='model.pt path(s)')
 # parser.add_argument('--image_path', type=str, default='images/tmp6FC6.png', help='source')
-parser.add_argument('--image_path', type=str, default='/home/student/jialin/crnn/new/02D41166_1.jpg', help='source')
-#parser.add_argument('--image_path', type=str, default='C:/Users/tianj/PycharmProjects/COMP3030J_Group_10_J0303/crnn/new/02D41166_1.jpg', help='source')
+#parser.add_argument('--image_path', type=str, default='/home/student/jialin/crnn/new/02D41166_1.jpg', help='source')
+parser.add_argument('--image_path', type=str, default='C:/Users/tianj/PycharmProjects/COMP3030J_Group_10_J0303/crnn/new/02D41166_1.jpg', help='source')
 # parser.add_argument('--image_path', type=str, default='/mnt/Gu/trainData/plate/new_git_train/val_verify', help='source')
 parser.add_argument('--img_h', type=int, default=48, help='height')
 parser.add_argument('--img_w',type=int,default=168,help='width')
