@@ -1,8 +1,23 @@
+<!--<template>-->
+<!--  <router-view />-->
+<!--</template>-->
+
+<!--<script>-->
+<!--import './charts/ChartjsConfig';-->
+<!--</script>-->
+
 <template>
-  <router-view />
+  <TranslatorProvider>
+    <router-view />
+  </TranslatorProvider>
 </template>
 
 <script>
-import './charts/ChartjsConfig';
+export default {
+  name: 'App'
+};
 </script>
 
+<style>
+/* 你的样式 */
+</style>

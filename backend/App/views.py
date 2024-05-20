@@ -318,3 +318,7 @@ def end_order():
     db.session.commit()
 
     return jsonify({'message': 'Order updated successfully', 'carbon_emission': carbon_emission}), 200
+
+@blue.route('/api/<path:filename>')
+def get_model(filename):
+    return send_from_directory('../3d/', filename)

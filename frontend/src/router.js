@@ -67,6 +67,7 @@ import AccordionPage from './pages/component/AccordionPage.vue'
 import IconsPage from './pages/component/IconsPage.vue'
 import Plate from './pages/Plate.vue'
 import Road from './pages/Road.vue'
+import Model from './pages/Model.vue'
 
 const routerHistory = createWebHashHistory()
 
@@ -344,6 +345,10 @@ const router = createRouter({
     {
       path: '/road',
       component: Road
+    },
+    {
+      path: '/model',
+      component: Model
     },
     {
       path: '/:pathMatch(.*)*',

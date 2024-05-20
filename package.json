@@ -1,5 +1,10 @@
 {
   "devDependencies": {
     "vue-router": "^4.3.0"
+  },
+  "dependencies": {
+    "@types/three": "^0.164.0",
+    "three": "^0.164.1",
+    "tree": "^0.1.3"
   }
 }
