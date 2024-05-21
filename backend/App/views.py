@@ -181,20 +181,91 @@ def get_vehicles():
 
 
 
+# def generate_random_captcha(length=4):
+#     # 生成一个包含大写字母和数字的验证码
+#     characters = string.ascii_uppercase + string.digits
+#     return ''.join(random.choice(characters) for _ in range(length))
+#
+#
+# @blue.route('/api/captcha')
+# def generate_captcha():
+#     image = ImageCaptcha(width=280, height=90)
+#     captcha_text = generate_random_captcha()
+#     data = image.generate(captcha_text)
+#     session['captcha'] = captcha_text  # 将验证码保存到 session 中
+#     return send_file(io.BytesIO(data.getvalue()), mimetype='image/png')
+#
+#
+# @blue.route('/api/login', methods=['POST'])
+# def user_login():
+#     data = request.get_json()
+#     email = data.get('email')
+#     password = data.get('password')
+#
+#     if not email or not password:
+#         return jsonify({'error': 'Missing email or password'}), 400
+#
+#     if 'captcha' in data and session.get('captcha', '') == data['captcha']:
+#         user = User.query.filter_by(email=email).first()
+#         if user and check_password_hash(user.password_hash, password):
+#             session.clear()  # 登录前先清除现有会话
+#             session['user_id'] = user.user_id  # 保存用户ID到session
+#             session['username'] = user.username  # 保存用户名到session，方便前端显示
+#             session['role'] = user.role  # 保存用户角色到session
+#
+#             # 根据角色返回不同的前端URL
+#             if user.role == 'DRIVER':
+#                 return jsonify({'success': True, 'message': 'Login successful', 'username': user.username, 'redirect_url': '/driver'})
+#             elif user.role == 'WAREHOUSE':
+#                 return jsonify({'success': True, 'message': 'Login successful', 'username': user.username, 'redirect_url': '/warehouse'})
+#             elif user.role == 'ADMIN':
+#                 return jsonify({'success': True, 'message': 'Login successful', 'username': user.username, 'redirect_url': '/admin'})
+#             else:
+#                 return jsonify({'success': False, 'error': 'Invalid role'}), 401
+#         else:
+#             return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+#     else:
+#         return jsonify({'error': 'Invalid captcha'}), 400
+#
+#
+#
+# @blue.route('/api/logout', methods=['POST'])
+# def user_logout():
+#     session.clear()  # 清除所有会话信息
+#     return jsonify({'success': True, 'message': 'Logout successful', 'redirect_url': '/'})
+#
+#
+# @blue.route('/api/user-session', methods=['GET'])
+# def get_user_session():
+#     user_id = session.get('user_id')
+#     username = session.get('username')
+#     role = session.get('role')
+#     if user_id and username and role:
+#         return jsonify({'user_id': user_id, 'username': username, 'role': role}), 200
+#     else:
+#         return jsonify({'error': 'No active session found'}), 404
+
+from flask import Blueprint, request, jsonify, session
+from werkzeug.security import check_password_hash
+from backend.App.models import User
+import random
+import string
+from captcha.image import ImageCaptcha
+import io
+
+blue = Blueprint('user', __name__)
+
 def generate_random_captcha(length=4):
-    # 生成一个包含大写字母和数字的验证码
     characters = string.ascii_uppercase + string.digits
     return ''.join(random.choice(characters) for _ in range(length))
-
 
 @blue.route('/api/captcha')
 def generate_captcha():
     image = ImageCaptcha(width=280, height=90)
     captcha_text = generate_random_captcha()
     data = image.generate(captcha_text)
-    session['captcha'] = captcha_text  # 将验证码保存到 session 中
+    session['captcha'] = captcha_text
     return send_file(io.BytesIO(data.getvalue()), mimetype='image/png')
-
 
 @blue.route('/api/login', methods=['POST'])
 def user_login():
@@ -208,17 +279,18 @@ def user_login():
     if 'captcha' in data and session.get('captcha', '') == data['captcha']:
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password_hash, password):
+            session.clear()  # 登录前先清除现有会话
             session['user_id'] = user.user_id  # 保存用户ID到session
             session['username'] = user.username  # 保存用户名到session，方便前端显示
             session['role'] = user.role  # 保存用户角色到session
 
             # 根据角色返回不同的前端URL
             if user.role == 'DRIVER':
-                return jsonify({'success': True, 'message': 'Login successful', 'username': user.username, 'redirect_url': 'http://127.0.0.1:5000/driver'})
+                return jsonify({'success': True, 'message': 'Login successful', 'user': user.username, 'redirect_url': '/driver'})
             elif user.role == 'WAREHOUSE':
-                return jsonify({'success': True, 'message': 'Login successful', 'username': user.username, 'redirect_url': 'http://127.0.0.1:5000/warehouse'})
+                return jsonify({'success': True, 'message': 'Login successful', 'user': user.username, 'redirect_url': '/warehouse'})
             elif user.role == 'ADMIN':
-                return jsonify({'success': True, 'message': 'Login successful', 'username': user.username, 'redirect_url': 'http://127.0.0.1:5000/admin'})
+                return jsonify({'success': True, 'message': 'Login successful', 'user': user.username, 'redirect_url': '/admin'})
             else:
                 return jsonify({'success': False, 'error': 'Invalid role'}), 401
         else:
@@ -229,11 +301,8 @@ def user_login():
 
 @blue.route('/api/logout', methods=['POST'])
 def user_logout():
-    session.pop('user_id', None)
-    session.pop('username', None)
-    session.pop('role', None)
-    return jsonify({'success': True, 'message': 'Logout successful'}), 200
-
+    session.clear()  # 清除所有会话信息
+    return jsonify({'success': True, 'message': 'Logout successful'})
 
 
 @blue.route('/api/user-session', methods=['GET'])
@@ -245,6 +314,7 @@ def get_user_session():
         return jsonify({'user_id': user_id, 'username': username, 'role': role}), 200
     else:
         return jsonify({'error': 'No active session found'}), 404
+
 
 
 @blue.route('/api/register', methods=['POST'])

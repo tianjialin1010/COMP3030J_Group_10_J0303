@@ -42,7 +42,7 @@
           <hr class="w-px h-6 bg-slate-200 dark:bg-slate-700 border-none" />
           <UserMenu align="right" />
           <!-- Logout Button -->
-          <button @click="logout" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+          <button @click="handleLogout" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
             Logout!
           </button>
         </div>
@@ -59,6 +59,8 @@ import Notifications from '../components/DropdownNotifications.vue'
 import Help from '../components/DropdownHelp.vue'
 import ThemeToggle from '../components/ThemeToggle.vue'
 import UserMenu from '../components/DropdownProfile.vue'
+import axios from 'axios'
+
 
 export default {
   name: 'Header',
@@ -77,9 +79,20 @@ export default {
     }
   },
   methods: {
-    logout() {
-      localStorage.removeItem('username'); // 清除用户名
-      this.$router.push('/'); // 导航到登录页面
+    handleLogout() {
+      axios.post('/api/logout')
+        .then(response => {
+          if (response.data.success) {
+            // 在成功登出后，进行页面重定向
+            this.$router.push(response.data.redirect_url);
+          } else {
+            alert('Logout failed!');
+          }
+        })
+        .catch(error => {
+          console.error('Error during logout:', error);
+          alert('Logout failed!');
+        });
     }
   }
 }

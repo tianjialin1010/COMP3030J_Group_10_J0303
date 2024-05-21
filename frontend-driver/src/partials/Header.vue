@@ -32,7 +32,7 @@
                 <path class="fill-current text-slate-500 dark:text-slate-400" d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z" />
                 <path class="fill-current text-slate-400 dark:text-slate-500" d="M15.707 14.293L13.314 11.9a8.019 8.019 0 01-1.414 1.414l2.393 2.393a.997.997 0 001.414 0 .999.999 0 000-1.414z" />
               </svg>
-            </button>          
+            </button>
             <SearchModal id="search-modal" searchId="search" :modalOpen="searchModalOpen" @open-modal="searchModalOpen = true" @close-modal="searchModalOpen = false" />
           </div>
           <Notifications align="right" />
@@ -42,7 +42,7 @@
           <hr class="w-px h-6 bg-slate-200 dark:bg-slate-700 border-none" />
           <UserMenu align="right" />
           <!-- Logout Button -->
-          <button @click="logout" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+          <button @click="handleLogout" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
             Logout!
           </button>
         </div>
@@ -54,11 +54,13 @@
 
 <script>
 import { ref } from 'vue'
+import { mapActions } from 'vuex'
 import SearchModal from '../components/ModalSearch.vue'
 import Notifications from '../components/DropdownNotifications.vue'
 import Help from '../components/DropdownHelp.vue'
 import ThemeToggle from '../components/ThemeToggle.vue'
 import UserMenu from '../components/DropdownProfile.vue'
+import axios from 'axios'
 
 export default {
   name: 'Header',
@@ -77,9 +79,22 @@ export default {
     }
   },
   methods: {
-    logout() {
-      localStorage.removeItem('username'); // 清除用户名
-      this.$router.push('/'); // 导航到登录页面
+    ...mapActions(['logout']),
+    handleLogout() {
+      axios.post('/api/logout')
+        .then(response => {
+          if (response.data.success) {
+            this.logout(); // 调用 Vuex 动作来清除会话数据
+            // 清除浏览器历史记录
+            window.location.replace('http://127.0.0.1:5000');
+          } else {
+            alert('Logout failed!');
+          }
+        })
+        .catch(error => {
+          console.error('Error during logout:', error);
+          alert('Logout failed!');
+        });
     }
   }
 }

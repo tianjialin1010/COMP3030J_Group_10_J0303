@@ -92,7 +92,6 @@ export default {
       axios.post('/api/login', { email, password, captcha: this.captcha })
         .then(response => {
           if (response.data.success) {
-            this.$store.dispatch('login', response.data.username);
             window.location.href = response.data.redirect_url;
           } else {
             alert(response.data.error || 'Login failed!');

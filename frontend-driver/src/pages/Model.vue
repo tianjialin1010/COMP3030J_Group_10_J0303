@@ -21,10 +21,6 @@ export default {
       // 创建场景
       const scene = new THREE.Scene();
 
-      // 创建相机
-      const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-      camera.position.set(0, 0, 5);
-
       // 创建渲染器
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(width, height);
@@ -33,28 +29,50 @@ export default {
       // 加载模型
       const loader = new GLTFLoader();
       loader.load('/api/model.glb', (gltf) => {
-        scene.add(gltf.scene);
-      });
+        const model = gltf.scene;
+        scene.add(model);
 
-      // 添加灯光
-      const ambientLight = new THREE.AmbientLight(0x404040); // 环境光
-      scene.add(ambientLight);
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // 平行光
-      directionalLight.position.set(5, 5, 5).normalize();
-      scene.add(directionalLight);
+        // 遍历场景，读取并添加光影和摄像头
+        let camera;
+        gltf.scene.traverse((node) => {
+          if (node.isLight) {
+            scene.add(node);
+          }
+          if (node.isCamera) {
+            camera = node;
+          }
+        });
 
-      // 添加OrbitControls
-      const controls = new OrbitControls(camera, renderer.domElement);
-      controls.update();
+        // 确保找到摄像头，如果没有找到则创建默认摄像头
+        if (!camera) {
+          camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+          camera.position.set(0, 0, 5);
+        }
 
-      // 动画循环
-      const animate = () => {
-        requestAnimationFrame(animate);
+        // 获取动画并播放
+        const mixer = new THREE.AnimationMixer(model);
+        gltf.animations.forEach((clip) => {
+          const action = mixer.clipAction(clip);
+          action.setLoop(THREE.LoopOnce); // 只播放一次
+          action.clampWhenFinished = true; // 保持动画结束时的姿势
+          action.play();
+        });
+
+        // 动画循环
+        const clock = new THREE.Clock();
+        const animate = () => {
+          requestAnimationFrame(animate);
+          const delta = clock.getDelta() * 0.5; // 调整播放速度为0.5倍
+          mixer.update(delta);
+          renderer.render(scene, camera);
+        };
+
+        animate();
+
+        // 添加OrbitControls
+        const controls = new OrbitControls(camera, renderer.domElement);
         controls.update();
-        renderer.render(scene, camera);
-      };
-
-      animate();
+      });
     }
   }
 };

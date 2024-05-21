@@ -1,31 +1,32 @@
 // store/index.js
 import { createStore } from 'vuex'
 
-export default createStore({
+const store = createStore({
   state: {
-    username: '',
-    role: ''
+    user: null,
+    isLoggedIn: false,
+  },
+  getters: {
+    isLoggedIn: state => state.isLoggedIn,
   },
   mutations: {
-    login(state, { username, role }) {
-      state.username = username;
-      state.role = role;
+    setUser(state, user) {
+      state.user = user
+      state.isLoggedIn = true
     },
-    logout(state) {
-      state.username = '';
-      state.role = '';
+    clearSession(state) {
+      state.user = null
+      state.isLoggedIn = false
     }
   },
   actions: {
-    login({ commit }, { username, role }) {
-      commit('login', { username, role });
+    login({ commit }, user) {
+      commit('setUser', user)
     },
     logout({ commit }) {
-      commit('logout');
+      commit('clearSession')
     }
-  },
-  getters: {
-    isLoggedIn: state => !!state.username,
-    userRole: state => state.role
   }
-});
+})
+
+export default store
