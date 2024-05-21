@@ -3,13 +3,13 @@
     <!-- Main Content area -->
     <main class="grow">
       <div id="mapElement" ref="mapElement" style="height: 100%; width: 100%;"></div>
+      <div id="infoPanel" ref="infoPanel"></div>
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, toRefs } from 'vue'
-import { defineProps } from 'vue'
+import { ref, onMounted, defineProps } from 'vue'
 
 const { origin, destination } = defineProps({
   origin: {
@@ -23,6 +23,7 @@ const { origin, destination } = defineProps({
 })
 
 const mapElement = ref(null);
+const infoPanel = ref(null);
 
 onMounted(() => {
   if (!window.google || !window.google.maps) {
@@ -77,9 +78,11 @@ function calculateRoute(directionsService, directionsRenderer, map) {
   });
 }
 
+const stopFraction = 1;
+
 function animateMarker(map, route, origin, destination) {
   const path = route.overview_path;
-  const stoppingPointIndex = Math.floor(path.length / 3);
+  const stoppingPointIndex = Math.floor(path.length / stopFraction);
   let carIconPath;
 
   if (origin.lat > destination.lat) {
@@ -93,20 +96,40 @@ function animateMarker(map, route, origin, destination) {
     icon: carIconPath,
   });
 
+  const remainingPath = new google.maps.Polyline({
+    path: path,
+    strokeColor: '#75759a',
+    strokeOpacity: 0.6,
+    strokeWeight: 5,
+  });
+
+  const traveledPath = new google.maps.Polyline({
+    path: [],
+    strokeColor: '#00008B',
+    strokeOpacity: 0.8,
+    strokeWeight: 5,
+  });
+
+  remainingPath.setMap(map);
+  traveledPath.setMap(map);
+
   let step = 0;
   const intervalId = setInterval(() => {
     if (step <= stoppingPointIndex) {
       marker.setPosition(path[step]);
+      traveledPath.getPath().push(path[step]);
+      remainingPath.getPath().removeAt(0);
       step++;
     } else {
       clearInterval(intervalId);
-      const remainingDistance = (route.legs[0].distance.value * (1 - 1/3) / 1000).toFixed(2) + " km";
-      const remainingDuration = (route.legs[0].duration.value * (1 - 1/3) / 60).toFixed(0) + " minutes";
+      const remainingDistance = (route.legs[0].distance.value * (1 - 1/stopFraction) / 1000).toFixed(2) + " km";
+      const remainingDuration = (route.legs[0].duration.value * (1 - 1/stopFraction) / 60).toFixed(0) + " minutes";
       infoPanel.value.innerHTML = `<strong>Remaining Distance:</strong> ${remainingDistance} <br><strong>Remaining Duration:</strong> ${remainingDuration}`;
     }
   }, 100);
 }
 </script>
+
 
 <script>
 import Sidebar from '../partials/Sidebar.vue'
