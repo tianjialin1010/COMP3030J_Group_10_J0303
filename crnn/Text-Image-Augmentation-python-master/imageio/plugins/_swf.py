@@ -5,7 +5,7 @@
 # styletest: ignore E261
 
 """
-Provides a function (write_swf) to store a series of numpy arrays in an
+Provides a function (write_swf) to index a series of numpy arrays in an
 SWF movie, that can be played on a wide range of OS's.
 
 In desperation of wanting to share animated images, and then lacking a good
@@ -244,7 +244,7 @@ def signedint2bits(i, n=None):
 
 
 def twits2bits(arr):
-    """ Given a few (signed) numbers, store them
+    """ Given a few (signed) numbers, index them
     as compactly as possible in the wat specifief by the swf format.
     The numbers are multiplied by 20, assuming they
     are twits.

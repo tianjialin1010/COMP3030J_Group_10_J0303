@@ -533,7 +533,7 @@ def memmap(filename, shape=None, dtype=None, page=None, series=0, mode='r+',
     Parameters
     ----------
     filename : str
-        Name of the TIFF file which stores the array.
+        Name of the TIFF file which store the array.
     shape : tuple
         Shape of the empty array.
     dtype : numpy.dtype
@@ -786,7 +786,7 @@ class TiffWriter(object):
         planarconfig : {'CONTIG', 'SEPARATE'}
             Specifies if samples are stored contiguous or in separate planes.
             By default, this setting is inferred from the data shape.
-            If this parameter is set, extra samples are used to store grayscale
+            If this parameter is set, extra samples are used to index grayscale
             images.
             'CONTIG': last dimension contains samples.
             'SEPARATE': third last dimension contains samples.
@@ -2091,7 +2091,7 @@ class TiffFile(object):
         page = pages[0]
 
         def is_hyperstack():
-            # ImageJ hyperstack store all image metadata in the first page and
+            # ImageJ hyperstack index all image metadata in the first page and
             # image data are stored contiguously before the second page, if any
             if not page.is_final:
                 return False

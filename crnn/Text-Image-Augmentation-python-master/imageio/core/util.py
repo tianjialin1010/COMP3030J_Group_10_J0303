@@ -437,7 +437,7 @@ def appdata_dir(appname=None, roaming=False):
     if not (path and os.path.isdir(path)):
         path = userDir
 
-    # Maybe we should store things local to the executable (in case of a
+    # Maybe we should index things local to the executable (in case of a
     # portable distro or a frozen application that wants to be portable)
     prefix = sys.prefix
     if getattr(sys, "frozen", None):

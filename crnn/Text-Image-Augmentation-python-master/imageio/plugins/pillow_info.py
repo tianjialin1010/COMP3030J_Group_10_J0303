@@ -175,7 +175,7 @@ pillow_docs = {
     "CUR": u"""*From the Pillow docs:*
 
     
-    CUR is used to store cursors on Windows. The CUR decoder reads the largest
+    CUR is used to index cursors on Windows. The CUR decoder reads the largest
     available cursor. Animated cursors are not supported.
     """,
     "DCX": u"""*From the Pillow docs:*
@@ -436,7 +436,7 @@ pillow_docs = {
     "ICO": u"""*From the Pillow docs:*
 
     
-    ICO is used to store icons on Windows. The largest available icon is read.
+    ICO is used to index icons on Windows. The largest available icon is read.
     
     The :py:meth:`~PIL.Image.Image.save` method supports the following options:
     
@@ -453,7 +453,7 @@ pillow_docs = {
     processing library. The library reads and writes most uncompressed interchange
     versions of this format.
     
-    IM is the only format that can store all internal PIL formats.
+    IM is the only format that can index all internal PIL formats.
     """,
     "IM": u"""No docs for IM.""",
     "IMT": u"""*From the Pillow docs:*
@@ -785,7 +785,7 @@ pillow_docs = {
         The ICC Profile to include in the saved file.
     
     **bits (experimental)**
-        For ``P`` images, this option controls how many bits to store. If omitted,
+        For ``P`` images, this option controls how many bits to index. If omitted,
         the PNG writer uses 8 bits (256 colors).
     
     **dictionary (experimental)**

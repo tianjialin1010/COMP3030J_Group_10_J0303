@@ -1,5 +1,6 @@
 import os
-
+from flask import Flask, send_from_directory, session, redirect, url_for
+import os
 from flask import Flask,send_from_directory
 from backend.App.exts import init_exts
 from flask_sqlalchemy import SQLAlchemy
@@ -7,12 +8,20 @@ from flask_migrate import Migrate
 from backend.App.views import blue
 from flask_cors import CORS
 
+import os
+from flask import Flask, send_from_directory
+from backend.App.exts import init_exts
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from backend.App.views import blue
+from flask_cors import CORS
 
 HOSTNAME = "127.0.0.1"
 PORT = 3306
 USERNAME = "root"
 PASSWORD = "2003721gavin?"
 FLASK_DB = "comp3030j"
+
 
 def createApp(config_name=None):
     app = Flask(__name__,
@@ -33,8 +42,8 @@ def createApp(config_name=None):
 def register_routes(app):
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
-    def serve_frontend(path):
-        dist_path = os.path.join(app.static_folder, 'frontend', 'dist')
+    def serve_promo_frontend(path):
+        dist_path = os.path.join(app.static_folder, 'frontend-promo', 'dist')
         if path and os.path.exists(os.path.join(dist_path, path)):
             return send_from_directory(dist_path, path)
         else:
@@ -43,9 +52,34 @@ def register_routes(app):
     @app.route('/admin/', defaults={'path': ''})
     @app.route('/admin/<path:path>')
     def serve_admin_frontend(path):
-        admin_dist_path = os.path.join(app.static_folder, 'frontend_admin', 'dist')
-        if path and os.path.exists(os.path.join(admin_dist_path, path)):
-            return send_from_directory(admin_dist_path, path)
+        dist_path = os.path.join(app.static_folder, 'frontend-admin', 'dist')
+        if path and os.path.exists(os.path.join(dist_path, path)):
+            return send_from_directory(dist_path, path)
         else:
-            return send_from_directory(admin_dist_path, 'index.html')
+            return send_from_directory(dist_path, 'index.html')
+
+    @app.route('/driver/', defaults={'path': ''})
+    @app.route('/driver/<path:path>')
+    def serve_driver_frontend(path):
+        dist_path = os.path.join(app.static_folder, 'frontend-driver', 'dist')
+        if path and os.path.exists(os.path.join(dist_path, path)):
+            return send_from_directory(dist_path, path)
+        else:
+            return send_from_directory(dist_path, 'index.html')
+
+    @app.route('/warehouse/', defaults={'path': ''})
+    @app.route('/warehouse/<path:path>')
+    def serve_warehouse_frontend(path):
+        dist_path = os.path.join(app.static_folder, 'frontend-warehouse', 'dist')
+        if path and os.path.exists(os.path.join(dist_path, path)):
+            return send_from_directory(dist_path, path)
+        else:
+            return send_from_directory(dist_path, 'index.html')
+
+    # 静态文件处理
+    @app.route('/static/<path:filename>')
+    def serve_static(filename):
+        return app.send_static_file(filename)
+
+
 

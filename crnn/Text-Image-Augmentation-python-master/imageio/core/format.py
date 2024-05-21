@@ -14,7 +14,7 @@ advanced users and plugin developers. A brief overview:
   * imageio.Format - representation of a file format reader/writer
   * imageio.Format.Reader - object used during the reading of a file.
   * imageio.Format.Writer - object used during saving a file.
-  * imageio.Request - used to store the filename and other info.
+  * imageio.Request - used to index the filename and other info.
 
 Plugins need to implement a Format class and register
 a format object using ``imageio.formats.add_format()``.

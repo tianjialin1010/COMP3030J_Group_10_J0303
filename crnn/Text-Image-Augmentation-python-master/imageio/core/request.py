@@ -98,15 +98,15 @@ class Request(object):
         # To handle the user-side
         self._filename_zip = None  # not None if a zipfile is used
         self._bytes = None  # Incoming bytes
-        self._zipfile = None  # To store a zipfile instance (if used)
+        self._zipfile = None  # To index a zipfile instance (if used)
 
         # To handle the plugin side
-        self._file = None  # To store the file instance
+        self._file = None  # To index the file instance
         self._file_is_local = False  # whether the data needs to be copied at end
         self._filename_local = None  # not None if using tempfile on this FS
         self._firstbytes = None  # For easy header parsing
 
-        # To store formats that may be able to fulfil this request
+        # To index formats that may be able to fulfil this request
         # self._potential_formats = []
 
         # Check mode

@@ -17,10 +17,7 @@ import io
 
 blue = Blueprint('user', __name__)
 
-def generate_random_captcha(length=4):
-    # 生成一个包含大写字母和数字的验证码
-    characters = string.ascii_uppercase + string.digits
-    return ''.join(random.choice(characters) for _ in range(length))
+
 
 # @blue.route('/', defaults={'path': 'home'})
 # @blue.route('/home')
@@ -158,8 +155,49 @@ def get_vehicles():
 
 
 
+# @blue.route('/api/login', methods=['POST'])
+# def login():
+#     data = request.get_json()
+#     email = data.get('email')
+#     password = data.get('password')
+#
+#     if not email or not password:
+#         return jsonify({'error': 'Missing email or password'}), 400
+#
+#     if 'captcha' in data and session.get('captcha', '') == data['captcha']:
+#         user = User.query.filter_by(email=email).first()
+#         if user and check_password_hash(user.password_hash, password):
+#             session['user_id'] = user.user_id  # 保存用户ID到session
+#             session['username'] = user.username  # 保存用户名到session，方便前端显示
+#             return jsonify({'success': True, 'message': 'Login successful', 'username': user.username}), 200
+#         else:
+#             return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+#
+#         pass
+#
+#     else:
+#         return jsonify({'error': 'Invalid captcha'}), 400
+
+
+
+
+def generate_random_captcha(length=4):
+    # 生成一个包含大写字母和数字的验证码
+    characters = string.ascii_uppercase + string.digits
+    return ''.join(random.choice(characters) for _ in range(length))
+
+
+@blue.route('/api/captcha')
+def generate_captcha():
+    image = ImageCaptcha(width=280, height=90)
+    captcha_text = generate_random_captcha()
+    data = image.generate(captcha_text)
+    session['captcha'] = captcha_text  # 将验证码保存到 session 中
+    return send_file(io.BytesIO(data.getvalue()), mimetype='image/png')
+
+
 @blue.route('/api/login', methods=['POST'])
-def login():
+def user_login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -172,20 +210,41 @@ def login():
         if user and check_password_hash(user.password_hash, password):
             session['user_id'] = user.user_id  # 保存用户ID到session
             session['username'] = user.username  # 保存用户名到session，方便前端显示
-            return jsonify({'success': True, 'message': 'Login successful', 'username': user.username}), 200
+            session['role'] = user.role  # 保存用户角色到session
+
+            # 根据角色返回不同的前端URL
+            if user.role == 'DRIVER':
+                return jsonify({'success': True, 'message': 'Login successful', 'username': user.username, 'redirect_url': 'http://127.0.0.1:5000/driver'})
+            elif user.role == 'WAREHOUSE':
+                return jsonify({'success': True, 'message': 'Login successful', 'username': user.username, 'redirect_url': 'http://127.0.0.1:5000/warehouse'})
+            elif user.role == 'ADMIN':
+                return jsonify({'success': True, 'message': 'Login successful', 'username': user.username, 'redirect_url': 'http://127.0.0.1:5000/admin'})
+            else:
+                return jsonify({'success': False, 'error': 'Invalid role'}), 401
         else:
             return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
-
-        pass
-
     else:
         return jsonify({'error': 'Invalid captcha'}), 400
 
+
 @blue.route('/api/logout', methods=['POST'])
-def logout():
-    session.pop('user_id', None)  # 清除session
+def user_logout():
+    session.pop('user_id', None)
     session.pop('username', None)
+    session.pop('role', None)
     return jsonify({'success': True, 'message': 'Logout successful'}), 200
+
+
+
+@blue.route('/api/user-session', methods=['GET'])
+def get_user_session():
+    user_id = session.get('user_id')
+    username = session.get('username')
+    role = session.get('role')
+    if user_id and username and role:
+        return jsonify({'user_id': user_id, 'username': username, 'role': role}), 200
+    else:
+        return jsonify({'error': 'No active session found'}), 404
 
 
 @blue.route('/api/register', methods=['POST'])
@@ -351,16 +410,6 @@ def get_weather():
     return jsonify(weather)
 
 
-
-@blue.route('/api/captcha')
-def generate_captcha():
-    image = ImageCaptcha(width=280, height=90)
-    captcha_text = generate_random_captcha()  # 生成随机的验证码文本
-    data = image.generate(captcha_text)
-    session['captcha'] = captcha_text  # 将验证码文本保存在session中以供验证
-    return send_file(io.BytesIO(data.getvalue()), mimetype='image/png')
-
-
 # In Flask, receiving and processing data:
 @blue.route('/api/endOrder', methods=['POST'])
 def end_order():
@@ -388,7 +437,7 @@ def end_order():
 
 @blue.route('/video')
 def get_video():
-    return send_file('../../frontend/src/assets/images/test.mp4', mimetype='video/mp4')
+    return send_file('../../frontend-driver/src/assets/images/test.mp4', mimetype='video/mp4')
 
 @blue.route('/api/<path:filename>')
 def get_model(filename):

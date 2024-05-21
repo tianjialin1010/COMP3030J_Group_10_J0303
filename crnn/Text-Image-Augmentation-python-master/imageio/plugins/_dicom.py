@@ -153,13 +153,13 @@ class SimpleDicomReader(object):
         else:
             self._filename = "<unknown file>"
             self._file = file
-        # Init variable to store position and size of pixel data
+        # Init variable to index position and size of pixel data
         self._pixel_data_loc = None
         # The meta header is always explicit and little endian
         self.is_implicit_VR = False
         self.is_little_endian = True
         self._unpackPrefix = "<"
-        # Dict to store data elements of interest in
+        # Dict to index data elements of interest in
         self._info = {}
         # VR Conversion
         self._converters = {
@@ -299,7 +299,7 @@ class SimpleDicomReader(object):
         f = self._file
         TransferSyntaxUID = None
 
-        # Read all elements, store transferSyntax when we encounter it
+        # Read all elements, index transferSyntax when we encounter it
         try:
             while True:
                 fp_save = f.tell()

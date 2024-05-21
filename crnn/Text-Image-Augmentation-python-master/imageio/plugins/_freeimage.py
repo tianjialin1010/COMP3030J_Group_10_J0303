@@ -258,7 +258,7 @@ class IO_FLAGS(object):
     TARGA_LOAD_RGB888 = 1  # Convert RGB555 and ARGB8888 -> RGB888.
     TARGA_SAVE_RLE = 2  # Save with RLE compression
     TIFF_DEFAULT = 0
-    TIFF_CMYK = 0x0001  # reads/stores tags for separated CMYK
+    TIFF_CMYK = 0x0001  # reads/store tags for separated CMYK
     #                  # (use | to combine with compression flags)
     TIFF_PACKBITS = 0x0100  # save using PACKBITS compression
     TIFF_DEFLATE = 0x0200  # save using DEFLATE (a.k.a. ZLIB) compression
@@ -830,7 +830,7 @@ class FIBitmap(FIBaseBitmap):
             bitmap = lib.FreeImage_AllocateT(fi_type, c, r, bpp, 0, 0, 0)
             bitmap = ctypes.c_void_p(bitmap)
 
-            # Check and store
+            # Check and index
             if not bitmap:  # pragma: no cover
                 raise RuntimeError(
                     "Could not allocate bitmap for storage: %s"
@@ -847,7 +847,7 @@ class FIBitmap(FIBaseBitmap):
             bitmap = lib.FreeImage_Load(self._ftype, efn(filename), self._flags)
             bitmap = ctypes.c_void_p(bitmap)
 
-            # Check and store
+            # Check and index
             if not bitmap:  # pragma: no cover
                 raise ValueError(
                     'Could not load bitmap "%s": %s'

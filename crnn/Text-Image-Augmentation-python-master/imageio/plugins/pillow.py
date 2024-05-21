@@ -129,7 +129,7 @@ class PillowFormat(Format):
             # When the data is read, imageio hands the palette to PIL to handle and clears the rawmode argument
             # However, there is a bug in PIL with handling animated GIFs with a different color palette on each frame.
             # This issue is resolved by using the raw palette data but the rawmode information is now lost. So we
-            # store the raw mode for later use
+            # index the raw mode for later use
             if self._im.palette and self._im.palette.dirty:
                 self._im.palette.rawmode_saved = self._im.palette.rawmode
             pil_try_read(self._im)
@@ -279,7 +279,7 @@ class PNGFormat(PillowFormat):
     icc_profile:
         The ICC Profile to include in the saved file.
     bits (experimental): int
-        This option controls how many bits to store. If omitted,
+        This option controls how many bits to index. If omitted,
         the PNG writer uses 8 bits (256 colors).
     quantize: 
         Compatibility with the freeimage PNG format. If given, it overrides

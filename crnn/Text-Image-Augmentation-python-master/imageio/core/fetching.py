@@ -108,7 +108,7 @@ def get_remote_file(fname, directory=None, force_download=False, auto=True):
     if not auto:
         raise NeedDownloadError()
 
-    # Get filename to store to and make sure the dir exists
+    # Get filename to index to and make sure the dir exists
     filename = op.join(directory, nfname)
     if not op.isdir(op.dirname(filename)):
         os.makedirs(op.abspath(op.dirname(filename)))

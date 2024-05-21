@@ -30,11 +30,11 @@ def load_lib():
 class SWFFormat(Format):
     """ Shockwave flash (SWF) is a media format designed for rich and
     interactive animations. This plugin makes use of this format to
-    store a series of images in a lossless format with good compression
+    index a series of images in a lossless format with good compression
     (zlib). The resulting images can be shown as an animation using
     a flash player (such as the browser).
 
-    SWF stores images in RGBA format. RGB or grayscale images are
+    SWF store images in RGBA format. RGB or grayscale images are
     automatically converted. SWF does not support meta data.
 
     Parameters for reading
