@@ -1,3 +1,4 @@
+# views.py
 from sqlalchemy.testing.pickleable import User
 from werkzeug.security import generate_password_hash
 from backend.App.models import *
@@ -16,20 +17,6 @@ from captcha.image import ImageCaptcha
 import io
 
 blue = Blueprint('user', __name__)
-
-
-
-# @blue.route('/', defaults={'path': 'home'})
-# @blue.route('/home')
-# def catch_all(path):
-#     return render_template("index.html")
-
-# # Route for user login
-# # Define a route for the login page
-# @blue.route('/api/items')
-# def get_items():
-#     items = Item.query.all()
-#     return jsonify([{'id': item.id, 'name': item.name} for item in items])
 
 @blue.route('/api/customers')
 def get_customers():
@@ -50,6 +37,7 @@ def get_customers():
             'created_at': user.created_at.isoformat() if user.created_at else None
         } for user in customers]
     })
+
 
 
 @blue.route('/api/orders')
@@ -252,8 +240,6 @@ import random
 import string
 from captcha.image import ImageCaptcha
 import io
-
-blue = Blueprint('user', __name__)
 
 def generate_random_captcha(length=4):
     characters = string.ascii_uppercase + string.digits

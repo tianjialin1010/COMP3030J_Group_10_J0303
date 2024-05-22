@@ -102,8 +102,9 @@
 #     def serve_static(filename):
 #         return app.send_static_file(filename)
 
+# App.__init__.py
 import os
-from flask import Flask, send_from_directory, session, redirect, url_for
+from flask import Flask, send_from_directory, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from backend.App.exts import init_exts
@@ -121,7 +122,7 @@ FLASK_DB = "comp3030j"
 def createApp(config_name=None):
     app = Flask(__name__, static_folder='../..')
     CORS(app)
-    app.register_blueprint(blueprint=blue)
+    app.register_blueprint(blue)
     app.config['SECRET_KEY'] = 'J0303'
     db_uri = f'mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{FLASK_DB}?charset=utf8mb4'
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri

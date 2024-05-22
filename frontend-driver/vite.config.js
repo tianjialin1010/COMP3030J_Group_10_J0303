@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: process.env.NODE_ENV === 'production' ? '/driver/' : '/',
   server: {
     proxy: {
       // 使用 proxy 实例
@@ -12,7 +13,6 @@ export default defineConfig({
       },
     },
   },
-
   define: {
     'process.env': process.env
   },
