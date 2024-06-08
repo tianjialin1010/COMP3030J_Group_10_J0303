@@ -61,6 +61,7 @@
 <script>
 import { ref } from 'vue'
 import LineChart from '../../charts/LineChart03.vue'
+import { subMonths, format } from 'date-fns'
 
 // Import utilities
 import { tailwindConfig, hexToRGB } from '../../utils/Utils'
@@ -71,27 +72,23 @@ export default {
     LineChart,
   },
   setup() {
+    const generateLastSixMonthsLabels = () => {
+      const labels = []
+      for (let i = 0; i < 6; i++) {
+        const date = subMonths(new Date(), i)
+        labels.push(format(date, 'MM-dd-yyyy'))
+      }
+      return labels.reverse()
+    }
+
     const chartData = ref({
-      labels: [
-        '12-01-2020', '01-01-2021', '02-01-2021',
-        '03-01-2021', '04-01-2021', '05-01-2021',
-        '06-01-2021', '07-01-2021', '08-01-2021',
-        '09-01-2021', '10-01-2021', '11-01-2021',
-        '12-01-2021', '01-01-2022', '02-01-2022',
-        '03-01-2022', '04-01-2022', '05-01-2022',
-        '06-01-2022', '07-01-2022', '08-01-2022',
-        '09-01-2022', '10-01-2022', '11-01-2022',
-        '12-01-2022', '01-01-2023',
-      ],
+      labels: generateLastSixMonthsLabels(),
       datasets: [
         // Indigo line
         {
           label: 'Current',
           data: [
-            5000, 8700, 7500, 12000, 11000, 9500, 10500,
-            10000, 15000, 9000, 10000, 7000, 22000, 7200,
-            9800, 9000, 10000, 8000, 15000, 12000, 11000,
-            13000, 11000, 15000, 17000, 18000,
+            5000, 8700, 7500, 12000, 11000, 9500,
           ],
           fill: true,
           backgroundColor: `rgba(${hexToRGB(tailwindConfig().theme.colors.blue[500])}, 0.08)`,
@@ -103,17 +100,14 @@ export default {
           pointBackgroundColor: tailwindConfig().theme.colors.indigo[500],
           pointHoverBackgroundColor: tailwindConfig().theme.colors.indigo[500],
           pointBorderWidth: 0,
-          pointHoverBorderWidth: 0,          
+          pointHoverBorderWidth: 0,
           clip: 20,
         },
         // Gray line
         {
           label: 'Previous',
           data: [
-            8000, 5000, 6500, 5000, 6500, 12000, 8000,
-            9000, 8000, 8000, 12500, 10000, 10000, 12000,
-            11000, 16000, 12000, 10000, 10000, 14000, 9000,
-            10000, 15000, 12500, 14000, 11000,
+            8000, 5000, 6500, 5000, 6500, 12000,
           ],
           borderColor: `rgba(${hexToRGB(tailwindConfig().theme.colors.slate[500])}, 0.25)`,
           fill: false,
@@ -124,7 +118,7 @@ export default {
           pointBackgroundColor: `rgba(${hexToRGB(tailwindConfig().theme.colors.slate[500])}, 0.25)`,
           pointHoverBackgroundColor: `rgba(${hexToRGB(tailwindConfig().theme.colors.slate[500])}, 0.25)`,
           pointBorderWidth: 0,
-          pointHoverBorderWidth: 0,               
+          pointHoverBorderWidth: 0,
           clip: 20,
         },
       ],
@@ -132,7 +126,7 @@ export default {
 
     return {
       chartData,
-    } 
+    }
   }
 }
 </script>

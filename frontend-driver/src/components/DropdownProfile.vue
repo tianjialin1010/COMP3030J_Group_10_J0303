@@ -7,9 +7,10 @@
       @click.prevent="dropdownOpen = !dropdownOpen"
       :aria-expanded="dropdownOpen"
     >
-      <img class="w-8 h-8 rounded-full" :src="UserAvatar" width="32" height="32" alt="User" />
+      <!-- Update :src to use the fetched avatar URL or a default image -->
+      <img class="w-8 h-8 rounded-full" :src="userInfo.avatar_url || defaultAvatar" width="32" height="32" alt="User" />
       <div class="flex items-center truncate">
-        <span class="truncate ml-2 text-sm font-medium dark:text-slate-300 group-hover:text-slate-800 dark:group-hover:text-slate-200">Acme Inc.</span>
+        <span class="truncate ml-2 text-sm font-medium dark:text-slate-300 group-hover:text-slate-800 dark:group-hover:text-slate-200">{{ userInfo.username }}</span>
         <svg class="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
           <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
         </svg>
@@ -25,8 +26,8 @@
     >
       <div v-show="dropdownOpen" class="origin-top-right z-10 absolute top-full min-w-44 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-1.5 rounded shadow-lg overflow-hidden mt-1" :class="align === 'right' ? 'right-0' : 'left-0'">
         <div class="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200 dark:border-slate-700">
-          <div class="font-medium text-slate-800 dark:text-slate-100">Acme Inc.</div>
-          <div class="text-xs text-slate-500 dark:text-slate-400 italic">Administrator</div>
+          <div class="font-medium text-slate-800 dark:text-slate-100">{{ userInfo.username }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 italic">{{ userInfo.role }}</div>
         </div>
         <ul
           ref="dropdown"
@@ -36,48 +37,61 @@
           <li>
             <router-link class="font-medium text-sm text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center py-1 px-3" to="/settings/account" @click="dropdownOpen = false">Settings</router-link>
           </li>
-          <li>
-            <router-link class="font-medium text-sm text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center py-1 px-3" to="/signin" @click="dropdownOpen = false">Sign Out</router-link>
-          </li>
+<!--          <li>-->
+<!--            <router-link class="font-medium text-sm text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center py-1 px-3" to="/signin" @click="dropdownOpen = false"></router-link>-->
+<!--          </li>-->
         </ul>
-      </div> 
+      </div>
     </transition>
   </div>
 </template>
 
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
+import axios from 'axios'
 import UserAvatar from '../images/user-avatar-32.png'
 
 export default {
   name: 'DropdownProfile',
   props: ['align'],
-  data() {
-    return {
-      UserAvatar: UserAvatar,
-    }
-  },  
   setup() {
-
     const dropdownOpen = ref(false)
     const trigger = ref(null)
     const dropdown = ref(null)
+    const userInfo = ref({
+      username: '',
+      role: '',
+      avatar_url: UserAvatar
+    })
+    const defaultAvatar = UserAvatar;
 
-    // close on click outside
+    // Close on click outside
     const clickHandler = ({ target }) => {
       if (!dropdownOpen.value || dropdown.value.contains(target) || trigger.value.contains(target)) return
       dropdownOpen.value = false
     }
 
-    // close if the esc key is pressed
+    // Close if the esc key is pressed
     const keyHandler = ({ keyCode }) => {
       if (!dropdownOpen.value || keyCode !== 27) return
       dropdownOpen.value = false
     }
 
+    // Fetch user info from the API
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get('/api/user-info')
+        userInfo.value = response.data
+        userInfo.value.avatar_url = userInfo.value.avatar_url || defaultAvatar; // Use default avatar if none is provided
+      } catch (error) {
+        console.error('Error fetching user info:', error)
+      }
+    }
+
     onMounted(() => {
       document.addEventListener('click', clickHandler)
       document.addEventListener('keydown', keyHandler)
+      fetchUserInfo()
     })
 
     onUnmounted(() => {
@@ -89,6 +103,7 @@ export default {
       dropdownOpen,
       trigger,
       dropdown,
+      userInfo
     }
   }
 }

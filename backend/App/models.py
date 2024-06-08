@@ -1,25 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-from enum import Enum
-from sqlalchemy.orm import relationship
-from sqlalchemy.types import Enum as SQLEnum
-
-
-
-
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-from enum import Enum
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
-from flask_sqlalchemy import SQLAlchemy
+# App.models.py
 from backend.App.exts import db
-from sqlalchemy import Enum
-from enum import Enum
-from sqlalchemy import Column, Integer, String, DateTime, Enum as SQLEnum
-from flask_sqlalchemy import SQLAlchemy
-
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Enum
 
 class User(db.Model):

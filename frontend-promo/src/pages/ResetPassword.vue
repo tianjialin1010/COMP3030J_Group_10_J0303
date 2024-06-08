@@ -1,8 +1,6 @@
 <template>
   <main class="grow">
-
     <section class="relative">
-
       <!-- Illustration -->
       <div class="md:block absolute left-1/2 -translate-x-1/2 -mt-36 blur-2xl opacity-70 pointer-events-none -z-10" aria-hidden="true">
         <img src="../images/auth-illustration.svg" class="max-w-none" width="1440" height="450" alt="Page Illustration">
@@ -10,7 +8,6 @@
 
       <div class="relative max-w-6xl mx-auto px-4 sm:px-6">
         <div class="pt-32 pb-12 md:pt-40 md:pb-20">
-
           <!-- Page header -->
           <div class="max-w-3xl mx-auto text-center pb-12">
             <!-- Logo -->
@@ -27,33 +24,60 @@
 
           <!-- Form -->
           <div class="max-w-sm mx-auto">
-
-            <form>
+            <form @submit.prevent="resetPassword">
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm text-slate-300 font-medium mb-1" for="email">Email</label>
-                  <input id="email" class="form-input w-full" type="email" required />
+                  <input id="email" v-model="email" class="form-input w-full" type="email" required />
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-300 font-medium mb-1" for="new_password">New Password</label>
+                  <input id="new_password" v-model="newPassword" class="form-input w-full" type="password" required />
                 </div>
               </div>
               <div class="mt-6">
-                <button class="btn text-sm text-white bg-purple-500 hover:bg-purple-600 w-full shadow-sm group">
+                <button class="btn text-sm text-white bg-purple-500 hover:bg-purple-600 w-full shadow-sm group" type="submit">
                   Reset Password <span class="tracking-normal text-purple-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
                 </button>
               </div>
             </form>
-
           </div>
-
         </div>
       </div>
-
     </section>
-
   </main>
 </template>
 
 <script>
 export default {
   name: 'ResetPassword',
-}
+  data() {
+    return {
+      email: '',
+      newPassword: ''
+    };
+  },
+  methods: {
+    async resetPassword() {
+      const response = await fetch('/api/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: this.email,
+          new_password: this.newPassword
+        })
+      });
+
+      if (response.ok) {
+        alert('Password successfully reset');
+        this.$router.push('/signin');  // 跳转到登录页面
+      } else {
+        const data = await response.json();
+        alert(`Error: ${data.error}`);
+      }
+    }
+  }
+};
 </script>

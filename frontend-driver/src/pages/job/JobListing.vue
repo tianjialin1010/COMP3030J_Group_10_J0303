@@ -18,7 +18,7 @@
           <!-- Page content -->
           <div class="flex flex-col space-y-10 sm:flex-row sm:space-x-6 sm:space-y-0 md:flex-col md:space-x-0 md:space-y-10 xl:flex-row xl:space-x-6 xl:space-y-0 mt-9">
             <!-- Sidebar -->
-            <JobSidebar />
+            <JobSidebar @update-filter="updateFilter" />
             <!-- Content -->
             <div class="w-full">
               <!-- Search form -->
@@ -36,17 +36,17 @@
               </div>
               <!-- Jobs header -->
               <div class="flex justify-between items-center mb-4">
-                <div class="text-sm text-slate-500 dark:text-slate-400 italic">Showing {{ total }} Jobs</div>
+                <div class="text-sm text-slate-500 dark:text-slate-400 italic">Showing {{ filteredItems.length }} Jobs</div>
                 <!-- Sort -->
                 <div class="text-sm">
                   <span>Sort by </span>
-                  <DropdownSort align="right" />
+                  <DropdownSort align="right" @sort-change="handleSortChange" />
                 </div>
               </div>
               <!-- Job list -->
               <div class="space-y-2">
                 <JobListItem
-                  v-for="item in items"
+                  v-for="item in filteredItems"
                   :key="item.id"
                   :item="item"
                   @click="openModal(item)"
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import Sidebar from '../../partials/Sidebar.vue'
 import Header from '../../partials/Header.vue'
 import JobSidebar from '../../partials/job/JobSidebar.vue'
@@ -90,12 +90,20 @@ export default {
   setup() {
     const sidebarOpen = ref(false)
     const items = ref([])
+    const filteredItems = ref([])
     const showModal = ref(false)
     const total = ref(0)
     const page = ref(1)
     const perPage = ref(10)
     const selectedOrder = ref(null)
     const driverId = ref(null)
+    const sortType = ref('Newest')
+
+    const filterCriteria = ref({
+      destination: [],
+      status: null,
+      distance: null,
+    })
 
     const fetchJobs = async (newPage = 1) => {
       page.value = newPage
@@ -105,6 +113,7 @@ export default {
         })
         items.value = response.data.orders
         total.value = response.data.total
+        applyFilters()
       } catch (error) {
         console.error('Error fetching jobs:', error)
       }
@@ -117,6 +126,51 @@ export default {
       } catch (error) {
         console.error('Error fetching driver id:', error)
       }
+    }
+
+    const updateFilter = ({ type, value, checked }) => {
+      if (type === 'destination') {
+        if (checked) {
+          filterCriteria.value.destination.push(value)
+        } else {
+          const index = filterCriteria.value.destination.indexOf(value)
+          if (index > -1) {
+            filterCriteria.value.destination.splice(index, 1)
+          }
+        }
+      } else if (type === 'status') {
+        filterCriteria.value.status = checked ? value : null
+      } else if (type === 'distance') {
+        filterCriteria.value.distance = checked ? value : null
+      }
+      applyFilters()
+    }
+
+    const applyFilters = () => {
+      filteredItems.value = items.value.filter(item => {
+        const meetsDestination = !filterCriteria.value.destination.length || filterCriteria.value.destination.includes(item.destination)
+        const meetsStatus = !filterCriteria.value.status || item.status === filterCriteria.value.status
+        const meetsDistance = !filterCriteria.value.distance || (
+          (filterCriteria.value.distance === '0-100' && item.mileage <= 100) ||
+          (filterCriteria.value.distance === '100-200' && item.mileage > 100 && item.mileage <= 200) ||
+          (filterCriteria.value.distance === '>200' && item.mileage > 200)
+        )
+        return meetsDestination && meetsStatus && meetsDistance
+      })
+      applySort()
+    }
+
+    const applySort = () => {
+      if (sortType.value === 'Newest') {
+        filteredItems.value.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      } else if (sortType.value === 'Oldest') {
+        filteredItems.value.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+      }
+    }
+
+    const handleSortChange = (sort) => {
+      sortType.value = sort
+      applyFilters()
     }
 
     const openModal = (order) => {
@@ -132,6 +186,7 @@ export default {
     return {
       sidebarOpen,
       items,
+      filteredItems,
       showModal,
       total,
       page,
@@ -139,7 +194,9 @@ export default {
       selectedOrder,
       driverId,
       fetchJobs,
+      updateFilter,
       openModal,
+      handleSortChange,
     }
   }
 }

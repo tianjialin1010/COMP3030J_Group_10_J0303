@@ -25,29 +25,35 @@
 
           <div class="md:flex justify-between space-x-6 md:space-x-8 lg:space-x-14">
             <figure class="min-w-[240px]">
-              <img class="sticky top-8 mx-auto mb-12 md:mb-0 rounded-lg -rotate-[4deg]" src="../images/team.jpg" width="420" height="280" alt="Team" />
+              <img class="sticky top-8 mx-auto mb-12 md:mb-0 rounded-lg -rotate-[4deg]" src="../images/feature-image-04.png" width="420" height="280" alt="Team" />
             </figure>
             <div class="max-w-[548px] mx-auto">
               <div class="text-slate-400 space-y-6">
                 <p>
-                  We came together over a shared excitement about building a product that could solve our own problem of where our next favourite hack is coming from. But also a product that helps everyone thrive in this market: from founders and engineers to companies and investors.
+                  The logistics industry is currently facing significant challenges due to outdated manual processes that lead to inefficiencies and increased operational costs. This proposal outlines a transformative solution that leverages image recognition technology and data visualization tools to create an intelligent logistics management system. The core objectives of this system are to enhance operational efficiency, reduce environmental impact, and provide a sustainable solution for logistics companies.
                 </p>
                 <p>
-                  Stellar is a product that connects people around the topics and ideas that fascinate them. <strong class="text-slate-50 font-medium">The idea that we can use technology to take our experience</strong>, as security lovers, to a new dimension and leave the computer industry in better shape while we're at it.
+                  Our innovative system addresses the critical issues of energy consumption and carbon emissions by optimizing logistics routes and transportation plans. Utilizing algorithms such as Dijkstra and Bellman-Ford, the system identifies the most efficient routes, thereby reducing unnecessary mileage and energy usage. This not only lessens the environmental footprint but also aligns with global efforts to combat climate change.
                 </p>
                 <p>
-                  You can dive into the atoms that make up a product, share the moments that move you and discuss the ideas you find compelling. We want to create a ground for <strong class="text-slate-50 font-medium">discussion and bring knowledge together</strong>, while making it more accessible and easier to grasp.
+                  The integration of image recognition technology streamlines the logistics information recording process by automatically capturing license plate numbers, eliminating manual data entry, and reducing the potential for human error. This automation leads to significant time savings and improved accuracy in tracking shipments.
                 </p>
                 <p>
-                  Contrary to popular belief, this product is not random security. It has roots in a piece of classical literature, making it over 5 years old. Richard McClintock, a professor at <a class="text-purple-500 font-medium hover:underline" href="#0">Hampden-Sydney College</a> in Virginia, looked up one of the more obscure words, consectetur from a passage, and going through the cites of the word in classical literature, discovered the undoubtable source.
+                  Furthermore, the system includes a user-friendly data visualization website that presents key performance indicators in an accessible format. This interface empowers decision-makers with real-time insights into their logistics operations, facilitating informed decision-making and process optimization.
                 </p>
                 <p>
-                  We all thrive on learning something new every day and everyone is constantly trying on different hats. We are working with new technologies while rethinking an old industry and are excited about all the possibilities and opportunities to innovate.
-                  It's a problem deeply ingrained in traditional sectors like startups and the wider service industry but which has been compounded in the past five to ten years by the emergence of the mostly tech-powered gig economy which has created a new generation of shift workers and indeed
+                  The proposed route optimization algorithm considers various factors such as traffic conditions, vehicle types, and cargo capacities to recommend the most efficient routes and cargo capacity selections. This leads to improved resource utilization, reduced empty trips, and enhanced overall logistics efficiency.
+                </p>
+                <p>
+                  The success of this system will be measured by its ability to improve logistics efficiency, reduce energy consumption and carbon emissions, and achieve high customer satisfaction through regular feedback and evaluation. By implementing this intelligent logistics management system, logistics companies can expect a significant leap towards sustainable and efficient operations.
+                </p>
+                <p>
+                  This proposal aims to create an intelligent management system for the logistics industry by introducing image recognition technology and data visualization tools. The system will address inefficiencies in the logistics industry.
                 </p>
               </div>
             </div>
           </div>
+
 
         </div>
       </div>

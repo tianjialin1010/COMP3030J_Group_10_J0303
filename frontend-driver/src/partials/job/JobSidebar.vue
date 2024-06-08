@@ -25,9 +25,9 @@
         </svg>
       </div>
       <div class="relative">
-        <div class="text-sm font-medium text-slate-800 dark:text-indigo-200 mb-2">Remember to keep track of your job research.</div>
+        <div class="text-sm font-medium text-slate-800 dark:text-indigo-200 mb-2">Tips: Undertaking more orders with a unified destination is more sustainable when allowed</div>
         <div class="text-right">
-          <a class="text-sm font-medium text-indigo-500 dark:text-indigo-50 hover:text-indigo-600 dark:hover:text-white" href="#0">Create Alert -&gt;</a>
+          <a class="text-sm font-medium text-indigo-500 dark:text-indigo-50 hover:text-indigo-600 dark:hover:text-white" href="#0">Accept these orders -&gt;</a>
         </div>
       </div>
     </div>
@@ -36,46 +36,40 @@
       <div class="grid md:grid-cols-2 xl:grid-cols-1 gap-6">
         <!-- Group 1 -->
         <div>
-          <div class="text-sm text-slate-800 dark:text-slate-100 font-semibold mb-3">Job Types</div>
+          <div class="text-sm text-slate-800 dark:text-slate-100 font-semibold mb-3">Destination</div>
           <ul class="space-y-2">
             <li>
               <label class="flex items-center">
-                <input type="checkbox" class="form-checkbox" checked />
-                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">Programming</span>
+                <input type="checkbox" class="form-checkbox" @change="updateFilter('destination', 'Dublin', $event.target.checked)" />
+                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">Dublin</span>
               </label>
             </li>
             <li>
               <label class="flex items-center">
-                <input type="checkbox" class="form-checkbox" />
-                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">Design</span>
+                <input type="checkbox" class="form-checkbox" @change="updateFilter('destination', 'Cork', $event.target.checked)" />
+                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">Cork</span>
               </label>
             </li>
             <li>
               <label class="flex items-center">
-                <input type="checkbox" class="form-checkbox" />
-                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">Management / Finance</span>
+                <input type="checkbox" class="form-checkbox" @change="updateFilter('destination', 'Limerick', $event.target.checked)" />
+                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">Limerick</span>
               </label>
             </li>
             <li>
               <label class="flex items-center">
-                <input type="checkbox" class="form-checkbox" />
-                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">Customer Support</span>
-              </label>
-            </li>
-            <li>
-              <label class="flex items-center">
-                <input type="checkbox" class="form-checkbox" />
-                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">Sales / Marketing</span>
+                <input type="checkbox" class="form-checkbox" @change="updateFilter('destination', 'Galway', $event.target.checked)" />
+                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">Galway</span>
               </label>
             </li>
           </ul>
         </div>
         <!-- Group 2 -->
         <div>
-          <div class="text-sm text-slate-800 dark:text-slate-100 font-semibold mb-3">Company Culture</div>
+          <div class="text-sm text-slate-800 dark:text-slate-100 font-semibold mb-3">Waiting for acceptance</div>
           <div class="flex items-center">
             <div class="form-switch">
-              <input type="checkbox" id="company-toggle" class="sr-only" v-model="companySetting" true-value="On" false-value="Off" />
+              <input type="checkbox" id="company-toggle" class="sr-only" @change="updateFilter('status', $event.target.checked ? 'CREATED' : '', $event.target.checked)" />
               <label class="bg-slate-400 dark:bg-slate-700" for="company-toggle">
                 <span class="bg-white shadow-sm" aria-hidden="true"></span>
                 <span class="sr-only">Company Culture</span>
@@ -83,52 +77,31 @@
             </div>
             <div class="text-sm text-slate-400 dark:text-slate-500 italic ml-2">{{companySetting}}</div>
           </div>
-          <div class="text-sm dark:text-slate-500 italic mt-3">Only show companies that are creating a positive culture</div>
+          <div class="text-sm dark:text-slate-500 italic mt-3">Only show orders that have not been accepted</div>
         </div>
         <!-- Group 3 -->
         <div>
-          <div class="text-sm text-slate-800 dark:text-slate-100 font-semibold mb-3">Salary Range</div>
+          <div class="text-sm text-slate-800 dark:text-slate-100 font-semibold mb-3">Distance Range</div>
           <ul class="space-y-2">
             <li>
               <label class="flex items-center">
-                <input type="checkbox" class="form-checkbox" checked />
-                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">$20K - $50K</span>
+                <input type="checkbox" class="form-checkbox" @change="updateFilter('distance', '0-100', $event.target.checked)" />
+                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">0KM -100KM</span>
               </label>
             </li>
             <li>
               <label class="flex items-center">
-                <input type="checkbox" class="form-checkbox" />
-                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">$50K - $100K</span>
+                <input type="checkbox" class="form-checkbox" @change="updateFilter('distance', '100-200', $event.target.checked)" />
+                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">100KM - 200KM</span>
               </label>
             </li>
             <li>
               <label class="flex items-center">
-                <input type="checkbox" class="form-checkbox" />
-                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">> $100K</span>
-              </label>
-            </li>
-            <li>
-              <label class="flex items-center">
-                <input type="checkbox" class="form-checkbox" />
-                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">Drawing / Painting</span>
+                <input type="checkbox" class="form-checkbox" @change="updateFilter('distance', '>200', $event.target.checked)" />
+                <span class="text-sm text-slate-600 dark:text-slate-300 font-medium ml-2">> 200KM</span>
               </label>
             </li>
           </ul>
-        </div>
-        <!-- Group 4 -->
-        <div>
-          <div class="text-sm text-slate-800 dark:text-slate-100 font-semibold mb-3">Immigration</div>
-          <div class="flex items-center">
-            <div class="form-switch">
-              <input type="checkbox" id="immigration-toggle" class="sr-only" v-model="immigrationSetting" true-value="On" false-value="Off" />
-              <label class="bg-slate-400 dark:bg-slate-700" for="immigration-toggle">
-                <span class="bg-white shadow-sm" aria-hidden="true"></span>
-                <span class="sr-only">Immigration</span>
-              </label>
-            </div>
-            <div class="text-sm text-slate-400 dark:text-slate-500 italic ml-2">{{immigrationSetting}}</div>
-          </div>
-          <div class="text-sm dark:text-slate-500 italic mt-3">Only show companies that can sponsor a visa</div>
         </div>
       </div>
     </div>
@@ -140,15 +113,18 @@ import { ref } from 'vue'
 
 export default {
   name: 'JobSidebar',
-  setup() {
+  emits: ['update-filter'],
+  setup(props, { emit }) {
+    const companySetting = ref('on')
 
-  const companySetting = ref('On')
-  const immigrationSetting = ref('Off')
+    const updateFilter = (type, value, checked) => {
+      emit('update-filter', { type, value, checked });
+    }
 
     return {
       companySetting,
-      immigrationSetting,
+      updateFilter,
     }
-  }  
+  }
 }
 </script>

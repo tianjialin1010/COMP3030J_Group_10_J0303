@@ -21,10 +21,10 @@
             <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
               <!-- Delete button -->
               <DeleteButton :selectedItems="selectedItems" apiUrl="/api/delete-orders" />
-              <!-- Dropdown -->
-              <DateSelect />
-              <!-- Filter button -->
-              <FilterButton align="right" />
+<!--              &lt;!&ndash; Dropdown &ndash;&gt;-->
+<!--              <DateSelect />-->
+<!--              &lt;!&ndash; Filter button &ndash;&gt;-->
+<!--              <FilterButton align="right" />-->
               <!-- Add order button -->
               <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white" @click="showModal=true">
                 <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">

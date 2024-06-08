@@ -2,8 +2,8 @@
   <div className="px-5 py-3">
     <div className="flex flex-wrap justify-between items-end">
       <div className="flex items-center">
-        <div className="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">244.7%</div>
-        <div className="text-sm text-slate-500 dark:text-slate-400"><span className="font-medium text-slate-800 dark:text-slate-100">17.4%</span> AVG</div>
+        <div className="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">Great job！Here is a 6 month report:</div>
+        <div className="text-sm text-slate-500 dark:text-slate-400"><span className="font-medium text-slate-800 dark:text-slate-100">288.09</span> AVG</div>
       </div>
       <div className="grow ml-2 mb-1">
         <ul ref="legend" className="flex flex-wrap justify-end" />
@@ -41,7 +41,7 @@ export default {
     let chart = null
     const darkMode = useDark()
     const { textColor, gridColor, tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = chartColors
-    
+
     onMounted(() => {
       const ctx = canvas.value
       chart = new Chart(ctx, {
@@ -59,7 +59,7 @@ export default {
               },
               ticks: {
                 maxTicksLimit: 7,
-                callback: (value) => `${value}%`,
+                callback: (value) => `${value}kg`,
                 color: darkMode.value ? textColor.dark : textColor.light,
               },
               grid: {
@@ -95,11 +95,11 @@ export default {
             tooltip: {
               callbacks: {
                 title: () => false, // Disable tooltip title
-                label: (context) => `${context.parsed.y}%`,
+                label: (context) => `${context.parsed.y}kg`,
               },
               bodyColor: darkMode.value ? tooltipBodyColor.dark : tooltipBodyColor.light,
               backgroundColor: darkMode.value ? tooltipBgColor.dark : tooltipBgColor.light,
-              borderColor: darkMode.value ? tooltipBorderColor.dark : tooltipBorderColor.light,                    
+              borderColor: darkMode.value ? tooltipBorderColor.dark : tooltipBorderColor.light,
             },
           },
           interaction: {
@@ -154,7 +154,7 @@ export default {
               ul.appendChild(li)
             })
           },
-        }],        
+        }],
       })
     })
 
@@ -179,7 +179,7 @@ export default {
           chart.options.plugins.tooltip.borderColor = tooltipBorderColor.light
         }
         chart.update('none')
-      })         
+      })
 
     return {
       canvas,

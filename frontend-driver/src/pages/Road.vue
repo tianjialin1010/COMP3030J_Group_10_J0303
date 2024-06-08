@@ -86,9 +86,9 @@ function animateMarker(map, route, origin, destination) {
   let carIconPath;
 
   if (origin.lat > destination.lat) {
-    carIconPath = '/car1.jpg';
+    carIconPath = '../src/assets/images/car1.jpg';
   } else {
-    carIconPath = '/car2.jpg';
+    carIconPath = '../src/assets/images/car2.jpg';
   }
 
   const marker = new google.maps.Marker({

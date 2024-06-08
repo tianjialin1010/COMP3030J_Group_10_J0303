@@ -10,15 +10,9 @@
       <Hero />
       <Clients />
       <Features />
-      <Features02 />
       <Features03 />
-      <TestimonialsCarousel />
-      <Features04 />
-      <Testimonials />
-      <Hero />
       <Story />
       <Team />
-      <Recruitment />
       <Testimonials />
       <Cta />
 

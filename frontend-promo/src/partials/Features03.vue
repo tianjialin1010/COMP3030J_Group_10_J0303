@@ -19,8 +19,8 @@
 
         <!-- Section header -->
         <div class="max-w-3xl mx-auto text-center pb-12 md:pb-20">
-          <h2 class="h2 bg-clip-text text-transparent bg-gradient-to-r from-slate-200/60 via-slate-200 to-slate-200/60 pb-4">More than a login box</h2>
-          <p class="text-lg text-slate-400">There are many variations available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
+          <h2 class="h2 bg-clip-text text-transparent bg-gradient-to-r from-slate-200/60 via-slate-200 to-slate-200/60 pb-4">More than a Software</h2>
+          <p class="text-lg text-slate-400">We analyze the user's mode of operation, based on SWOT and other business analysis tools, we discover your pain points and specify a customized software solution for you according to the starting point.</p>
         </div>
 
         <div class="max-w-3xl mx-auto">
@@ -32,7 +32,6 @@
                   <div class="absolute bottom-0 translate-y-1/2 left-1/2 -translate-x-1/2 pointer-events-none -z-10 w-1/2 aspect-square" aria-hidden="true">
                     <div class="absolute inset-0 translate-z-0 bg-purple-500 rounded-full blur-[120px]"></div>
                   </div>
-                  <img src="../images/feature-image-04.png" width="768" height="400" alt="Feature 04">
                 </div>
               </HighlighterItem>
             </Highlighter>

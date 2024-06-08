@@ -15,7 +15,7 @@
           </div> 
           <!-- Vistors number -->
           <div>
-            <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">347</div>
+            <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">19</div>
             <div class="text-sm text-slate-500 dark:text-slate-400">Live drivers</div>
           </div>
         </div>
@@ -50,7 +50,7 @@
                   <div class="text-left">Dublin</div>
                 </td>
                 <td class="py-2">
-                  <div class="font-medium text-right text-slate-800">94</div>
+                  <div class="font-medium text-right text-slate-800">7</div>
                 </td>
               </tr>
               <!-- Row -->
@@ -59,7 +59,7 @@
                   <div class="text-left">Galway</div>
                 </td>
                 <td class="py-2">
-                  <div class="font-medium text-right text-slate-800">42</div>
+                  <div class="font-medium text-right text-slate-800">5</div>
                 </td>
               </tr>
               <!-- Row -->
@@ -68,16 +68,16 @@
                   <div class="text-left">Belfast</div>
                 </td>
                 <td class="py-2">
-                  <div class="font-medium text-right text-slate-800">12</div>
+                  <div class="font-medium text-right text-slate-800">4</div>
                 </td>
               </tr>
               <!-- Row -->
               <tr>
                 <td class="py-2">
-                  <div class="text-left">Waterford</div>
+                  <div class="text-left">Limerick</div>
                 </td>
                 <td class="py-2">
-                  <div class="font-medium text-right text-slate-800">4</div>
+                  <div class="font-medium text-right text-slate-800">3</div>
                 </td>
               </tr>
             </tbody>
@@ -86,9 +86,9 @@
       </div>
 
       <!-- Card footer -->
-      <div class="text-right px-5 pb-4">
-        <router-link class="text-sm font-medium text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400" to="#0">Real-Time Report -&gt;</router-link>
-      </div>
+<!--      <div class="text-right px-5 pb-4">-->
+<!--        <router-link class="text-sm font-medium text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400" to="#0">Real-Time Report -&gt;</router-link>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -122,10 +122,10 @@ export default {
         // Indigo line
         {
           data: [
-            732, 610, 610, 504, 504, 504, 349,
-            349, 504, 342, 504, 610, 391, 192,
-            154, 273, 191, 191, 126, 263, 349,
-            252, 423, 622, 470, 532,
+            32, 10, 10, 50, 50, 50, 34,
+            39, 54, 32, 54, 61, 31, 12,
+            15, 27, 19, 11, 16, 26, 34,
+            25, 42, 62, 40, 19,
           ],
           fill: true,
           backgroundColor: `rgba(${hexToRGB(tailwindConfig().theme.colors.blue[500])}, 0.08)`,

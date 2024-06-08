@@ -38,13 +38,13 @@
               </div>
             </li>
             <!-- Item -->
-            <li class="relative px-2 py-1">
-              <div class="absolute inset-0 bg-sky-100 dark:bg-sky-400/30" aria-hidden="true" style="width: 44%;"></div>
-              <div class="relative flex justify-between space-x-2">
-                <div>🇬🇧 Belfast</div>
-                <div class="font-medium">1.2k</div>
-              </div>
-            </li>
+<!--            <li class="relative px-2 py-1">-->
+<!--              <div class="absolute inset-0 bg-sky-100 dark:bg-sky-400/30" aria-hidden="true" style="width: 44%;"></div>-->
+<!--              <div class="relative flex justify-between space-x-2">-->
+<!--                <div>🇬🇧 Belfast</div>-->
+<!--                <div class="font-medium">1.2k</div>-->
+<!--              </div>-->
+<!--            </li>-->
             <!-- Item -->
             <li class="relative px-2 py-1">
               <div class="absolute inset-0 bg-sky-100 dark:bg-sky-400/30" aria-hidden="true" style="width: 40%;"></div>
@@ -54,35 +54,35 @@
               </div>
             </li>
             <!-- Item -->
-            <li class="relative px-2 py-1">
-              <div class="absolute inset-0 bg-sky-100 dark:bg-sky-400/30" aria-hidden="true" style="width: 30%;"></div>
-              <div class="relative flex justify-between space-x-2">
-                <div>🇨🇮 Waterford</div>
-                <div class="font-medium">677</div>
-              </div>
-            </li>
+<!--            <li class="relative px-2 py-1">-->
+<!--              <div class="absolute inset-0 bg-sky-100 dark:bg-sky-400/30" aria-hidden="true" style="width: 30%;"></div>-->
+<!--              <div class="relative flex justify-between space-x-2">-->
+<!--                <div>🇨🇮 Waterford</div>-->
+<!--                <div class="font-medium">677</div>-->
+<!--              </div>-->
+<!--            </li>-->
             <!-- Item -->
-            <li class="relative px-2 py-1">
-              <div class="absolute inset-0 bg-sky-100 dark:bg-sky-400/30" aria-hidden="true" style="width: 22%;"></div>
-              <div class="relative flex justify-between space-x-2">
-                <div>🇨🇮 Drogheda</div>
-                <div class="font-medium">449</div>
-              </div>
-            </li>
+<!--            <li class="relative px-2 py-1">-->
+<!--              <div class="absolute inset-0 bg-sky-100 dark:bg-sky-400/30" aria-hidden="true" style="width: 22%;"></div>-->
+<!--              <div class="relative flex justify-between space-x-2">-->
+<!--                <div>🇨🇮 Drogheda</div>-->
+<!--                <div class="font-medium">449</div>-->
+<!--              </div>-->
+<!--            </li>-->
             <!-- Item -->
-            <li class="relative px-2 py-1">
-              <div class="absolute inset-0 bg-sky-100 dark:bg-sky-400/30" aria-hidden="true" style="width: 12%;"></div>
-              <div class="relative flex justify-between space-x-2">
-                <div>🇬🇧 Newry</div>
-                <div class="font-medium">269</div>
-              </div>
-            </li>
+<!--            <li class="relative px-2 py-1">-->
+<!--              <div class="absolute inset-0 bg-sky-100 dark:bg-sky-400/30" aria-hidden="true" style="width: 12%;"></div>-->
+<!--              <div class="relative flex justify-between space-x-2">-->
+<!--                <div>🇬🇧 Newry</div>-->
+<!--                <div class="font-medium">269</div>-->
+<!--              </div>-->
+<!--            </li>-->
           </ul>
         </div>
         <!-- Card footer -->
-        <div class="text-center pt-4 pb-1 border-t border-slate-100 dark:border-slate-700">
-          <router-link class="text-sm font-medium text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400" to="#0">Cities Report -&gt;</router-link>
-        </div>
+<!--        <div class="text-center pt-4 pb-1 border-t border-slate-100 dark:border-slate-700">-->
+<!--          <router-link class="text-sm font-medium text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400" to="#0">Cities Report</router-link>-->
+<!--        </div>-->
       </div>
     </div>
   </div>

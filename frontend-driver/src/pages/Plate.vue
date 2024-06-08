@@ -1,7 +1,7 @@
 <template>
   <div>
     <input type="file" @change="onFileChange" />
-    <button @click="recognizePlate" :disabled="!selectedFile">Recognize now!</button>
+    <button @click="recognizePlate" :disabled="!selectedFile && !selectedImage">Recognize now!</button>
     <div v-if="imageSrc" class="image-preview">
       <img :src="imageSrc" alt="Selected image preview">
     </div>
@@ -9,6 +9,11 @@
       The plate number is: <strong>{{ plateNumber }}</strong>
     </div>
     <div v-if="error" class="error">{{ error }}</div>
+    <div v-if="loading" class="loading">Loading...</div>
+    <select v-model="selectedImage" @change="onImageSelect">
+      <option value="">Select an image</option>
+      <option v-for="image in images" :key="image" :value="image">{{ image }}</option>
+    </select>
   </div>
 </template>
 
@@ -19,17 +24,31 @@ export default {
   data() {
     return {
       selectedFile: null,
+      selectedImage: null,
       plateNumber: null,
       imageSrc: null,
+      images: [],
       error: null,
       loading: false
     };
   },
+  created() {
+    this.fetchImages();
+  },
   methods: {
+    async fetchImages() {
+      try {
+        const response = await axios.get('http://localhost:5000/api/images');
+        this.images = response.data;
+      } catch (error) {
+        this.error = `Failed to fetch images: ${error.response?.data?.error || error.message}`;
+      }
+    },
     onFileChange(event) {
       const file = event.target.files[0];
       if (file) {
         this.selectedFile = file;
+        this.selectedImage = null;  // 清空选择的图片路径
         const reader = new FileReader();
         reader.onload = (e) => {
           this.imageSrc = e.target.result;
@@ -37,10 +56,19 @@ export default {
         reader.readAsDataURL(file);
       }
     },
+    onImageSelect() {
+      this.selectedFile = null;  // 清空上传的文件
+      this.imageSrc = `http://localhost:5000/api/images/${this.selectedImage}`;
+    },
     async recognizePlate() {
       this.loading = true;
       const formData = new FormData();
-      formData.append('image', this.selectedFile);
+
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
+      } else if (this.selectedImage) {
+        formData.append('image_name', this.selectedImage);
+      }
 
       try {
         const response = await axios.post('http://localhost:5000/api/recognize', formData, {
@@ -70,5 +98,8 @@ export default {
 }
 .error {
   color: red;
+}
+.loading {
+  color: blue;
 }
 </style>

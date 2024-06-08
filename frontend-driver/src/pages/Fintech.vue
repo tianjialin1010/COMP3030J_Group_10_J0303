@@ -19,21 +19,24 @@
             <!-- Left: Title -->
             <div class="mb-4 sm:mb-0">
               <h1 class="text-2xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold">Foot Point ♻️</h1>
+
             </div>
 
             <!-- Right: Actions -->
             <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
 
               <!-- Datepicker built with flatpickr -->
-              <Datepicker align="right" />
+<!--              <Datepicker align="right" />-->
+              <!-- Real-time Date and Time -->
+              <div class="text-xl text-slate-600 dark:text-slate-300 " align="right" >{{ currentDateTime }}</div>
 
               <!-- Add account button -->
-              <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
-                <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                  <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                </svg>
-                <span class="hidden xs:block ml-2">Add Account</span>
-              </button>
+<!--              <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white">-->
+<!--                <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">-->
+<!--                  <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />-->
+<!--                </svg>-->
+<!--                <span class="hidden xs:block ml-2">Add Account</span>-->
+<!--              </button>-->
 
             </div>
 
@@ -85,7 +88,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Sidebar from '../partials/Sidebar.vue'
 import Header from '../partials/Header.vue'
 import Datepicker from '../components/Datepicker.vue'
@@ -106,7 +109,7 @@ import FintechCard13 from '../partials/fintech/FintechCard13.vue'
 import FintechCard14 from '../partials/fintech/FintechCard14.vue'
 
 export default {
-  name: 'Dashboard',
+  name: 'Fintech',
   components: {
     Sidebar,
     Header,
@@ -128,12 +131,19 @@ export default {
     FintechCard14,
   },
   setup() {
-
     const sidebarOpen = ref(false)
+    const currentDateTime = ref(new Date().toLocaleString())
+
+    onMounted(() => {
+      setInterval(() => {
+        currentDateTime.value = new Date().toLocaleString()
+      }, 1000)
+    })
 
     return {
       sidebarOpen,
-    }  
+      currentDateTime,
+    }
   }
 }
 </script>

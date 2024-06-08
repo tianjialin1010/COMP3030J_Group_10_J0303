@@ -1,20 +1,21 @@
 # views.py
+from datetime import datetime, timedelta
 from sqlalchemy.testing.pickleable import User
 from werkzeug.security import generate_password_hash
 from backend.App.models import *
 from backend.App.models import User
 # 2024/4/29
-from flask import Blueprint, abort, send_from_directory
+from flask import Blueprint, abort, send_from_directory, url_for
 from werkzeug.security import check_password_hash
-#
 from flask import Flask, request, jsonify
 import requests
-
+from backend.uploads.avatars import *
 import random
 import string
-from flask import send_file, session
+from flask import send_file, session, current_app
 from captcha.image import ImageCaptcha
 import io
+from flask import Blueprint, request, jsonify, Response
 
 blue = Blueprint('user', __name__)
 
@@ -34,7 +35,8 @@ def get_customers():
             'name': user.username,
             'email': user.email,
             'role': user.role,
-            'created_at': user.created_at.isoformat() if user.created_at else None
+            'created_at': user.created_at.isoformat() if user.created_at else None,
+            'avatar_url': url_for('user.serve_avatar', filename=user.avatar_url, _external=True) if user.avatar_url else None,
         } for user in customers]
     })
 
@@ -96,7 +98,7 @@ def add_order():
     return jsonify({'message': 'Order added successfully'}), 201
 
 
-@blue.route('/update_order', methods=['POST'])
+@blue.route('/api/update_order', methods=['POST'])
 def update_order():
     data = request.json
     order_id = data.get('order_id')
@@ -467,39 +469,41 @@ def get_weather():
 
 
 # In Flask, receiving and processing data:
-@blue.route('/api/endOrder', methods=['POST'])
+@blue.route('/api/end_order', methods=['POST'])
 def end_order():
     data = request.json
-    mileage = data.get('Mileage')
-    vehicle_id = data.get('Vehicle_ID')
-    plate_number = data.get('PlateNumber')  # You are receiving it but not using it
-    completed_at = datetime.utcnow()  # Server time, no need to send from client
+    license_plate = data.get('license_plate')
 
-    if not all([mileage, vehicle_id]):
-        return jsonify({'error': 'Missing data'}), 400
+    if not license_plate:
+        return jsonify({'error': 'Missing license_plate'}), 400
 
-    order = Order.query.filter_by(vehicle_id=vehicle_id).first()
-    if not order:
-        return jsonify({'error': 'Order not found'}), 404
+    orders = Order.query.filter_by(license_plate=license_plate).all()
 
-    order.mileage = mileage
-    order.completed_at = completed_at
-    carbon_emission = float(mileage) * 0.2
-    order.carbon_emission = carbon_emission
+    if not orders:
+        return jsonify({'error': 'No orders found with this license plate'}), 404
+
+    for order in orders:
+        order.status = 'COMPLETED'
+        order.completed_at = datetime.utcnow()
+        # 找到绑定司机并更新状态
+        driver = Driver.query.filter_by(driver_id=order.assigned_driver_id).first()
+        if driver:
+            driver.status = 'AVAILABLE'
 
     db.session.commit()
 
-    return jsonify({'message': 'Order updated successfully', 'carbon_emission': carbon_emission}), 200
+    return jsonify({'message': f'{len(orders)} order(s) ended successfully'}), 200
 
 @blue.route('/video')
 def get_video():
     return send_file('../../frontend-driver/src/assets/images/test.mp4', mimetype='video/mp4')
 
-@blue.route('/api/<path:filename>')
-def get_model(filename):
-    return send_from_directory('../3d/', filename)
 
 from werkzeug.utils import secure_filename
+from flask import Blueprint, request, jsonify, send_from_directory, abort
+import os
+from crnn import demo  # 确保导入正确的识别函数
+
 
 IMAGE_DIR = '../../crnn/new'  # 确保路径正确
 
@@ -507,37 +511,371 @@ IMAGE_DIR = '../../crnn/new'  # 确保路径正确
 if not os.path.exists(IMAGE_DIR):
     os.makedirs(IMAGE_DIR)
 
-
 @blue.route('/api/images', methods=['GET'])
 def get_images():
-    images = os.listdir(IMAGE_DIR)
-    return jsonify(images)
-
+    try:
+        images = os.listdir(IMAGE_DIR)
+        return jsonify(images)
+    except Exception as e:
+        print(f"Error listing images: {e}")
+        return jsonify({'error': 'Failed to list images', 'details': str(e)}), 500
 
 @blue.route('/api/images/<filename>', methods=['GET'])
 def get_image(filename):
-    return send_from_directory(IMAGE_DIR, filename)
-
+    try:
+        return send_from_directory(IMAGE_DIR, filename)
+    except Exception as e:
+        print(f"Error serving image {filename}: {e}")
+        return jsonify({'error': 'File not found', 'details': str(e)}), 404
 
 @blue.route('/api/recognize', methods=['POST'])
 def recognize():
     try:
-        if 'image' not in request.files:
-            abort(400, description="Missing 'image' in request files")
-        image = request.files['image']
-        if image.filename == '':
-            abort(400, description="No selected file")
+        if 'image' in request.files:
+            image = request.files['image']
+            if image.filename == '':
+                abort(400, description="No selected file")
 
-        filename = secure_filename(image.filename)
-        image_path = os.path.join(IMAGE_DIR, filename)
-        image.save(image_path)
+            filename = secure_filename(image.filename)
+            image_path = os.path.join(IMAGE_DIR, filename)
+            image.save(image_path)
+
+        elif 'image_name' in request.form:
+            image_name = request.form['image_name']
+            image_path = os.path.join(IMAGE_DIR, image_name)
+            if not os.path.exists(image_path):
+                abort(400, description="Image not found")
+        else:
+            abort(400, description="No image provided")
 
         # 调用车牌识别函数
         plate_number = demo.recognize_plate(image_path)
 
         # 返回识别结果
         return jsonify({'plate_number': plate_number})
+
     except Exception as e:
         # 捕获所有异常并返回 500 错误
         print(f"Error processing request: {e}")
-        return jsonify({'error': 'Internal Server Error'}), 500
+        return jsonify({'error': 'Internal Server Error', 'details': str(e)}), 500
+
+# 以下内容是关于可持续性分析报告的：
+@blue.route('/api/driver-info', methods=['GET'])
+def get_driver_info():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'No user logged in'}), 401
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    if user.role != 'DRIVER':
+        return jsonify({'error': 'User is not a driver'}), 403
+
+    driver = Driver.query.filter_by(user_id=user_id).first()
+    if not driver:
+        return jsonify({'error': 'Driver not found'}), 404
+
+    # Calculate the total carbon emission
+    total_carbon_emission = sum(order.carbon_emission for order in driver.orders if order.carbon_emission is not None)
+
+    driver_info = {
+        'username': user.username,
+        'email': user.email,
+        'avatar_url': user.avatar_url,
+        'total_mileage': driver.total_mileage,
+        'total_emission': driver.total_emission,
+        'orders_count': driver.orders_count,
+        'status': driver.status,
+        'total_carbon_emission': total_carbon_emission
+    }
+
+    return jsonify(driver_info), 200
+
+
+@blue.route('/api/user-info', methods=['GET'])
+def get_user_info():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'No user logged in'}), 401
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    user_info = {
+        'username': user.username,
+        'role': user.role,
+        'avatar_url': url_for('user.serve_avatar', filename=user.avatar_url, _external=True)
+    }
+    return jsonify(user_info), 200
+
+
+
+# 使用相对路径构建 UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@blue.route('/api/upload-avatar', methods=['POST'])
+def upload_avatar():
+    if 'avatar' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    file = request.files['avatar']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    if file and allowed_file(file.filename):
+        # 使用 current_app 在请求处理函数内部获取应用实例的根路径
+        upload_folder = os.path.join(current_app.root_path, 'uploads', 'avatars')
+        os.makedirs(upload_folder, exist_ok=True)  # 确保目录存在
+
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'No user logged in'}), 401
+
+        # 使用用户 ID 作为文件名
+        filename = f'user_{user_id}.png'
+        filepath = os.path.join(upload_folder, filename)
+        file.save(filepath)
+
+        # 更新用户头像路径
+        # 假设有一个User模型和db.session
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        user.avatar_url = filename
+        db.session.commit()
+
+        return jsonify({'message': 'Avatar uploaded successfully', 'avatar_url': filename}), 200
+    else:
+        return jsonify({'error': 'File type not allowed'}), 400
+
+
+@blue.route('/api/avatars/<filename>')
+def serve_avatar(filename):
+    directory = os.path.join(current_app.root_path, 'uploads', 'avatars')
+    try:
+        return send_from_directory(directory, filename)
+    except FileNotFoundError:
+        return jsonify({'error': 'File not found'}), 404
+
+@blue.route('/api/users', methods=['GET'])
+def get_users():
+    user_list = User.query.all()  # 获取所有用户
+    users_data = []
+    for user in user_list:
+        driver_info = Driver.query.filter_by(user_id=user.user_id).first()
+        user_data = {
+            'id': user.user_id,
+            'username': user.username,
+            'avatar_url': user.avatar_url if user.avatar_url else 'path/to/default/avatar.jpg',  # 提供默认头像路径
+            'role': user.role,
+            'status': 'Available' if driver_info and driver_info.status == 'AVAILABLE' else 'Unavailable',
+            'totalMileage': driver_info.total_mileage if driver_info else 0
+        }
+        users_data.append(user_data)
+    return jsonify(users_data)
+
+
+@blue.route('/api/update-user-info', methods=['POST'])
+def update_user_info():
+    data = request.json
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    username = data.get('username')
+    email = data.get('email')
+
+    if username:
+        user.username = username
+    if email:
+        user.email = email
+
+    db.session.commit()
+    return jsonify({'message': 'User info updated successfully'}), 200
+
+
+@blue.route('/api/carbon-emission', methods=['GET'])
+def get_carbon_emission():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'No user logged in'}), 401
+
+    # 获取当前时间和六个月前的时间
+    end_date = datetime.utcnow()
+    start_date = end_date - timedelta(days=6 * 30)
+
+    # 查询过去六个月内的订单数据
+    orders = Order.query.filter(Order.created_at.between(start_date, end_date),
+                                Order.assigned_driver_id == user_id).all()
+
+    # 计算总碳排放量
+    your_emissions = sum(order.carbon_emission for order in orders if order.carbon_emission is not None)
+    expected_emissions = sum(
+        order.estimate_time * Vehicle.query.filter_by(license_plate=order.license_plate).first().emission_rate for order
+        in orders if order.estimate_time is not None)
+    colleagues_emissions = sum(
+        order.carbon_emission for order in Order.query.filter(Order.created_at.between(start_date, end_date)).all() if
+        order.carbon_emission is not None)
+
+    # 返回数据
+    return jsonify({
+        'your_emissions': your_emissions,
+        'expected_emissions': expected_emissions,
+        'colleagues_emissions': colleagues_emissions,
+        'average_emissions': colleagues_emissions / 6  # 假设过去六个月的总数据
+    })
+
+CAR_IMAGE_DIR = '../images/Cars'
+
+@blue.route('/api/car_images/<filename>', methods=['GET'])
+def get_car_image(filename):
+    try:
+        return send_from_directory(CAR_IMAGE_DIR, filename)
+    except FileNotFoundError:
+        return jsonify({'error': 'File not found'}), 404
+
+
+@blue.route('/api/recent-orders', methods=['GET'])
+def get_recent_orders():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    driver = Driver.query.filter_by(user_id=user_id).first()
+    if not driver:
+        return jsonify({'error': 'Driver not found'}), 404
+
+    orders = (Order.query
+              .filter_by(assigned_driver_id=driver.driver_id)
+              .order_by(Order.completed_at.desc())
+              .limit(10)
+              .all())
+
+    if not orders:
+        return jsonify({'error': 'No orders found'}), 404
+
+    recent_orders = []
+    for order in orders:
+        vehicle = Vehicle.query.filter_by(license_plate=order.license_plate, type='ELECTRIC').first()
+        if vehicle:
+            if order.mileage is not None and vehicle.emission_rate is not None:
+                expected_emission = float(order.mileage) * float(vehicle.emission_rate) * 100
+                if order.carbon_emission is not None and float(order.carbon_emission) < expected_emission:
+                    recent_orders.append({
+                        'origin': order.origin,
+                        'destination': order.destination,
+                        'vehicle_type': vehicle.type,
+                        'completed_at': order.completed_at.strftime('%Y-%m-%d'),
+                        'carbon_saving': float(expected_emission - float(order.carbon_emission))
+                    })
+
+    if not recent_orders:
+        return jsonify({'error': 'No orders with better emissions'}), 404
+
+    return jsonify(recent_orders)
+
+@blue.route('/api/recent-orders-worst', methods=['GET'])
+def get_recent_orders_worst():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    driver = Driver.query.filter_by(user_id=user_id).first()
+    if not driver:
+        return jsonify({'error': 'Driver not found'}), 404
+
+    # 过滤条件：车型不是ELECTRIC，订单结束日期不早于2023年9月，订单完成日期不是2024年5月5日
+    orders = Order.query.filter(
+        Order.assigned_driver_id == driver.driver_id,
+        Order.completed_at <= datetime(2023, 11, 1)
+    ).order_by(Order.completed_at.desc()).limit(10).all()
+
+    recent_orders_worst = []
+    for order in orders:
+        vehicle = Vehicle.query.filter_by(license_plate=order.license_plate).first()
+        if vehicle and vehicle.type != 'ELECTRIC':
+            expected_emission = float(order.mileage) * float(vehicle.emission_rate)*0.1
+            if float(order.carbon_emission) > expected_emission:
+                recent_orders_worst.append({
+                    'order_id': order.order_id,
+                    'origin': order.origin,
+                    'destination': order.destination,
+                    'vehicle_type': vehicle.type,
+                    'completed_at': order.completed_at.strftime('%Y-%m-%d'),
+                    'carbon_wasting': float(order.carbon_emission) - expected_emission
+                })
+
+    return jsonify(recent_orders_worst)
+
+@blue.route('/api/get_driver_id', methods=['GET'])
+def get_driver_id():
+    user_id = session.get('user_id')  # 假设 session 中保存了 user_id
+    if not user_id:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    driver = Driver.query.filter_by(user_id=user_id).first()
+    if not driver:
+        return jsonify({'error': 'Driver not found'}), 404
+
+    return jsonify({'driver_id': driver.driver_id})
+
+
+@blue.route('/backend/3d/<path:filename>')
+def serve_glb(filename):
+    return send_from_directory('../3d', filename)
+
+@blue.route('/api/recent-orders', methods=['GET'])
+def dashboard_get_recent_orders():
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'error': 'User not logged in'}), 401
+
+        driver = Driver.query.filter_by(user_id=user_id).first()
+        if not driver:
+            return jsonify({'error': 'User is not a driver'}), 403
+
+        try:
+            recent_orders = Order.query.filter_by(assigned_driver_id=driver.driver_id).order_by(
+                Order.created_at.desc()).limit(5).all()
+
+            orders_data = []
+            for order in recent_orders:
+                order_data = {
+                    'order_id': order.order_id,
+                    'status': order.status,
+                    'origin': order.origin,
+                    'destination': order.destination,
+                    'created_at': order.created_at.isoformat() if order.created_at else None,
+                    'completed_at': order.completed_at.isoformat() if order.completed_at else None,
+                }
+                # Handle potential NoneType and decimal.Decimal issues
+                if order.mileage is not None:
+                    order_data['mileage'] = float(order.mileage)
+                if order.estimate_time is not None:
+                    order_data['estimate_time'] = float(order.estimate_time)
+                if order.carbon_emission is not None:
+                    order_data['carbon_emission'] = float(order.carbon_emission)
+
+                orders_data.append(order_data)
+
+            return jsonify(orders_data)
+
+        except Exception as e:
+            return jsonify({'error': 'Internal Server Error'}), 500
+
+
+import openai
+import logging
+# 配置OpenAI API
+# openai.api_base = "https://api.openai.com/" # 换成代理，一定要加 v1
+openai.api_key = "sk-LZdoa7Cw51Zf0Ul2A0Fa471e17414dEf93760cB0684358A4"
+
+

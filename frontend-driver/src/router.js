@@ -68,7 +68,8 @@ import IconsPage from './pages/component/IconsPage.vue'
 import Plate from './pages/Plate.vue'
 import Road from './pages/Road.vue'
 import ShowRealTimeRoad from './pages/ShowRealTimeRoad.vue'
-import Model from './pages/Model.vue'
+import Model from './components/Model.vue'
+import CHAT from './pages/Chat.vue'
 
 const routerHistory = createWebHashHistory()
 
@@ -306,7 +307,8 @@ const router = createRouter({
     },
     {
       path: '/reset-password',
-      component: ResetPassword
+      component: ResetPassword,
+      meta: { requiresAuth: true }
     },
     {
       path: '/onboarding-01',
@@ -407,6 +409,11 @@ const router = createRouter({
     {
       path: '/model',
       component: Model,
+      meta: { requiresAuth: true }
+    },
+      {
+      path: '/chat',
+      component: CHAT,
       meta: { requiresAuth: true }
     },
     {

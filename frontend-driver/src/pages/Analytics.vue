@@ -25,7 +25,7 @@
             <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
                 
               <!-- Datepicker built with flatpickr -->
-              <Datepicker align="right" />
+              <div class="text-xl text-slate-600 dark:text-slate-300 " align="right" >{{ currentDateTime }}</div>
                 
             </div>
           
@@ -41,7 +41,7 @@
             <!-- Stacked bar chart (Acquisition Channels) -->
             <AnalyticsCard03 />
             <!-- Horizontal bar chart (Audience Overview) -->
-            <AnalyticsCard04 />
+<!--            <AnalyticsCard04 />-->
 <!--            &lt;!&ndash; Report card (Top Channels) &ndash;&gt;
             <AnalyticsCard05 />
             &lt;!&ndash; Report card (Top Pages) &ndash;&gt;
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import Sidebar from '../partials/Sidebar.vue'
 import Header from '../partials/Header.vue'
 import Datepicker from '../components/Datepicker.vue'
@@ -106,8 +106,16 @@ export default {
 
     const sidebarOpen = ref(false)
 
+    const currentDateTime = ref(new Date().toLocaleString())
+
+    onMounted(() => {
+      setInterval(() => {
+        currentDateTime.value = new Date().toLocaleString()
+      }, 1000)
+    })
     return {
       sidebarOpen,
+      currentDateTime,
     }  
   }
 }

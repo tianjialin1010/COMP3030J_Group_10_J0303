@@ -8,7 +8,7 @@
       :aria-expanded="dropdownOpen"
     >
       <div class="flex items-center truncate">
-        <span class="truncate font-medium text-indigo-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">Newest</span>
+        <span class="truncate font-medium text-indigo-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">{{ currentSort }}</span>
         <svg class="w-3 h-3 shrink-0 ml-1 fill-current text-indigo-400" viewBox="0 0 12 12">
           <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
         </svg>
@@ -29,13 +29,13 @@
           @focusout="dropdownOpen = false"
         >
           <li>
-            <a class="font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 flex items-center py-1 px-3" href="#0" @click="dropdownOpen = false">Oldest</a>
+            <button class="font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 flex items-center py-1 px-3" @click.prevent="setSort('Oldest')">Oldest</button>
           </li>
           <li>
-            <a class="font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 flex items-center py-1 px-3" href="#0" @click="dropdownOpen = false">Popular</a>
+            <button class="font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 flex items-center py-1 px-3" @click.prevent="setSort('Newest')">Newest</button>
           </li>
         </ul>
-      </div> 
+      </div>
     </transition>
   </div>
 </template>
@@ -46,19 +46,23 @@ import { ref, onMounted, onUnmounted } from 'vue'
 export default {
   name: 'DropdownSort',
   props: ['align'],
-  setup() {
-
+  setup(props, { emit }) {
     const dropdownOpen = ref(false)
     const trigger = ref(null)
     const dropdown = ref(null)
+    const currentSort = ref('Newest')
 
-    // close on click outside
+    const setSort = (sort) => {
+      currentSort.value = sort
+      emit('sort-change', sort)
+      dropdownOpen.value = false
+    }
+
     const clickHandler = ({ target }) => {
       if (!dropdownOpen.value || dropdown.value.contains(target) || trigger.value.contains(target)) return
       dropdownOpen.value = false
     }
 
-    // close if the esc key is pressed
     const keyHandler = ({ keyCode }) => {
       if (!dropdownOpen.value || keyCode !== 27) return
       dropdownOpen.value = false
@@ -78,6 +82,8 @@ export default {
       dropdownOpen,
       trigger,
       dropdown,
+      setSort,
+      currentSort
     }
   }
 }

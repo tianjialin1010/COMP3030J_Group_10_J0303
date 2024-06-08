@@ -1,16 +1,16 @@
 <template>
-  <canvas ref="canvas" :data="data" :width="width" :height="height"></canvas>
+  <canvas ref="canvas" :width="width" :height="height"></canvas>
 </template>
 
 <script>
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useDark } from '@vueuse/core'
 import { chartColors } from './ChartjsConfig'
-
 import {
   Chart, LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip,
 } from 'chart.js'
 import 'chartjs-adapter-moment'
+import moment from 'moment'
 
 // Import utilities
 import { formatThousands } from '../utils/Utils'
@@ -21,18 +21,28 @@ export default {
   name: 'LineChart03',
   props: ['data', 'width', 'height'],
   setup(props) {
-
     const canvas = ref(null)
-    const legend = ref(null)
     let chart = null
     const darkMode = useDark()
     const { textColor, gridColor, tooltipBodyColor, tooltipBgColor, tooltipBorderColor } = chartColors
-    
+
+    // Generate labels for the last six months
+    const generateLastSixMonthsLabels = () => {
+      const labels = []
+      for (let i = 0; i < 6; i++) {
+        labels.push(moment().subtract(i, 'months').format('MM-DD-YYYY'))
+      }
+      return labels.reverse()
+    }
+
     onMounted(() => {
       const ctx = canvas.value
       chart = new Chart(ctx, {
         type: 'line',
-        data: props.data,
+        data: {
+          ...props.data,
+          labels: generateLastSixMonthsLabels(), // Use dynamic labels
+        },
         options: {
           layout: {
             padding: 20,
@@ -49,7 +59,7 @@ export default {
               },
               grid: {
                 color: darkMode.value ? gridColor.dark : gridColor.light,
-              },   
+              },
             },
             x: {
               type: 'time',
@@ -84,7 +94,7 @@ export default {
               },
               bodyColor: darkMode.value ? tooltipBodyColor.dark : tooltipBodyColor.light,
               backgroundColor: darkMode.value ? tooltipBgColor.dark : tooltipBgColor.light,
-              borderColor: darkMode.value ? tooltipBorderColor.dark : tooltipBorderColor.light,                 
+              borderColor: darkMode.value ? tooltipBorderColor.dark : tooltipBorderColor.light,
             },
           },
           interaction: {
@@ -118,11 +128,10 @@ export default {
           chart.options.plugins.tooltip.borderColor = tooltipBorderColor.light
         }
         chart.update('none')
-      })     
+      })
 
     return {
       canvas,
-      legend,
     }
   }
 }

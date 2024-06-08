@@ -23,22 +23,22 @@ export default {
   },
   setup() {
     const chartData = ref({
-      labels: ['Big', 'Small', 'Bicycle'],
+      labels: ['Truck', 'Van', 'Electric'],
       datasets: [
         {
-          label: 'Emission by Vehicles',
+          label: 'Emission by Vehicles(kg CO2e)',
           data: [
             500, 326, 242,
           ],
           backgroundColor: [
             `rgba(${hexToRGB(tailwindConfig().theme.colors.indigo[500])}, 0.8)`,
             `rgba(${hexToRGB(tailwindConfig().theme.colors.sky[400])}, 0.8)`,
-            `rgba(${hexToRGB(tailwindConfig().theme.colors.emerald[500])}, 0.8)`,
+            `rgba(${hexToRGB(tailwindConfig().theme.colors.emerald[50])}, 0.8)`,
           ],
           hoverBackgroundColor: [
             `rgba(${hexToRGB(tailwindConfig().theme.colors.indigo[600])}, 0.8)`,
             `rgba(${hexToRGB(tailwindConfig().theme.colors.sky[500])}, 0.8)`,
-            `rgba(${hexToRGB(tailwindConfig().theme.colors.emerald[600])}, 0.8)`,
+            `rgba(${hexToRGB(tailwindConfig().theme.colors.emerald[100])}, 0.8)`,
           ],
           borderWidth: 0,
         },

@@ -7,9 +7,10 @@
       <section>
         <div class="flex items-center">
           <div class="mr-4">
-            <img class="w-20 h-20 rounded-full" src="../../images/user-avatar-80.png" width="80" height="80" alt="User upload" />
+            <img class="w-20 h-20 rounded-full" :src="avatarUrl" width="80" height="80" alt="User upload" />
           </div>
-          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">{{ translatedTexts.change }}</button>
+          <input type="file" @change="onFileChange" class="hidden" ref="fileInput">
+          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white" @click="triggerFileInput">{{ translatedTexts.change }}</button>
         </div>
       </section>
       <!-- Business Profile -->
@@ -19,7 +20,7 @@
         <div class="sm:flex sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-5">
           <div class="sm:w-1/3">
             <label class="block text-sm font-medium mb-1" for="name">{{ translatedTexts.fullName }}</label>
-            <input id="name" class="form-input w-full" type="text" />
+            <input id="name" v-model="userName" class="form-input w-full" type="text" />
           </div>
         </div>
       </section>
@@ -30,9 +31,9 @@
         <div class="flex flex-wrap mt-5">
           <div class="mr-2">
             <label class="sr-only" for="email">{{ translatedTexts.businessEmail }}</label>
-            <input id="email" class="form-input" type="email" />
+            <input id="email" v-model="userEmail" class="form-input" type="email" />
           </div>
-          <button class="btn border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 shadow-sm text-indigo-500">{{ translatedTexts.change }}</button>
+          <button class="btn border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 shadow-sm text-indigo-500" @click="applyChanges">{{ translatedTexts.change }}</button>
         </div>
       </section>
       <!-- Password -->
@@ -40,7 +41,7 @@
         <h3 class="text-xl leading-snug text-slate-800 dark:text-slate-100 font-bold mb-1">{{ translatedTexts.password }}</h3>
         <div class="text-sm">{{ translatedTexts.passwordDesc }}</div>
         <div class="mt-5">
-          <button class="btn border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 shadow-sm text-indigo-500">{{ translatedTexts.setNewPassword }}</button>
+          <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" @click="navigateToResetPassword">{{ translatedTexts.setNewPassword }}</button>
         </div>
       </section>
       <!-- Smart Sync -->
@@ -70,14 +71,16 @@
 </template>
 
 <script>
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect, onMounted } from 'vue';
 import { useTranslate } from '../../plugins/translator';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+
 
 export default {
   name: 'AccountPanel',
   setup() {
     const { currentLanguage, translateText, changeLanguage } = useTranslate();
-
     const texts = {
       account: 'My Account',
       profile: 'Profile',
@@ -97,7 +100,9 @@ export default {
     };
 
     const translatedTexts = ref({ ...texts });
-    const selectedLanguage = ref(currentLanguage.value); // 临时存储选择的语言
+    const selectedLanguage = ref(currentLanguage.value);
+    const userName = ref('');
+    const userEmail = ref('');
 
     const updateTranslations = async (lang) => {
       for (const key in texts) {
@@ -110,24 +115,83 @@ export default {
     });
 
     const selectLanguage = (lang) => {
-      selectedLanguage.value = lang; // 更新临时选择的语言
-      updateTranslations(lang); // 更新翻译文本
+      selectedLanguage.value = lang;
+      updateTranslations(lang);
     };
 
-    const applyChanges = () => {
-      changeLanguage(selectedLanguage.value); // 仅在用户点击保存时更改全局语言
+    const avatarUrl = ref('../../images/user-avatar-80.png');  // 默认头像路径
+
+    const fetchUserAvatar = async () => {
+      try {
+        const response = await axios.get('/api/user-info');
+        if (response.data && response.data.avatar_url) {
+          avatarUrl.value = response.data.avatar_url;
+          userName.value = response.data.username;
+          userEmail.value = response.data.email;
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
     };
 
-    const cancelChanges = () => {
-      updateTranslations(currentLanguage.value); // 恢复为当前语言的翻译文本
+    onMounted(() => {
+      fetchUserAvatar();
+    });
+
+    const avatarFile = ref(null);
+    const triggerFileInput = () => document.querySelector('input[type="file"]').click();
+    const onFileChange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => avatarUrl.value = e.target.result;
+        reader.readAsDataURL(file);
+        avatarFile.value = file;
+      }
     };
+
+    const applyChanges = async () => {
+      if (avatarFile.value) {
+        const formData = new FormData();
+        formData.append('avatar', avatarFile.value);
+        try {
+          const response = await axios.post('/api/upload-avatar', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          });
+          avatarUrl.value = response.data.avatar_url;
+        } catch (error) {
+          console.error('Error uploading avatar:', error);
+        }
+      }
+      // Save username and email changes
+      try {
+        await axios.post('/api/update-user-info', { username: userName.value, email: userEmail.value });
+      } catch (error) {
+        console.error('Error updating user info:', error);
+      }
+      changeLanguage(selectedLanguage.value);
+    };
+
+    const router = useRouter();
+
+    const navigateToResetPassword = () => {
+      router.push('/reset-password');
+    };
+    const cancelChanges = () => updateTranslations(currentLanguage.value);
 
     return {
       translatedTexts,
       selectLanguage,
       applyChanges,
-      cancelChanges
+      cancelChanges,
+      avatarUrl,
+      triggerFileInput,
+      onFileChange,
+      userName,
+      userEmail,
+      navigateToResetPassword
     };
+
   }
 }
 </script>

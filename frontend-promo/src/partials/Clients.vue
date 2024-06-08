@@ -15,31 +15,31 @@
             <div class="swiper-wrapper !ease-linear select-none items-center">
               <!-- Carousel items -->
               <div class="swiper-slide !w-auto">
-                <img src="../images/client-01.svg" alt="Client 01" width="110" height="21" />
+                <div class="client-text">Produced by J0303 Technique Software Company</div>
               </div>
               <div class="swiper-slide !w-auto">
-                <img src="../images/client-02.svg" alt="Client 02" width="70" height="25" />
+                <div class="client-text">We insight your needs!</div>
               </div>
               <div class="swiper-slide !w-auto">
-                <img class="mt-1" src="../images/client-03.svg" alt="Client 03" width="107" height="33" />
+                <div class="client-text">We satisfy your needs!</div>
               </div>
               <div class="swiper-slide !w-auto">
-                <img src="../images/client-04.svg" alt="Client 04" width="85" height="36" />
+                <div class="client-text">Building Tomorrow Today</div>
               </div>
               <div class="swiper-slide !w-auto">
-                <img src="../images/client-05.svg" alt="Client 05" width="86" height="18" />
+                <div class="client-text">Innovation for Growth</div>
               </div>
               <div class="swiper-slide !w-auto">
-                <img src="../images/client-06.svg" alt="Client 06" width="78" height="34" />
+                <div class="client-text">Your Success, Our Commitment</div>
               </div>
               <div class="swiper-slide !w-auto">
-                <img src="../images/client-07.svg" alt="Client 07" width="83" height="23" />
+                <div class="client-text">Driving the Future</div>
               </div>
               <div class="swiper-slide !w-auto">
-                <img src="../images/client-08.svg" alt="Client 08" width="98" height="26" />
+                <div class="client-text">Quality You Can Trust</div>
               </div>
               <div class="swiper-slide !w-auto">
-                <img class="mt-2" src="../images/client-09.svg" alt="Client 09" width="92" height="28" />
+                <div class="client-text">Innovation Meets Excellence</div>
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@ export default {
   name: 'Clients',
   components: {
     Particles
-  },  
+  },
   setup() {
     onMounted(() => {
       const carousel = new Swiper('.clients-carousel', {
@@ -80,6 +80,15 @@ export default {
         },
       })
     })
-  }  
+  }
 }
 </script>
+
+<style scoped>
+.client-text {
+  font-size: 1.25rem;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+}
+</style>

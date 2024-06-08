@@ -1,6 +1,5 @@
 <template>
   <div class="grow flex flex-col md:translate-x-0 transition-transform duration-300 ease-in-out" :class="inboxSidebarOpen ? 'translate-x-1/3' : 'translate-x-0'">
-
     <!-- Header -->
     <div class="sticky top-16">
       <div class="flex items-center justify-between bg-slate-50 dark:bg-[#161F32] border-b border-slate-200 dark:border-slate-700 px-4 sm:px-6 md:px-5 h-16">
@@ -11,8 +10,8 @@
             class="md:hidden text-slate-400 hover:text-slate-500 mr-4"
             @click.stop="$emit('toggle-inboxsidebar')"
             aria-controls="inbox-sidebar"
-            :aria-expanded="inboxSidebarOpen"            
-            >
+            :aria-expanded="inboxSidebarOpen"
+          >
             <span class="sr-only">Close sidebar</span>
             <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M10.7 18.7l1.4-1.4L7.8 13H20v-2H7.8l4.3-4.3-1.4-1.4L4 12z" />
@@ -61,16 +60,16 @@
 
       <!-- Mail subject -->
       <header class="sm:flex sm:items-start sm:justify-between mb-4">
-        <h1 class="text-xl leading-snug text-slate-800 dark:text-slate-100 font-bold mb-1 sm:mb-0 ml-2">Chill your mind with this amazing offer 🎉</h1>
-        <button class="text-xs inline-flex font-medium bg-sky-100 dark:bg-sky-500/30 text-sky-600 dark:text-sky-400 rounded-full text-center px-2.5 py-1 whitespace-nowrap">Exciting news</button>
+        <h1 class="text-xl leading-snug text-slate-800 dark:text-slate-100 font-bold mb-1 sm:mb-0 ml-2">Office Group Chat 💬</h1>
+        <button class="text-xs inline-flex font-medium bg-sky-100 dark:bg-sky-500/30 text-sky-600 dark:text-sky-400 rounded-full text-center px-2.5 py-1 whitespace-nowrap">Active Now</button>
       </header>
 
       <!-- Messages box -->
       <div class="bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700 px-6 divide-y divide-slate-200 dark:divide-slate-700">
-        <Mail
-          v-for="mail in mails"
-          :key="mail.id"
-          :mail="mail"
+        <ChatMessage
+          v-for="message in messages"
+          :key="message.id"
+          :message="message"
         />
       </div>
 
@@ -87,10 +86,10 @@
           </svg>
         </button>
         <!-- Message input -->
-        <form class="grow flex">
+        <form class="grow flex" @submit.prevent="sendMessage">
           <div class="grow mr-3">
             <label for="message-input" class="sr-only">Type a message</label>
-            <input id="message-input" class="form-input w-full bg-slate-100 dark:bg-slate-800 border-transparent dark:border-transparent focus:bg-white dark:focus:bg-slate-800 placeholder-slate-500" type="text" placeholder="Aa" />
+            <input id="message-input" class="form-input w-full bg-slate-100 dark:bg-slate-800 border-transparent dark:border-transparent focus:bg-white dark:focus:bg-slate-800 placeholder-slate-500" type="text" placeholder="Aa" v-model="newMessage" />
           </div>
           <button type="submit" class="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">Send -&gt;</button>
         </form>
@@ -102,59 +101,66 @@
 
 <script>
 import { ref } from 'vue'
-import Mail from './Mail.vue'
+import ChatMessage from '../../pages/Chat.vue'
 
-import mailUser01 from '../../images/user-40-11.jpg'
-import mailUser02 from '../../images/user-avatar-80.png'
-import mailImage from '../../images/inbox-image.jpg'
+import chatUser01 from '../../images/user-40-11.jpg'
+import chatUser02 from '../../images/user-avatar-80.png'
 
 export default {
   name: 'InboxBody',
   props: ['inboxSidebarOpen'],
   components: {
-    Mail,
+    ChatMessage,
   },
   setup() {
 
-    const mails = ref([
+    const messages = ref([
       {
         id: '0',
-        open: false,
-        image: mailUser01,
+        image: chatUser01,
         name: 'Dominik Lamakani',
         email: 'dominiklama@acme.com',
         date: 'Sep 3, 3:18 PM',
-        recipients: ['me', 'Carolyn'],
-        excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore…',
-        message: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Consectetur adipiscing elit, sed do eiusmod aliqua? Check below:</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p><p>Cheers,</p><p class="font-medium">Dominik Lamakani</p>',
+        message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       },
       {
         id: '1',
-        open: false,
-        image: mailUser02,
+        image: chatUser02,
         name: 'Acme Inc.',
         email: 'acmeinc@acme.com',
         date: 'Sep 3, 3:18 PM',
-        recipients: ['me', 'Dominik'],
-        excerpt: 'Dominik, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt…',
-        message: '<p>Dominik, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Consectetur adipiscing elit, sed do eiusmod aliqua? Check below:</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p><p>Cheers,</p><p class="font-medium">Acme Inc.</p>',
+        message: 'Dominik, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
       },
       {
         id: '2',
-        open: true,
-        image: mailUser01,
+        image: chatUser01,
         name: 'Dominik Lamakani',
         email: 'dominiklama@acme.com',
         date: 'Sep 4, 3:37 AM',
-        recipients: ['me', 'Carolyn'],
-        excerpt: 'Hey Acme 👋 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt…',
-        message: `<p>Hey Acme 👋</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis <span class="underline">nostrud exercitation ullamco</span> laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p><p>Consectetur adipiscing elit, sed do eiusmod <a class="font-medium text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400" href="#0">tempor magna</a> aliqua? Check below:</p><p><img src=${mailImage} width="320" height="190" alt="Inbox image" /></p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p><p>Cheers,</p><p class="font-medium">Dominik Lamakani</p>`,
-      },      
+        message: 'Hey Acme 👋 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+      },
     ])
 
+    const newMessage = ref('')
+
+    const sendMessage = () => {
+      if (newMessage.value.trim() === '') return
+      messages.value.push({
+        id: String(messages.value.length),
+        image: chatUser01,  // Assuming current user is Dominik
+        name: 'Dominik Lamakani',
+        email: 'dominiklama@acme.com',
+        date: new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }),
+        message: newMessage.value,
+      })
+      newMessage.value = ''
+    }
+
     return {
-      mails,
-    }      
+      messages,
+      newMessage,
+      sendMessage,
+    }
   }
 }
 </script>

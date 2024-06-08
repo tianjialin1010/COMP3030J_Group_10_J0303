@@ -1,6 +1,6 @@
 <template>
   <div class="p-6">
-    <h1 class="text-xl font-bold mb-4"></h1>
+    <h1 class="text-xl font-bold mb-4">Update Order</h1>
 
     <ModalBasic :modalOpen="modalOpen" @close-modal="modalOpen = false">
       <!-- Google Map Component -->
@@ -16,7 +16,7 @@
           <div class="space-y-3">
             <!-- 订单ID -->
             <div>
-              <p class="block text-sm font-medium mb-1">Order ID: {{ order.order_id }}</p>
+              <p class="block text-sm font-medium mb-1">Order ID: {{ order.id }}</p>
             </div>
 
             <!-- 车辆ID -->
@@ -28,10 +28,6 @@
                 </option>
               </select>
             </div>
-            <video id="myVideo" width="640" height="360" controls autoplay>
-              <source src="http://localhost:5000/video" type="video/mp4">
-              您的浏览器不支持HTML5视频标签。
-            </video>
           </div>
         </div>
         <!-- Modal Footer -->
@@ -81,8 +77,8 @@ export default {
     },
     async sendDataToBackend() {
       try {
-        const response = await axios.post('/update_order', {
-          order_id: this.order.order_id,
+        const response = await axios.post('/api/update_order', {
+          order_id: this.order.id,
           vehicle_id: this.Vehicle_ID,
         });
         console.log(response.data);
@@ -97,3 +93,6 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+</style>

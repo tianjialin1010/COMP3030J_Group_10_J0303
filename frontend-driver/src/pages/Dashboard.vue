@@ -6,7 +6,7 @@
 
     <!-- Content area -->
     <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-      
+
       <!-- Site header -->
       <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
@@ -15,30 +15,30 @@
 
           <!-- Welcome banner -->
           <WelcomeBanner />
-          
-          <!-- Dashboard actions -->
-          <div class="sm:flex sm:justify-between sm:items-center mb-8">
 
-            <!-- Left: Avatars -->
-            <DashboardAvatars />
+<!--          &lt;!&ndash; Dashboard actions &ndash;&gt;-->
+<!--          <div class="sm:flex sm:justify-between sm:items-center mb-8">-->
 
-            <!-- Right: Actions -->
-            <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
+<!--            &lt;!&ndash; Left: Avatars &ndash;&gt;-->
+<!--            <DashboardAvatars />-->
 
-              <!-- Filter button -->
-              <FilterButton align="right" />
-              <!-- Datepicker built with flatpickr -->
-              <Datepicker align="right" />
-              <!-- Add view button -->
-              <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
-                  <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                      <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                  </svg>
-                  <span class="hidden xs:block ml-2">Add View</span>
-              </button>
-            </div>
+<!--            &lt;!&ndash; Right: Actions &ndash;&gt;-->
+<!--            <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">-->
 
-          </div>
+<!--              &lt;!&ndash; Filter button &ndash;&gt;-->
+<!--              <FilterButton align="right" />-->
+<!--              &lt;!&ndash; Datepicker built with flatpickr &ndash;&gt;-->
+<!--              <Datepicker align="right" />-->
+<!--              &lt;!&ndash; Add view button &ndash;&gt;-->
+<!--              <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white">-->
+<!--                  <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">-->
+<!--                      <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />-->
+<!--                  </svg>-->
+<!--                  <span class="hidden xs:block ml-2">Add View</span>-->
+<!--              </button>-->
+<!--            </div>-->
+
+<!--          </div>-->
 
           <!-- Cards -->
           <div class="grid grid-cols-12 gap-6">
@@ -49,29 +49,34 @@
             <DashboardCard02 />
             <!-- Line chart (Acme Professional) -->
             <DashboardCard03 />
+<!--            <div>-->
+<!--              <h1>Welcome to the Logistics Management System</h1>-->
+<!--              <ChatWidget />-->
+<!--            </div>-->
+
             <!-- Bar chart (Direct vs Indirect) -->
             <DashboardCard04 />
             <!-- Line chart (Real Time Value) -->
-            <DashboardCard05 />
-            <!-- Doughnut chart (Top Countries) -->
-            <DashboardCard06 />
-            <!-- Table (Top Channels) -->
-            <DashboardCard07 />
-            <!-- Line chart (Sales Over Time) -->
-            <DashboardCard08 />
-            <!-- Stacked bar chart (Sales VS Refunds) -->
-            <DashboardCard09 />
-            <!-- Card (Recent Activity) -->
-            <DashboardCard10 />
-            <!-- Card (Income/Expenses) -->
-            <DashboardCard11 />
+<!--            <DashboardCard05 />-->
+<!--            &lt;!&ndash; Doughnut chart (Top Countries) &ndash;&gt;-->
+<!--            <DashboardCard06 />-->
+<!--            &lt;!&ndash; Table (Top Channels) &ndash;&gt;-->
+<!--            <DashboardCard07 />-->
+<!--            &lt;!&ndash; Line chart (Sales Over Time) &ndash;&gt;-->
+<!--            <DashboardCard08 />-->
+<!--            &lt;!&ndash; Stacked bar chart (Sales VS Refunds) &ndash;&gt;-->
+<!--            <DashboardCard09 />-->
+<!--            &lt;!&ndash; Card (Recent Activity) &ndash;&gt;-->
+<!--            <DashboardCard10 />-->
+<!--            &lt;!&ndash; Card (Income/Expenses) &ndash;&gt;-->
+<!--            <DashboardCard11 />-->
 
           </div>
 
         </div>
       </main>
 
-    </div> 
+    </div>
 
   </div>
 </template>
@@ -95,6 +100,7 @@ import DashboardCard08 from '../partials/dashboard/DashboardCard08.vue'
 import DashboardCard09 from '../partials/dashboard/DashboardCard09.vue'
 import DashboardCard10 from '../partials/dashboard/DashboardCard10.vue'
 import DashboardCard11 from '../partials/dashboard/DashboardCard11.vue'
+import ChatWidget from '../components/ChatWidget.vue';
 
 export default {
   name: 'Dashboard',
@@ -115,7 +121,8 @@ export default {
     DashboardCard08,
     DashboardCard09,
     DashboardCard10,
-    DashboardCard11,    
+    DashboardCard11,
+    ChatWidget,
   },
   setup() {
 
@@ -123,7 +130,7 @@ export default {
 
     return {
       sidebarOpen,
-    }  
+    }
   }
 }
 </script>
