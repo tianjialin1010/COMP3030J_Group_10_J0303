@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/driver/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <script type="module" crossorigin src="/driver/assets/index-01093eeb.js"></script>
+    <link rel="stylesheet" href="/driver/assets/index-7ca3a0b9.css">
+  </head>
+  <body class="font-inter antialiased bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">
+    <script>
+        if (localStorage.getItem('sidebar-expanded') == 'true') {
+            document.querySelector('body').classList.add('sidebar-expanded');
+        } else {
+            document.querySelector('body').classList.remove('sidebar-expanded');
+        }
+    </script>
+    <div id="app"></div>
+    
+  </body>
+</html>

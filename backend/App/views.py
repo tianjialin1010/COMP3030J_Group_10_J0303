@@ -872,10 +872,4 @@ def dashboard_get_recent_orders():
             return jsonify({'error': 'Internal Server Error'}), 500
 
 
-import openai
-import logging
-# 配置OpenAI API
-# openai.api_base = "https://api.openai.com/" # 换成代理，一定要加 v1
-openai.api_key = "sk-LZdoa7Cw51Zf0Ul2A0Fa471e17414dEf93760cB0684358A4"
-
 

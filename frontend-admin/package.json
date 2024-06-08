@@ -1,0 +1,42 @@
+{
+  "name": "mosaic-vue",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.106.0",
+    "@react-three/fiber": "^8.16.8",
+    "@react-three/postprocessing": "^2.16.2",
+    "@tailwindcss/forms": "^0.5.6",
+    "@types/three": "^0.164.0",
+    "@unhead/vue": "^1.9.10",
+    "@vueuse/core": "^10.4.1",
+    "axios": "^1.6.8",
+    "chart.js": "^4.4.0",
+    "chartjs-adapter-moment": "^1.0.1",
+    "element-plus": "^2.7.0",
+    "flatpickr": "^4.6.13",
+    "moment": "^2.29.4",
+    "qs": "^6.12.0",
+    "three": "^0.164.1",
+    "three-orbitcontrols": "^2.110.3",
+    "vue": "^3.2.20",
+    "vue-cal": "^4.8.1",
+    "vue-flatpickr-component": "^11.0.3",
+    "vue-i18n": "^10.0.0-alpha.5",
+    "vue-recaptcha": "^3.0.0-alpha.6",
+    "vue-router": "^4.3.2",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.4.0",
+    "@vue/compiler-sfc": "^3.2.20",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.3",
+    "vite": "^4.4.10"
+  }
+}
